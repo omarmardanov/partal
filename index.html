@@ -6,11 +6,33 @@
   <title>Partal — Ehtiyat hissələri axtarışı</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Firebase v10 modular via CDN compat build -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <script>
+    // Firebase init — outside React so it's available immediately
+    const firebaseConfig = {
+      apiKey: "AIzaSyADnOuL4SxQ2Kq_M8Hl3n6NofhCup_QR1c",
+      authDomain: "partal-15efc.firebaseapp.com",
+      projectId: "partal-15efc",
+      storageBucket: "partal-15efc.firebasestorage.app",
+      messagingSenderId: "1035150457420",
+      appId: "1:1035150457420:web:d6a4b223487b4f0629d2e9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db   = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -22,299 +44,268 @@
       --font-b:'Plus Jakarta Sans',system-ui,sans-serif;
       --r:12px;--r-sm:8px;
     }
-    html,body,#root{height:100%;font-family:var(--font-b);color:var(--black);background:var(--g100);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-    .app{min-height:100dvh;max-width:480px;margin:0 auto;background:var(--white);display:flex;flex-direction:column;}
+    html { height: 100%; }
+    body { min-height:100%; font-family:var(--font-b); color:var(--black); background:var(--g100); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+    #root { min-height:100dvh; display:flex; flex-direction:column; align-items:center; }
+    .app { width:100%; max-width:480px; background:var(--white); display:flex; flex-direction:column; min-height:100dvh; }
 
-    /* ── TOPNAV ── */
-    .topnav{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid var(--g100);background:var(--white);position:sticky;top:0;z-index:100;gap:16px;}
-    .topnav-logo{font-family:var(--font-d);font-size:20px;font-weight:700;color:#0D0D0B;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:8px;}
-    .topnav-stats{font-size:12px;color:var(--g500);text-align:right;white-space:nowrap;line-height:1.4;}
-    .topnav-stats-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;}
+    /* TOPNAV */
+    .topnav { display:flex; align-items:center; justify-content:space-between; padding:13px 20px; border-bottom:1px solid var(--g100); background:var(--white); position:sticky; top:0; z-index:100; gap:16px; width:100%; max-width:480px; }
+    .topnav-logo { font-family:var(--font-d); font-size:20px; font-weight:700; color:#0D0D0B; cursor:pointer; flex-shrink:0; display:flex; align-items:center; gap:8px; }
+    .topnav-stats { font-size:12px; color:var(--g500); text-align:right; white-space:nowrap; line-height:1.6; }
+    .topnav-stats-label { font-size:10px; color:var(--g400); text-transform:uppercase; letter-spacing:.06em; }
 
-    /* ── REGION — native select styled ── */
-    .region-wrap{position:relative;flex-shrink:0;}
-    .region-select{
-      font-family:var(--font-b);font-size:13px;font-weight:500;color:var(--g700);
-      background:var(--g100);border:none;border-radius:20px;
-      padding:7px 32px 7px 14px;
-      cursor:pointer;outline:none;
-      -webkit-appearance:none;-moz-appearance:none;appearance:none;
-    }
-    .region-select:focus{background:var(--g200);}
-    .region-caret{
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      font-size:10px;color:var(--g500);pointer-events:none;
-    }
+    /* REGION */
+    .region-wrap { position:relative; flex-shrink:0; display:inline-flex; align-items:center; }
+    .region-sizer { position:absolute; visibility:hidden; pointer-events:none; white-space:nowrap; font-family:var(--font-b); font-size:13px; font-weight:500; padding:7px 30px 7px 14px; }
+    .region-select { font-family:var(--font-b); font-size:13px; font-weight:500; color:var(--g700); background:var(--g100); border:none; border-radius:20px; padding:7px 30px 7px 14px; cursor:pointer; outline:none; -webkit-appearance:none; -moz-appearance:none; appearance:none; width:100%; }
+    .region-select:focus { background:var(--g200); }
+    .region-caret { position:absolute; right:11px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--g500); pointer-events:none; }
 
-    /* ── MAIN ── */
-    .main{flex:1;overflow-y:auto;}
+    .main { flex:1; }
 
-    /* ── BUYER HOME ── */
-    .home-wrap{padding:40px 24px 0;display:flex;flex-direction:column;min-height:calc(100dvh - 57px);}
-    .home-headline{
-      font-family:var(--font-d);font-weight:700;
-      font-size:40px;line-height:1.1;
-      margin-bottom:32px;letter-spacing:-0.2px;
-      animation:fadeUp .45s ease both;max-width:300px;
-    }
-    .home-headline em{font-style:italic;color:#aaaaaa;font-weight:600;}
+    /* HOME */
+    .home-wrap { padding:40px 24px 0; display:flex; flex-direction:column; min-height:calc(100dvh - 57px); }
+    .home-headline { font-family:var(--font-d); font-weight:700; font-size:40px; line-height:1.1; margin-bottom:32px; letter-spacing:-0.2px; animation:fadeUp .45s ease both; max-width:300px; }
+    .home-headline em { font-style:italic; color:#aaaaaa; font-weight:600; }
+    .search-box { position:relative; margin-bottom:6px; animation:fadeUp .45s .07s ease both; }
+    .search-input { width:100%; font-family:var(--font-b); font-size:16px; font-weight:400; color:var(--black); background:var(--g100); border:2px solid transparent; border-radius:var(--r); padding:14px 52px 44px 18px; outline:none; transition:border-color .2s,background .2s; line-height:1.5; resize:none; overflow:hidden; min-height:90px; display:block; }
+    .search-input:focus { border-color:var(--g300); background:var(--white); }
+    .search-input::placeholder { color:var(--g500); }
+    .search-go { position:absolute; right:12px; bottom:12px; width:34px; height:34px; background:var(--black); border:none; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s,transform .15s; }
+    .search-go:hover { background:var(--g700); transform:scale(1.06); }
+    .search-hint { font-size:12px; color:var(--g500); line-height:1.5; padding:0 2px; margin-bottom:28px; animation:fadeUp .45s .1s ease both; }
+    .section-label { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--g500); margin-bottom:12px; }
+    .chip-row { display:flex; flex-wrap:wrap; gap:8px; }
+    .chip { font-family:var(--font-b); font-size:13px; color:var(--g700); background:var(--g100); border:none; border-radius:20px; padding:7px 14px; cursor:pointer; transition:background .15s; }
+    .chip:hover { background:var(--g200); }
+    .home-footer { margin-top:auto; padding:24px 0 28px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--g100); }
+    .text-link { font-size:13px; color:var(--g500); background:none; border:none; border-bottom:1px solid var(--g300); cursor:pointer; font-family:var(--font-b); padding-bottom:1px; transition:color .15s; }
+    .text-link:hover { color:var(--black); }
+    .online-badge { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--g500); }
+    .dot-live { width:7px; height:7px; border-radius:50%; background:var(--green); flex-shrink:0; }
 
-    /* ── SEARCH BOX ── */
-    .search-box{position:relative;margin-bottom:6px;animation:fadeUp .45s .07s ease both;}
-    .search-input{
-      width:100%;font-family:var(--font-b);font-size:16px;font-weight:400;
-      color:var(--black);background:var(--g100);
-      border:2px solid transparent;border-radius:var(--r);
-      padding:14px 52px 44px 18px;outline:none;
-      transition:border-color .2s,background .2s;line-height:1.5;
-      resize:none;overflow:hidden;min-height:90px;display:block;
-    }
-    .search-input:focus{border-color:var(--g300);background:var(--white);}
-    .search-input::placeholder{color:var(--g500);}
-    .search-go{
-      position:absolute;right:12px;bottom:12px;
-      width:34px;height:34px;background:var(--black);
-      border:none;border-radius:50%;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      transition:background .15s,transform .15s;
-    }
-    .search-go:hover{background:var(--g700);transform:scale(1.06);}
-    .search-hint{font-size:12px;color:var(--g500);line-height:1.5;padding:0 2px;margin-bottom:28px;animation:fadeUp .45s .1s ease both;}
+    /* RESULTS */
+    .results-header { padding:14px 20px 12px; border-bottom:1px solid var(--g100); position:sticky; top:57px; background:var(--white); z-index:50; }
+    .back-btn { display:flex; align-items:center; gap:5px; font-size:13px; color:var(--g500); background:none; border:none; cursor:pointer; font-family:var(--font-b); padding:0; margin-bottom:10px; transition:color .15s; }
+    .back-btn:hover { color:var(--black); }
+    .results-title { font-family:var(--font-d); font-weight:600; font-size:22px; line-height:1.2; margin-bottom:10px; }
+    .param-chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .param-chip { font-size:12px; color:var(--g700); background:var(--g100); border:none; border-radius:20px; padding:5px 10px 5px 12px; display:flex; align-items:center; gap:4px; cursor:pointer; font-family:var(--font-b); transition:background .15s; }
+    .param-chip:hover { background:var(--g200); }
+    .chip-x { color:var(--g400); font-size:15px; line-height:1; }
+    .results-meta { padding:9px 20px; font-size:12px; color:var(--g500); border-bottom:1px solid var(--g100); }
+    .no-results { padding:48px 24px; text-align:center; }
+    .no-results-icon { font-size:36px; margin-bottom:14px; }
+    .no-results h3 { font-family:var(--font-d); font-weight:600; font-size:20px; margin-bottom:8px; }
+    .no-results p { font-size:14px; color:var(--g500); line-height:1.6; }
+    .result-item { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:14px 20px; border-bottom:1px solid var(--g100); cursor:pointer; transition:background .12s; }
+    .result-item:hover { background:var(--g50); }
+    .result-left { flex:1; min-width:0; }
+    .result-name { font-size:15px; font-weight:500; line-height:1.3; margin-bottom:3px; }
+    .result-sub { font-size:13px; color:var(--g500); }
+    .result-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+    .result-price { font-size:16px; font-weight:700; font-family:var(--font-b); }
+    .result-price.no-price { font-size:13px; color:var(--g400); font-style:italic; font-weight:400; }
+    .avail { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--g500); }
+    .avail-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .avail-dot.green { background:var(--green); }
+    .avail-dot.grey { background:var(--g300); }
 
-    .section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:12px;}
-    .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
-    .chip{font-family:var(--font-b);font-size:13px;color:var(--g700);background:var(--g100);border:none;border-radius:20px;padding:7px 14px;cursor:pointer;transition:background .15s;}
-    .chip:hover{background:var(--g200);}
-    .home-footer{margin-top:auto;padding:24px 0 28px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--g100);}
-    .text-link{font-size:13px;color:var(--g500);background:none;border:none;border-bottom:1px solid var(--g300);cursor:pointer;font-family:var(--font-b);padding-bottom:1px;transition:color .15s;}
-    .text-link:hover{color:var(--black);}
-    .online-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g500);}
-    .dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+    /* SHEET */
+    body.sheet-open { overflow:hidden; }
+    .sheet-overlay { position:fixed; inset:0; background:rgba(13,13,11,.3); z-index:200; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .sheet-overlay.open { opacity:1; pointer-events:all; }
+    .sheet { position:fixed; bottom:0; left:50%; transform:translateX(-50%) translateY(100%); width:100%; max-width:480px; max-height:88dvh; background:var(--white); border-radius:20px 20px 0 0; z-index:201; transition:transform .36s cubic-bezier(.32,.72,0,1); display:flex; flex-direction:column; overflow:hidden; }
+    .sheet.open { transform:translateX(-50%) translateY(0); }
+    .sheet-toprow { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 6px; flex-shrink:0; }
+    .sheet-cat { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--g500); }
+    .sheet-close { width:28px; height:28px; background:rgba(0,0,0,0.06); border:none; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+    .sheet-close:hover { background:rgba(0,0,0,0.11); }
+    .sheet-body { flex:1; overflow-y:auto; padding:4px 20px 24px; scrollbar-width:none; }
+    .sheet-body::-webkit-scrollbar { display:none; }
+    .sheet-title { font-family:var(--font-d); font-weight:600; font-size:24px; line-height:1.2; margin-bottom:14px; }
+    .field-table { margin-bottom:18px; }
+    .field-row { display:flex; justify-content:space-between; align-items:baseline; padding:10px 0; border-bottom:1px solid var(--g100); }
+    .field-row:first-child { border-top:1px solid var(--g100); }
+    .field-lbl { font-size:12px; color:var(--g500); text-transform:uppercase; letter-spacing:.06em; }
+    .field-val { font-size:14px; text-align:right; font-family:var(--font-b); }
+    .field-val.big { font-family:var(--font-b); font-weight:700; font-size:14px; }
+    .field-val.green { color:var(--green); }
+    .field-val.muted { color:var(--g400); font-style:italic; font-weight:400; }
+    .seller-box { background:var(--g50); border-radius:var(--r); padding:14px 16px; margin-bottom:14px; }
+    .seller-box-name { font-size:15px; font-weight:600; margin-bottom:3px; display:flex; align-items:center; gap:7px; }
+    .seller-box-meta { font-size:12px; color:var(--g500); }
+    .cta-wrap { display:flex; flex-direction:column; gap:10px; }
+    .cta-btn { width:100%; padding:15px; background:var(--black); color:var(--white); border:none; border-radius:var(--r); font-family:var(--font-b); font-size:15px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:background .15s; text-decoration:none; }
+    .cta-btn:hover { background:var(--g700); }
+    .cta-btn.secondary { background:var(--g100); color:var(--black); font-size:14px; padding:13px; font-weight:500; }
+    .cta-btn.secondary:hover { background:var(--g200); }
 
-    /* ── RESULTS ── */
-    .results-header{padding:14px 20px 12px;border-bottom:1px solid var(--g100);position:sticky;top:0;background:var(--white);z-index:50;}
-    .back-btn{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--g500);background:none;border:none;cursor:pointer;font-family:var(--font-b);padding:0;margin-bottom:10px;transition:color .15s;}
-    .back-btn:hover{color:var(--black);}
-    .results-title{font-family:var(--font-d);font-weight:600;font-size:22px;line-height:1.2;margin-bottom:10px;}
-    .param-chips{display:flex;flex-wrap:wrap;gap:6px;}
-    .param-chip{font-size:12px;color:var(--g700);background:var(--g100);border:none;border-radius:20px;padding:5px 10px 5px 12px;display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--font-b);transition:background .15s;}
-    .param-chip:hover{background:var(--g200);}
-    .chip-x{color:var(--g400);font-size:15px;line-height:1;}
-    .results-meta{padding:9px 20px;font-size:12px;color:var(--g500);border-bottom:1px solid var(--g100);}
-    .no-results{padding:48px 24px;text-align:center;}
-    .no-results-icon{font-size:36px;margin-bottom:14px;}
-    .no-results h3{font-family:var(--font-d);font-weight:600;font-size:20px;margin-bottom:8px;}
-    .no-results p{font-size:14px;color:var(--g500);line-height:1.6;}
-    .result-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 20px;border-bottom:1px solid var(--g100);cursor:pointer;transition:background .12s;}
-    .result-item:hover{background:var(--g50);}
-    .result-left{flex:1;min-width:0;}
-    .result-name{font-size:15px;font-weight:500;line-height:1.3;margin-bottom:3px;}
-    .result-sub{font-size:13px;color:var(--g500);}
-    .result-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-    .result-price{font-size:16px;font-weight:600;}
-    .result-price.no-price{font-size:13px;color:var(--g400);font-style:italic;font-weight:400;}
-    .avail{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g500);}
-    .avail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-    .avail-dot.green{background:var(--green);}
-    .avail-dot.grey{background:var(--g300);}
+    /* LOGIN */
+    .login-page { display:flex; flex-direction:column; min-height:calc(100dvh - 57px); padding:40px 24px 40px; }
+    .login-headline { font-family:var(--font-d); font-weight:700; font-size:34px; line-height:1.1; margin-bottom:8px; }
+    .login-sub { font-size:14px; color:var(--g500); line-height:1.5; margin-bottom:36px; }
+    .login-step { animation:fadeUp .3s ease both; }
+    .login-field-label { font-size:12px; font-weight:600; color:var(--g700); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+    .phone-wrap { display:flex; background:var(--g100); border:2px solid transparent; border-radius:var(--r); transition:border-color .2s,background .2s; overflow:hidden; }
+    .phone-wrap:focus-within { border-color:var(--g300); background:var(--white); }
+    .phone-prefix { font-family:var(--font-b); font-size:16px; font-weight:500; color:var(--g700); padding:15px 0 15px 16px; background:transparent; border:none; outline:none; white-space:nowrap; flex-shrink:0; }
+    .phone-input { font-family:var(--font-b); font-size:16px; font-weight:400; color:var(--black); background:transparent; border:none; outline:none; padding:15px 16px 15px 6px; width:100%; letter-spacing:.03em; }
+    .phone-input::placeholder { color:var(--g400); }
+    .login-hint { font-size:12px; color:var(--g500); margin-top:8px; line-height:1.5; }
+    .login-btn { width:100%; margin-top:20px; padding:17px; background:var(--black); color:var(--white); border:none; border-radius:var(--r); font-family:var(--font-b); font-size:15px; font-weight:600; cursor:pointer; transition:background .15s; }
+    .login-btn:hover { background:var(--g700); }
+    .login-btn:disabled { background:var(--g300); cursor:not-allowed; }
+    .otp-boxes { display:flex; gap:10px; margin-bottom:8px; width:100%; }
+    .otp-box { flex:1; min-width:0; height:56px; font-family:var(--font-b); font-weight:600; font-size:22px; text-align:center; background:var(--g100); border:2px solid transparent; border-radius:var(--r); outline:none; color:var(--black); transition:border-color .2s,background .2s; -webkit-text-fill-color:var(--black); caret-color:var(--black); }
+    .otp-box:focus { border-color:var(--g300); background:var(--white); }
+    .error-msg { font-size:13px; color:var(--red); margin-top:10px; line-height:1.4; }
+    .info-note { display:flex; align-items:flex-start; gap:8px; background:var(--amber-bg); border-radius:var(--r-sm); padding:12px 14px; margin-top:16px; font-size:12px; color:var(--amber); line-height:1.5; }
+    /* reCAPTCHA container */
+    #recaptcha-container { margin-top:16px; }
 
-    /* ── BOTTOM SHEET ── */
-    .sheet-overlay{position:fixed;inset:0;background:rgba(13,13,11,.3);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
-    .sheet-overlay.open{opacity:1;pointer-events:all;}
-    .sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;max-height:90dvh;background:var(--white);border-radius:20px 20px 0 0;z-index:201;transition:transform .36s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;overflow:hidden;}
-    .sheet.open{transform:translateX(-50%) translateY(0);}
-    /* Category + close on same row */
-    .sheet-toprow{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0;}
-    .sheet-cat{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);}
-    .sheet-close{width:30px;height:30px;background:rgba(0,0,0,0.06);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
-    .sheet-close:hover{background:rgba(0,0,0,0.11);}
-    .sheet-body{flex:1;overflow-y:auto;padding:10px 20px 40px;scrollbar-width:none;}
-    .sheet-body::-webkit-scrollbar{display:none;}
-    .sheet-title{font-family:var(--font-d);font-weight:600;font-size:26px;line-height:1.2;margin-bottom:22px;}
-    .field-table{margin-bottom:22px;}
-    .field-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--g100);}
-    .field-row:first-child{border-top:1px solid var(--g100);}
-    .field-lbl{font-size:12px;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;}
-    .field-val{font-size:14px;text-align:right;}
-    .field-val.big{font-family:var(--font-d);font-weight:700;font-size:24px;}
-    .field-val.green{color:var(--green);}
-    .seller-box{background:var(--g50);border-radius:var(--r);padding:14px 16px;margin-bottom:18px;}
-    .seller-box-name{font-size:15px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:7px;}
-    .seller-box-meta{font-size:12px;color:var(--g500);}
-    .cta-btn{width:100%;padding:16px;background:var(--black);color:var(--white);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;margin-bottom:10px;text-decoration:none;}
-    .cta-btn:hover{background:var(--g700);}
-    .cta-btn.secondary{background:var(--g100);color:var(--black);font-size:14px;padding:13px;font-weight:500;}
-    .cta-btn.secondary:hover{background:var(--g200);}
+    /* DASHBOARD */
+    .dash-wrap { padding:24px 24px 40px; }
+    .dash-toprow { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .dash-shop-name { font-family:var(--font-d); font-weight:700; font-size:26px; line-height:1.1; display:flex; align-items:center; gap:10px; }
+    .dot-sm { width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; }
+    .icon-btn { width:36px; height:36px; background:var(--g100); border:none; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+    .icon-btn:hover { background:var(--g200); }
+    .dash-update-row { margin-bottom:24px; }
+    .dash-update-label { font-size:11px; color:var(--g400); text-transform:uppercase; letter-spacing:.07em; margin-bottom:2px; }
+    .dash-update-val { font-size:13px; color:var(--g700); font-weight:500; }
+    .stats-row { display:flex; border:1px solid var(--g200); border-radius:var(--r); overflow:hidden; margin-bottom:24px; }
+    .stat { flex:1; text-align:center; padding:16px 8px; border-right:1px solid var(--g200); }
+    .stat:last-child { border-right:none; }
+    .stat-num { font-family:var(--font-b); font-weight:700; font-size:32px; line-height:1; }
+    .stat-lbl { font-size:11px; color:var(--g500); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+    .action-row { display:flex; gap:10px; margin-bottom:28px; }
+    .act-btn { flex:1; padding:14px 16px; border:none; border-radius:var(--r); font-family:var(--font-b); font-size:14px; font-weight:600; cursor:pointer; text-align:left; line-height:1.3; transition:background .15s; }
+    .act-btn sub { display:block; font-size:11px; font-weight:400; opacity:.65; margin-top:2px; }
+    .act-btn.primary { background:var(--black); color:var(--white); }
+    .act-btn.primary:hover { background:var(--g700); }
+    .act-btn.secondary { background:var(--g100); color:var(--black); }
+    .act-btn.secondary:hover { background:var(--g200); }
 
-    /* ── LOGIN ── */
-    .login-page{display:flex;flex-direction:column;min-height:calc(100dvh - 57px);padding:40px 24px 40px;}
-    .login-headline{font-family:var(--font-d);font-weight:700;font-size:34px;line-height:1.1;margin-bottom:8px;}
-    .login-sub{font-size:14px;color:var(--g500);line-height:1.5;margin-bottom:36px;}
-    .login-step{animation:fadeUp .3s ease both;}
-    .login-field-label{font-size:12px;font-weight:600;color:var(--g700);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-    /* Phone input with +994 prefix */
-    .phone-wrap{display:flex;background:var(--g100);border:2px solid transparent;border-radius:var(--r);transition:border-color .2s,background .2s;overflow:hidden;}
-    .phone-wrap:focus-within{border-color:var(--g300);background:var(--white);}
-    .phone-prefix{font-family:var(--font-b);font-size:17px;font-weight:500;color:var(--g700);padding:15px 0 15px 16px;background:transparent;border:none;outline:none;white-space:nowrap;flex-shrink:0;}
-    .phone-input{font-family:var(--font-b);font-size:17px;font-weight:400;color:var(--black);background:transparent;border:none;outline:none;padding:15px 16px 15px 6px;width:100%;letter-spacing:.02em;}
-    .phone-input::placeholder{color:var(--g400);}
-    .login-hint{font-size:12px;color:var(--g500);margin-top:8px;line-height:1.5;}
-    .login-btn{width:100%;margin-top:20px;padding:17px;background:var(--black);color:var(--white);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:15px;font-weight:600;cursor:pointer;transition:background .15s;}
-    .login-btn:hover{background:var(--g700);}
-    .login-btn:disabled{background:var(--g300);cursor:not-allowed;}
-    /* OTP — 4 boxes fitting screen */
-    .otp-boxes{display:flex;gap:10px;margin-bottom:8px;width:100%;}
-    .otp-box{
-      flex:1;min-width:0;height:64px;
-      font-family:var(--font-d);font-weight:700;font-size:28px;
-      text-align:center;line-height:64px;
-      background:var(--g100);border:2px solid transparent;
-      border-radius:var(--r);outline:none;color:var(--black);
-      transition:border-color .2s,background .2s;
-      -webkit-text-fill-color:var(--black);
-      caret-color:var(--black);
-    }
-    .otp-box:focus{border-color:var(--g300);background:var(--white);}
-    .mock-note{display:flex;align-items:flex-start;gap:8px;background:var(--amber-bg);border-radius:var(--r-sm);padding:12px 14px;margin-top:16px;font-size:12px;color:var(--amber);line-height:1.5;}
+    /* TABLE */
+    .inv-table { border:1px solid var(--g200); border-radius:var(--r); overflow:hidden; }
+    .inv-table-head { display:grid; grid-template-columns:1fr 70px 72px; padding:9px 14px; background:var(--g50); border-bottom:1px solid var(--g200); }
+    .th { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--g500); }
+    .th.right { text-align:right; }
+    .inv-table-row { display:grid; grid-template-columns:1fr 70px 72px; padding:13px 14px; border-bottom:1px solid var(--g100); align-items:center; cursor:pointer; transition:background .1s; }
+    .inv-table-row:last-child { border-bottom:none; }
+    .inv-table-row:hover { background:var(--g50); }
+    .td-name { font-size:14px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .td-sub { font-size:12px; color:var(--g500); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .td-price { font-size:14px; text-align:right; font-weight:600; font-family:var(--font-b); }
+    .td-price.na { color:var(--g400); font-style:italic; font-size:12px; font-weight:400; }
+    .td-status { text-align:right; }
+    .badge { display:inline-block; font-size:11px; font-weight:600; border-radius:20px; padding:3px 9px; }
+    .badge-live { background:var(--green-bg); color:var(--green); }
+    .badge-draft { background:var(--g100); color:var(--g500); }
 
-    /* ── DASHBOARD ── */
-    .dash-wrap{padding:24px 24px 40px;}
-    .dash-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-    .dash-shop-name{font-family:var(--font-d);font-weight:700;font-size:26px;line-height:1.1;display:flex;align-items:center;gap:10px;}
-    .dot-sm{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
-    .icon-btn{width:36px;height:36px;background:var(--g100);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
-    .icon-btn:hover{background:var(--g200);}
-    .dash-update-row{margin-bottom:24px;}
-    .dash-update-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;}
-    .dash-update-val{font-size:13px;color:var(--g700);font-weight:500;}
-    .stats-row{display:flex;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;margin-bottom:24px;}
-    .stat{flex:1;text-align:center;padding:16px 8px;border-right:1px solid var(--g200);}
-    .stat:last-child{border-right:none;}
-    .stat-num{font-family:var(--font-d);font-weight:700;font-size:34px;line-height:1;}
-    .stat-lbl{font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;}
-    .action-row{display:flex;gap:10px;margin-bottom:28px;}
-    .act-btn{flex:1;padding:14px 16px;border:none;border-radius:var(--r);font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;text-align:left;line-height:1.3;transition:background .15s;}
-    .act-btn sub{display:block;font-size:11px;font-weight:400;opacity:.65;margin-top:2px;}
-    .act-btn.primary{background:var(--black);color:var(--white);}
-    .act-btn.primary:hover{background:var(--g700);}
-    .act-btn.secondary{background:var(--g100);color:var(--black);}
-    .act-btn.secondary:hover{background:var(--g200);}
+    /* FORM */
+    .form-header { padding:14px 20px; border-bottom:1px solid var(--g100); display:flex; align-items:center; gap:12px; position:sticky; top:57px; background:var(--white); z-index:50; }
+    .form-title { font-family:var(--font-d); font-weight:600; font-size:20px; }
+    .form-body { padding:22px 20px 48px; }
+    .form-section-title { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--g500); margin:22px 0 12px; }
+    .form-section-title:first-child { margin-top:0; }
+    .field-group-form { display:flex; flex-direction:column; gap:12px; }
+    .field-wrap { display:flex; flex-direction:column; gap:5px; }
+    .field-label-form { font-size:12px; font-weight:600; color:var(--g700); text-transform:uppercase; letter-spacing:.05em; }
+    .field-label-form .req { font-weight:400; color:var(--g400); font-style:italic; text-transform:none; letter-spacing:0; font-size:11px; }
+    .form-input,.form-select { font-family:var(--font-b); font-size:16px; color:var(--black); background:var(--g100); border:2px solid transparent; border-radius:var(--r-sm); padding:12px 14px; outline:none; width:100%; transition:border-color .2s,background .2s; font-weight:400; }
+    .form-input:focus,.form-select:focus { border-color:var(--g300); background:var(--white); }
+    .form-input::placeholder { color:var(--g400); }
+    .form-input.error { border-color:var(--red); }
+    .form-select { -webkit-appearance:none; -moz-appearance:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-footer { display:flex; gap:10px; margin-top:24px; }
+    .btn { font-family:var(--font-b); font-size:14px; font-weight:600; padding:14px 18px; border:none; border-radius:var(--r-sm); cursor:pointer; transition:background .15s; }
+    .btn-primary { background:var(--black); color:var(--white); flex:2; }
+    .btn-primary:hover { background:var(--g700); }
+    .btn-secondary { background:var(--g100); color:var(--black); flex:1; }
+    .btn-secondary:hover { background:var(--g200); }
+    .btn-danger { background:var(--red-bg); color:var(--red); flex:1; }
+    .btn-danger:hover { background:#fce5e5; }
 
-    /* ── TABLE ── */
-    .inv-table{border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;}
-    .inv-table-head{display:grid;grid-template-columns:1fr 70px 72px;padding:9px 14px;background:var(--g50);border-bottom:1px solid var(--g200);}
-    .th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g500);}
-    .th.right{text-align:right;}
-    .inv-table-row{display:grid;grid-template-columns:1fr 70px 72px;padding:13px 14px;border-bottom:1px solid var(--g100);align-items:center;cursor:pointer;transition:background .1s;}
-    .inv-table-row:last-child{border-bottom:none;}
-    .inv-table-row:hover{background:var(--g50);}
-    .td-name{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .td-sub{font-size:12px;color:var(--g500);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .td-price{font-size:14px;text-align:right;font-weight:500;}
-    .td-price.na{color:var(--g400);font-style:italic;font-size:12px;font-weight:400;}
-    .td-status{text-align:right;}
-    .badge{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;padding:3px 9px;}
-    .badge-live{background:var(--green-bg);color:var(--green);}
-    .badge-draft{background:var(--g100);color:var(--g500);}
+    /* SETTINGS */
+    .settings-header { padding:14px 20px; border-bottom:1px solid var(--g100); display:flex; align-items:center; gap:12px; position:sticky; top:57px; background:var(--white); z-index:50; }
+    .settings-body { padding:24px 20px 48px; }
+    .settings-section { margin-bottom:28px; }
+    .settings-section-title { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--g500); margin-bottom:14px; }
 
-    /* ── FORM ── */
-    .form-header{padding:14px 20px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--white);z-index:50;}
-    .form-title{font-family:var(--font-d);font-weight:600;font-size:20px;}
-    .form-body{padding:22px 20px 48px;}
-    .form-section-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin:22px 0 12px;}
-    .form-section-title:first-child{margin-top:0;}
-    .field-group-form{display:flex;flex-direction:column;gap:12px;}
-    .field-wrap{display:flex;flex-direction:column;gap:5px;}
-    .field-label-form{font-size:12px;font-weight:600;color:var(--g700);text-transform:uppercase;letter-spacing:.05em;}
-    .field-label-form span{font-weight:400;color:var(--g400);font-style:italic;text-transform:none;letter-spacing:0;}
-    .form-input,.form-select{font-family:var(--font-b);font-size:15px;color:var(--black);background:var(--g100);border:2px solid transparent;border-radius:var(--r-sm);padding:12px 14px;outline:none;width:100%;transition:border-color .2s,background .2s;font-weight:400;}
-    .form-input:focus,.form-select:focus{border-color:var(--g300);background:var(--white);}
-    .form-input::placeholder{color:var(--g400);}
-    /* select arrow fix */
-    .form-select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .form-footer{display:flex;gap:10px;margin-top:24px;}
-    .btn{font-family:var(--font-b);font-size:14px;font-weight:600;padding:14px 18px;border:none;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;}
-    .btn-primary{background:var(--black);color:var(--white);flex:2;}
-    .btn-primary:hover{background:var(--g700);}
-    .btn-secondary{background:var(--g100);color:var(--black);flex:1;}
-    .btn-secondary:hover{background:var(--g200);}
-    .btn-danger{background:var(--red-bg);color:var(--red);flex:1;}
-    .btn-danger:hover{background:#fce5e5;}
+    /* UPLOAD */
+    .upload-body { padding:24px 20px 40px; }
+    .upload-zone { border:2px dashed var(--g200); border-radius:var(--r); padding:36px 24px; text-align:center; cursor:pointer; transition:border-color .2s,background .2s; margin-bottom:18px; position:relative; }
+    .upload-zone:hover,.upload-zone.drag { border-color:var(--g300); background:var(--g50); }
+    .upload-icon { font-size:32px; margin-bottom:10px; }
+    .upload-main { font-family:var(--font-d); font-weight:600; font-size:20px; margin-bottom:6px; }
+    .upload-sub { font-size:13px; color:var(--g500); line-height:1.5; }
+    .upload-input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .file-info { background:var(--g50); border:1px solid var(--g200); border-radius:var(--r); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .analyze-btn { width:100%; padding:16px; background:var(--black); color:var(--white); border:none; border-radius:var(--r); font-family:var(--font-b); font-size:15px; font-weight:600; cursor:pointer; transition:background .15s; margin-bottom:12px; }
+    .analyze-btn:disabled { background:var(--g300); cursor:not-allowed; }
 
-    /* ── SETTINGS ── */
-    .settings-header{padding:14px 20px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--white);z-index:50;}
-    .settings-body{padding:24px 20px 48px;}
-    .settings-section{margin-bottom:28px;}
-    .settings-section-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:14px;}
+    /* REVIEW */
+    .review-header { padding:14px 20px 12px; border-bottom:1px solid var(--g100); position:sticky; top:57px; background:var(--white); z-index:50; }
+    .review-title { font-family:var(--font-d); font-weight:600; font-size:22px; margin-bottom:10px; }
+    .summary-pills { display:flex; gap:8px; flex-wrap:wrap; }
+    .pill { font-size:12px; font-weight:600; border-radius:20px; padding:4px 11px; }
+    .pill-ok { background:var(--green-bg); color:var(--green); }
+    .pill-warn { background:var(--amber-bg); color:var(--amber); }
+    .pill-err { background:var(--red-bg); color:var(--red); }
+    .mapping-section { padding:14px 20px; background:var(--g50); border-bottom:1px solid var(--g100); }
+    .mapping-grid { display:flex; flex-direction:column; gap:8px; }
+    .mapping-row { display:grid; grid-template-columns:1fr 20px 1fr; gap:6px; align-items:center; }
+    .m-orig { background:var(--white); border:1px solid var(--g200); border-radius:6px; padding:5px 9px; font-size:12px; color:var(--g700); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .m-arrow { color:var(--g400); text-align:center; font-size:12px; }
+    .review-tabs { display:flex; padding:0 20px; border-bottom:1px solid var(--g100); }
+    .rtab { font-size:13px; color:var(--g500); padding:11px 0; margin-right:22px; border:none; border-bottom:2px solid transparent; background:none; font-family:var(--font-b); cursor:pointer; }
+    .rtab.active { color:var(--black); border-bottom-color:var(--black); }
+    .review-row { display:grid; grid-template-columns:1fr 64px 16px; gap:10px; padding:11px 20px; border-bottom:1px solid var(--g100); align-items:center; }
+    .review-row.warn { background:#fffbf3; }
+    .review-row.err { background:#fff8f8; }
+    .rr-name { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .rr-issue { font-size:11px; margin-top:1px; }
+    .rr-issue.warn { color:var(--amber); }
+    .rr-issue.err { color:var(--red); }
+    .rr-issue.ok { color:var(--g400); }
+    .rr-price { font-size:13px; text-align:right; }
+    .status-circle { width:8px; height:8px; border-radius:50%; margin-left:auto; }
+    .sc-ok { background:var(--green); }
+    .sc-warn { background:var(--amber); }
+    .sc-err { background:var(--red); }
+    .review-footer { padding:13px 20px; border-top:1px solid var(--g100); display:flex; gap:10px; position:sticky; bottom:0; background:var(--white); }
 
-    /* ── UPLOAD ── */
-    .upload-body{padding:24px 20px 40px;}
-    .upload-zone{border:2px dashed var(--g200);border-radius:var(--r);padding:36px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:18px;position:relative;}
-    .upload-zone:hover{border-color:var(--g300);background:var(--g50);}
-    .upload-zone.drag{border-color:var(--black);background:var(--g50);}
-    .upload-icon{font-size:32px;margin-bottom:10px;}
-    .upload-main{font-family:var(--font-d);font-weight:600;font-size:20px;margin-bottom:6px;}
-    .upload-sub{font-size:13px;color:var(--g500);line-height:1.5;}
-    .upload-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-    .file-info{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-    .file-icon{font-size:22px;}
-    .file-name{font-size:14px;font-weight:500;}
-    .file-meta{font-size:12px;color:var(--g500);}
-    .analyze-btn{width:100%;padding:16px;background:var(--black);color:var(--white);border:none;border-radius:var(--r);font-family:var(--font-b);font-size:15px;font-weight:600;cursor:pointer;transition:background .15s;margin-bottom:12px;}
-    .analyze-btn:hover{background:var(--g700);}
-    .analyze-btn:disabled{background:var(--g300);cursor:not-allowed;}
+    /* LOADING */
+    .full-loading { display:flex; align-items:center; justify-content:center; min-height:calc(100dvh - 57px); flex-direction:column; gap:12px; }
+    .spinner { width:28px; height:28px; border:2px solid var(--g200); border-top-color:var(--black); border-radius:50%; animation:spin .7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* ── REVIEW ── */
-    .review-header{padding:14px 20px 12px;border-bottom:1px solid var(--g100);position:sticky;top:0;background:var(--white);z-index:50;}
-    .review-title{font-family:var(--font-d);font-weight:600;font-size:22px;margin-bottom:10px;}
-    .summary-pills{display:flex;gap:8px;flex-wrap:wrap;}
-    .pill{font-size:12px;font-weight:600;border-radius:20px;padding:4px 11px;}
-    .pill-ok{background:var(--green-bg);color:var(--green);}
-    .pill-warn{background:var(--amber-bg);color:var(--amber);}
-    .pill-err{background:var(--red-bg);color:var(--red);}
-    .mapping-section{padding:14px 20px;background:var(--g50);border-bottom:1px solid var(--g100);}
-    .mapping-grid{display:flex;flex-direction:column;gap:8px;}
-    .mapping-row{display:grid;grid-template-columns:1fr 20px 1fr;gap:6px;align-items:center;font-size:12px;}
-    .m-orig{background:var(--white);border:1px solid var(--g200);border-radius:6px;padding:5px 9px;color:var(--g700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .m-arrow{color:var(--g400);text-align:center;}
-    .review-tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--g100);}
-    .rtab{font-size:13px;color:var(--g500);padding:11px 0;margin-right:22px;border:none;border-bottom:2px solid transparent;background:none;font-family:var(--font-b);cursor:pointer;transition:color .15s;}
-    .rtab.active{color:var(--black);border-bottom-color:var(--black);}
-    .review-row{display:grid;grid-template-columns:1fr 64px 16px;gap:10px;padding:11px 20px;border-bottom:1px solid var(--g100);align-items:center;transition:background .1s;}
-    .review-row:hover{background:var(--g50);}
-    .review-row.warn{background:#fffbf3;}
-    .review-row.err{background:#fff8f8;}
-    .rr-name{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .rr-issue{font-size:11px;margin-top:1px;}
-    .rr-issue.warn{color:var(--amber);}
-    .rr-issue.err{color:var(--red);}
-    .rr-issue.ok{color:var(--g400);}
-    .rr-price{font-size:13px;text-align:right;}
-    .status-circle{width:8px;height:8px;border-radius:50%;margin-left:auto;}
-    .sc-ok{background:var(--green);}
-    .sc-warn{background:var(--amber);}
-    .sc-err{background:var(--red);}
-    .review-footer{padding:13px 20px;border-top:1px solid var(--g100);display:flex;gap:10px;position:sticky;bottom:0;background:var(--white);}
-
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--black);color:var(--white);font-size:14px;padding:12px 20px;border-radius:24px;z-index:999;pointer-events:none;white-space:nowrap;animation:toastIn .3s ease;}
-    @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-    .empty-state{padding:36px 24px;text-align:center;color:var(--g500);}
-    .empty-state p{font-size:14px;line-height:1.6;}
-    .loading-dots::after{content:'...';animation:dots 1.2s infinite;}
-    @keyframes dots{0%,20%{content:'.';}40%,60%{content:'..';}80%,100%{content:'...';}}
-    a{color:inherit;}
-</style>
+    /* TOAST */
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--black); color:var(--white); font-size:14px; padding:12px 20px; border-radius:24px; z-index:999; pointer-events:none; white-space:nowrap; animation:toastIn .3s ease; }
+    @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);} }
+    .empty-state { padding:36px 24px; text-align:center; color:var(--g500); }
+    .empty-state p { font-size:14px; line-height:1.6; }
+    .loading-dots::after { content:'...'; animation:dots 1.2s infinite; }
+    @keyframes dots { 0%,20%{content:'.';}40%,60%{content:'..';}80%,100%{content:'...';} }
+    a { color:inherit; }
+  </style>
 </head>
 <body>
 <div id="root"></div>
+<div id="recaptcha-container"></div>
+
 <script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
 
-const { useState, useEffect, useRef } = React;
+// ── LOGO ──
+const LOGO_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 22H12V2H4V22ZM17 2C14.2386 2 12 4.23858 12 7C12 9.76142 14.2386 12 17 12C19.7614 12 22 9.76142 22 7C22 4.23858 19.7614 2 17 2Z" fill="#0D0D0B"/></svg>';
 
-// ── AZ STRINGS ──
+// ── STRINGS ──
 const AZ = {
   headline1:"Ehtiyat hissələri",
   headline2:"burada tapın.",
@@ -335,31 +326,23 @@ const AZ = {
   phoneLabel:"Telefon nömrəsi",
   sendCode:"Kod göndər",
   codeLabel:"Təsdiq kodu",
-  codeSub:"Nömrənizə göndərilən 4 rəqəmli kodu daxil edin.",
+  codeSub:"Nömrənizə SMS göndərildi. 4 rəqəmli kodu daxil edin.",
   verify:"Daxil ol",
-  mockNote:"Demo rejimi: istənilən nömrə və 1234 kodu ilə daxil olun.",
   resend:"Kodu yenidən göndər",
   neverUploaded:"Hələ yükləmə yoxdur",
   lastUploadLabel:"Son yükləmə",
-  totalListings:"Cəmi",
-  liveListings:"Aktiv",
-  draftListings:"Qaralama",
-  addProduct:"Məhsul əlavə et",
-  addProductSub:"Tək məhsul forması",
-  uploadFile:"Fayl yüklə",
-  uploadFileSub:"CSV, XLS, XLSX",
-  yourListings:"Məhsullarınız",
-  live:"Aktiv",draft:"Qaralama",
-  addProductTitle:"Məhsul əlavə et",
-  editProductTitle:"Məhsulu redaktə et",
-  productSection:"Məhsul",
-  vehicleSection:"Avtomobil uyğunluğu",
-  pricingSection:"Qiymət və mövcudluq",
-  notesSection:"Qeydlər",
-  partName:"Hissə adı",required:"məcburidir",optional:"könüllü",
+  totalListings:"Cəmi",liveListings:"Aktiv",draftListings:"Qaralama",
+  addProduct:"Məhsul əlavə et",addProductSub:"Tək məhsul forması",
+  uploadFile:"Fayl yüklə",uploadFileSub:"CSV, XLS, XLSX",
+  yourListings:"Məhsullarınız",live:"Aktiv",draft:"Qaralama",
+  addProductTitle:"Məhsul əlavə et",editProductTitle:"Məhsulu redaktə et",
+  productSection:"Məhsul",vehicleSection:"Avtomobil uyğunluğu",
+  pricingSection:"Qiymət və mövcudluq",notesSection:"Qeydlər",
+  partName:"Hissə adı",required:"tələb olunur",
   partType:"Hissə növü",condition:"Vəziyyət",brand:"Marka",model:"Model",
-  yearFrom:"İldən",yearTo:"İlə qədər",engine:"Mühərrik",price:"Qiymət",
-  availability:"Mövcudluq",notes:"Qeydlər",notesPlaceholder:"Əlavə məlumat...",
+  yearFrom:"İldən",yearTo:"İlə qədər",engine:"Mühərrik",
+  price:"Qiymət",availability:"Mövcudluq",notes:"Qeydlər",
+  notesPlaceholder:"Əlavə məlumat...",
   saveDraft:"Qaralama saxla",publish:"Dərc et",delete:"Sil",selectType:"— Seçin —",
   uploadTitle:"Fayl yüklə",dropFile:"Faylı buraya atın",
   analyzeBtn:"AI ilə analiz et",analyzing:"Analiz edilir",downloadSample:"Nümunə CSV yüklə",
@@ -380,61 +363,34 @@ const AZ = {
   published:"elan dərc edildi ✓",confirmDelete:"Bu məhsulu silmək istədiyinizə əminsiniz?",
   todayStats:"bu gün:",views:"baxış",contacts:"əlaqə",
   months:["yanvar","fevral","mart","aprel","may","iyun","iyul","avqust","sentyabr","oktyabr","noyabr","dekabr"],
+  errPhone:"Telefon nömrəsini düzgün daxil edin",
+  errCode:"Yanlış kod. Yenidən cəhd edin.",
+  errGeneral:"Xəta baş verdi. Yenidən cəhd edin.",
+  saving:"Saxlanılır...",
 };
 
-const AZ_CITIES = [
-  "Bakı","Gəncə","Sumqayıt","Mingəçevir","Naxçıvan","Lənkəran",
-  "Şirvan","Şəki","Yevlax","Xankəndi","Bərdə","Salyan",
-  "Masallı","Quba","Zaqatala"
-];
+const AZ_CITIES = ["Bakı","Gəncə","Sumqayıt","Mingəçevir","Naxçıvan","Lənkəran","Şirvan","Şəki","Yevlax","Xankəndi","Bərdə","Salyan","Masallı","Quba","Zaqatala"];
 
 function formatDateAZ(date) {
   if (!date) return null;
-  const d = new Date(date);
-  const diffDays = Math.floor((new Date() - d) / 86400000);
-  if (diffDays === 0) return "Bu gün";
-  if (diffDays === 1) return "Dünən";
-  if (diffDays < 7) return `${diffDays} ${AZ.daysAgo}`;
+  const d = new Date(date), diffDays = Math.floor((new Date()-d)/86400000);
+  if (diffDays===0) return "Bu gün";
+  if (diffDays===1) return "Dünən";
+  if (diffDays<7) return `${diffDays} ${AZ.daysAgo}`;
   return `${d.getDate()} ${AZ.months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-// ── DATA ──
 const REGIONS = [
-  {id:"all",  label:"Bütün Azərbaycan", sellerCount:5},
-  {id:"baku", label:"Bakı",             sellerCount:4},
-  {id:"ganja",label:"Gəncə",            sellerCount:0},
-  {id:"nakh", label:"Naxçıvan",         sellerCount:1},
+  {id:"all",  label:"Bütün Azərbaycan"},
+  {id:"baku", label:"Bakı"},
+  {id:"ganja",label:"Gəncə"},
+  {id:"nakh", label:"Naxçıvan"},
 ];
 
-const MOCK_SELLERS = [
-  {id:1,name:"Vera Auto Hissələri",city:"Bakı",region:"baku",phone:"+994 50 123 45 67",whatsapp:"+994501234567",email:"vera@autoparts.az"},
-  {id:2,name:"Sparex Motors",city:"Bakı",region:"baku",phone:"+994 55 234 56 78",whatsapp:"+994552345678",email:null},
-  {id:3,name:"GarageMax",city:"Bakı",region:"baku",phone:"+994 70 345 67 89",whatsapp:null,email:"info@garagemax.az"},
-  {id:4,name:"AvtoDepo",city:"Bakı",region:"baku",phone:"+994 51 456 78 90",whatsapp:"+994514567890",email:null},
-  {id:5,name:"Naxçıvan Auto",city:"Naxçıvan",region:"nakh",phone:"+994 50 567 89 01",whatsapp:"+994505678901",email:"nax@auto.az"},
-];
-
-const MOCK_PRODUCTS = [
-  {id:1,name:"Radiator (Orijinal)",partType:"Radiator",brand:"Peugeot",model:"308",yearFrom:2014,yearTo:2018,engine:"1.6 benzin",condition:"Yeni",price:185,availability:"in_stock",sellerId:1},
-  {id:2,name:"Soyutma radiatoru — işlənmiş",partType:"Radiator",brand:"Peugeot",model:"308",yearFrom:2013,yearTo:2017,engine:null,condition:"İşlənmiş",price:90,availability:"in_stock",sellerId:2},
-  {id:3,name:"Radiator aftermarket",partType:"Radiator",brand:"Peugeot",model:"308",yearFrom:2015,yearTo:2020,engine:"1.6 benzin",condition:"Yeni",price:140,availability:"on_order",sellerId:3},
-  {id:4,name:"Радиатор охлаждения",partType:"Radiator",brand:"Peugeot",model:"308",yearFrom:null,yearTo:null,engine:"1.6",condition:"Yeni",price:null,availability:"in_stock",sellerId:4},
-  {id:5,name:"Radiator + ventilyator dəsti",partType:"Radiator",brand:"Peugeot",model:"308",yearFrom:2016,yearTo:2019,engine:"1.6 benzin",condition:"Yeni",price:210,availability:"in_stock",sellerId:1,notes:"Ventilyator motoru daxildir"},
-  {id:6,name:"Alternator",partType:"Alternator",brand:"Lada",model:"Granta",yearFrom:2018,yearTo:2023,engine:"1.6",condition:"İşlənmiş",price:120,availability:"in_stock",sellerId:2},
-  {id:7,name:"Alternator (yenilənmiş)",partType:"Alternator",brand:"Lada",model:"Granta",yearFrom:2015,yearTo:2022,engine:null,condition:"Yenilənmiş",price:95,availability:"in_stock",sellerId:3},
-  {id:8,name:"Tormoz bəndləri ön",partType:"Tormoz bəndi",brand:"Toyota",model:"Camry",yearFrom:2017,yearTo:2022,engine:null,condition:"Yeni",price:55,availability:"in_stock",sellerId:1},
-  {id:9,name:"Tormoz bəndləri keramik",partType:"Tormoz bəndi",brand:"Toyota",model:"Camry",yearFrom:2018,yearTo:2023,engine:"2.5",condition:"Yeni",price:78,availability:"in_stock",sellerId:4},
-  {id:10,name:"Yağ filteri",partType:"Yağ filteri",brand:"Toyota",model:"Camry",yearFrom:2015,yearTo:2023,engine:null,condition:"Yeni",price:18,availability:"in_stock",sellerId:3},
-  {id:11,name:"Ön amortizator L",partType:"Amortizator",brand:"Hyundai",model:"Accent",yearFrom:2014,yearTo:2019,engine:null,condition:"Yeni",price:68,availability:"in_stock",sellerId:4},
-  {id:12,name:"Vaxt kəməri dəsti",partType:"Vaxt kəməri",brand:"Peugeot",model:"308",yearFrom:2014,yearTo:2018,engine:"1.6 benzin",condition:"Yeni",price:95,availability:"in_stock",sellerId:1,notes:"Gərginləşdirici daxildir"},
-  {id:13,name:"Radiator VAZ 2107",partType:"Radiator",brand:"VAZ",model:"2107",yearFrom:2000,yearTo:2012,engine:null,condition:"İşlənmiş",price:60,availability:"in_stock",sellerId:5},
-];
-const MY_SELLER_ID = 1;
-
-// ── QUERY PARSER ──
-const BRAND_MAP={"peugeot":"Peugeot","pejo":"Peugeot","пежо":"Peugeot","lada":"Lada","лада":"Lada","vaz":"VAZ","toyota":"Toyota","тойота":"Toyota","hyundai":"Hyundai","bmw":"BMW","mercedes":"Mercedes","ford":"Ford","opel":"Opel","volkswagen":"Volkswagen","vw":"Volkswagen","kia":"KIA","honda":"Honda","nissan":"Nissan","chevrolet":"Chevrolet"};
+// ── QUERY PARSER (client-side) ──
+const BRAND_MAP={"peugeot":"Peugeot","pejo":"Peugeot","lada":"Lada","vaz":"VAZ","toyota":"Toyota","hyundai":"Hyundai","bmw":"BMW","mercedes":"Mercedes","ford":"Ford","opel":"Opel","volkswagen":"Volkswagen","vw":"Volkswagen","kia":"KIA","honda":"Honda","nissan":"Nissan","chevrolet":"Chevrolet"};
 const MODEL_MAP={"308":"308","207":"207","206":"206","2008":"2008","granta":"Granta","priora":"Priora","camry":"Camry","corolla":"Corolla","yaris":"Yaris","accent":"Accent","tucson":"Tucson","elantra":"Elantra","golf":"Golf","passat":"Passat","polo":"Polo","focus":"Focus","2107":"2107","2106":"2106"};
-const PART_MAP={"radiator":"Radiator","радиатор":"Radiator","radyator":"Radiator","alternator":"Alternator","generator":"Alternator","генератор":"Alternator","tormoz":"Tormoz bəndi","brake":"Tormoz bəndi","колодки":"Tormoz bəndi","yağ filteri":"Yağ filteri","oil filter":"Yağ filteri","filter":"Yağ filteri","amortizator":"Amortizator","shock":"Amortizator","амортизатор":"Amortizator","vaxt kəməri":"Vaxt kəməri","timing":"Vaxt kəməri","su pompası":"Su pompası","pompa":"Su pompası","starter":"Starter motor"};
+const PART_MAP={"radiator":"Radiator","radyator":"Radiator","alternator":"Alternator","generator":"Alternator","tormoz":"Tormoz bəndi","brake":"Tormoz bəndi","yağ filteri":"Yağ filteri","oil filter":"Yağ filteri","amortizator":"Amortizator","shock":"Amortizator","vaxt kəməri":"Vaxt kəməri","timing":"Vaxt kəməri","su pompası":"Su pompası","pompa":"Su pompası","starter":"Starter motor"};
 
 function parseQuery(raw){
   const q=raw.toLowerCase().trim(),tokens=q.split(/[\s,\-\/]+/);
@@ -446,26 +402,24 @@ function parseQuery(raw){
   const eng=q.match(/\b(\d+\.\d+)\b/);if(eng)p.engine=eng[1];
   return p;
 }
-function matchProducts(products,params,region){
-  if(!params.brand&&!params.model&&!params.partType)return[];
-  return products.filter(p=>{
-    if(region!=="all"){const s=MOCK_SELLERS.find(s=>s.id===p.sellerId);if(!s||s.region!==region)return false;}
-    let score=0;
-    if(params.partType&&p.partType===params.partType)score+=3;
-    if(params.brand&&p.brand===params.brand)score+=2;
-    if(params.model&&p.model===params.model)score+=2;
-    if(params.year&&p.yearFrom&&p.yearTo&&params.year>=p.yearFrom&&params.year<=p.yearTo)score+=1;
-    if(params.engine&&p.engine&&p.engine.includes(params.engine))score+=1;
-    return score>=2;
-  }).sort((a,b)=>{if(a.availability===b.availability)return(a.price||9999)-(b.price||9999);return a.availability==="in_stock"?-1:1;});
+
+// Score a product against parsed query params
+function scoreProduct(p, params) {
+  let score = 0;
+  if(params.partType && p.partType===params.partType) score+=3;
+  if(params.brand && p.brand===params.brand) score+=2;
+  if(params.model && p.model===params.model) score+=2;
+  if(params.year && p.yearFrom && p.yearTo && params.year>=p.yearFrom && params.year<=p.yearTo) score+=1;
+  if(params.engine && p.engine && p.engine.includes(params.engine)) score+=1;
+  return score;
 }
 
-// ── CSV ──
+// CSV helpers
 const COL_MAP={"наименование товара":"partName","наименование":"partName","part name":"partName","name":"partName","hissə adı":"partName","марка":"brand","brand":"brand","marka":"brand","модель":"model","model":"model","год":"year","year":"year","il":"year","цена":"price","цена azn":"price","price":"price","qiymət":"price","engine":"engine","двигатель":"engine","mühərrik":"engine","состояние":"condition","condition":"condition","vəziyyət":"condition","наличие":"availability","availability":"availability","остаток":"availability","mövcudluq":"availability","марка/модель/год":null,"примечания":"notes","notes":"notes","qeydlər":"notes"};
 const CANON_LABELS={partName:"Hissə adı",brand:"Marka",model:"Model",year:"İl",engine:"Mühərrik",price:"Qiymət",condition:"Vəziyyət",availability:"Mövcudluq",notes:"Qeydlər"};
 function inferCols(headers){return headers.map(h=>{const low=h.toLowerCase().trim(),inf=COL_MAP[low];return{original:h,inferred:inf!==undefined?(inf===null?"ignore":inf):"ignore",confidence:inf===null?"warn":inf!==undefined?"ok":"warn"};});}
 function normalizeRows(rows,mappings){
-  return rows.slice(0,25).map((row,i)=>{
+  return rows.slice(0,100).map((row,i)=>{
     const obj={};mappings.forEach(m=>{if(m.inferred&&m.inferred!=="ignore")obj[m.inferred]=row[m.original]||null;});
     let status="ok",issue="Bütün sahələr xəritələndi";
     if(Object.values(obj).every(v=>!v)){status="err";issue="Boş sətir";}
@@ -492,111 +446,116 @@ const Icon=({name,size=16,color="currentColor",strokeWidth=1.8})=>{
 };
 
 function Toast({message,onDone}){
-  useEffect(()=>{const t=setTimeout(onDone,2600);return()=>clearTimeout(t);},[]);
+  useEffect(()=>{const t=setTimeout(onDone,2800);return()=>clearTimeout(t);},[]);
   return <div className="toast">{message}</div>;
 }
 
-// ── REGION SELECT (native) ──
-function RegionSelector({region,onChange}){
+function Spinner() { return <div className="full-loading"><div className="spinner"/></div>; }
+
+// ── REGION SELECTOR ──
+function RegionSelector({region,onChange,sellerCounts}){
+  const cur=REGIONS.find(r=>r.id===region)||REGIONS[0];
+  const count=sellerCounts[cur.id]||0;
+  const label=cur.label+(count>0?` · ${count} satıcı`:cur.id==="all"?"":" · tezliklə");
   return(
     <div className="region-wrap">
+      <span className="region-sizer" aria-hidden="true">{label}</span>
       <select className="region-select" value={region} onChange={e=>onChange(e.target.value)}>
-        {REGIONS.map(r=>(
-          <option key={r.id} value={r.id}>
-            {r.label}{r.sellerCount>0?` · ${r.sellerCount} satıcı`:` · tezliklə`}
-          </option>
-        ))}
+        {REGIONS.map(r=>{
+          const c=sellerCounts[r.id]||0;
+          return <option key={r.id} value={r.id}>{r.label}{c>0?` · ${c} satıcı`:r.id==="all"?"":" · tezliklə"}</option>;
+        })}
       </select>
       <span className="region-caret">▾</span>
     </div>
   );
 }
 
-// ── PHONE INPUT with +994 mask ──
-function PhoneInput({value, onChange}) {
-  // value is the 9-digit part after +994
-  const format = (digits) => {
-    // XX XXX XX XX — up to 9 digits
-    const d = digits.replace(/\D/g,"").slice(0,9);
-    let out = "";
-    if(d.length>0) out += d.slice(0,2);
-    if(d.length>2) out += " " + d.slice(2,5);
-    if(d.length>5) out += " " + d.slice(5,7);
-    if(d.length>7) out += " " + d.slice(7,9);
-    return out;
-  };
-  const handleChange = (e) => {
-    const raw = e.target.value.replace(/\D/g,"").slice(0,9);
-    onChange(raw);
-  };
+// ── PHONE INPUT ──
+function PhoneInput({value,onChange,autoFocus}){
+  const fmt=d=>{const s=d.slice(0,9);let o="";if(s.length>0)o+=s.slice(0,2);if(s.length>2)o+=" "+s.slice(2,5);if(s.length>5)o+=" "+s.slice(5,7);if(s.length>7)o+=" "+s.slice(7,9);return o;};
   return(
     <div className="phone-wrap">
       <span className="phone-prefix">+994</span>
-      <input
-        className="phone-input"
-        type="tel"
-        placeholder="50 000 00 00"
-        value={format(value)}
-        onChange={handleChange}
-        autoFocus
-      />
+      <input className="phone-input" type="tel" placeholder="50 000 00 00" autoFocus={autoFocus}
+        value={fmt(value)} onChange={e=>onChange(e.target.value.replace(/\D/g,"").slice(0,9))}/>
     </div>
   );
 }
 
-// ── AUTO-EXPAND TEXTAREA SEARCH ──
-function SearchTextarea({value, onChange, onSubmit, placeholder}) {
-  const ref = useRef();
-  useEffect(()=>{
-    const el=ref.current;if(!el)return;
-    el.style.height="auto";
-    el.style.height=Math.max(90,el.scrollHeight)+"px";
-  },[value]);
+// ── SEARCH TEXTAREA ──
+function SearchTextarea({value,onChange,onSubmit,placeholder}){
+  const ref=useRef();
+  useEffect(()=>{const el=ref.current;if(!el)return;el.style.height="auto";el.style.height=Math.max(90,el.scrollHeight)+"px";},[value]);
   return(
     <div className="search-box">
       <textarea ref={ref} className="search-input" placeholder={placeholder} value={value} rows={2}
         onChange={e=>onChange(e.target.value)}
-        onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSubmit();}}}
-      />
-      <button className="search-go" onClick={onSubmit}>
-        <Icon name="arrowRight" size={14} color="white" strokeWidth={2.5}/>
-      </button>
+        onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSubmit();}}}/>
+      <button className="search-go" onClick={onSubmit}><Icon name="arrowRight" size={14} color="white" strokeWidth={2.5}/></button>
     </div>
   );
 }
 
 // ── BUYER HOME ──
-function BuyerHome({onSearch,onSellerLogin,sellerCount}){
+function BuyerHome({onSearch,onSellerLogin,sellerCounts,region,onRegion}){
   const [q,setQ]=useState("");
-  const presets=["Radiator Peugeot 308 2016","Alternator Lada Granta 2019","Tormoz bəndi Toyota Camry"];
-  const submit=()=>{if(q.trim())onSearch(q.trim());};
+  const presets=["Radiator Peugeot 308 2016","Tormoz bəndi Toyota Camry","Yağ filteri Hyundai Accent"];
+  const totalOnline=Object.values(sellerCounts).reduce((a,b)=>Math.max(a,b),0);
   return(
     <div className="home-wrap">
-      <div className="home-headline">
-        {AZ.headline1}<br/><em>{AZ.headline2}</em>
-      </div>
-      <SearchTextarea value={q} onChange={setQ} onSubmit={submit} placeholder={AZ.searchPlaceholder}/>
+      <div className="home-headline">{AZ.headline1}<br/><em>{AZ.headline2}</em></div>
+      <SearchTextarea value={q} onChange={setQ} onSubmit={()=>{if(q.trim())onSearch(q.trim());}} placeholder={AZ.searchPlaceholder}/>
       <div className="search-hint">{AZ.searchHint}</div>
       <div className="section-label">{AZ.tryThese}</div>
       <div className="chip-row">{presets.map(p=><button key={p} className="chip" onClick={()=>onSearch(p)}>{p}</button>)}</div>
       <div className="home-footer">
         <button className="text-link" onClick={onSellerLogin}>{AZ.sellerLogin} →</button>
-        <div className="online-badge"><div className="dot-live"/><span>{sellerCount} {AZ.sellersOnline}</span></div>
+        <div className="online-badge"><div className="dot-live"/><span>{sellerCounts["all"]||0} {AZ.sellersOnline}</span></div>
       </div>
     </div>
   );
 }
 
 // ── RESULTS ──
-function ResultsPage({query,products,region,onBack,onProduct}){
+function ResultsPage({query,region,onBack,onProduct,onContact}){
   const [params,setParams]=useState(()=>parseQuery(query));
-  const results=matchProducts(products,params,region);
-  const sellerMap=Object.fromEntries(MOCK_SELLERS.map(s=>[s.id,s]));
+  const [allProducts,setAllProducts]=useState([]);
+  const [sellers,setSellers]=useState({});
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    // Load active products from Firestore
+    let q2=db.collection("products").where("status","==","live");
+    if(region!=="all") q2=q2.where("region","==",region);
+    return q2.onSnapshot(snap=>{
+      const prods=snap.docs.map(d=>({id:d.id,...d.data()}));
+      setAllProducts(prods);
+      // Load seller info for these products
+      const sellerIds=[...new Set(prods.map(p=>p.sellerId).filter(Boolean))];
+      sellerIds.forEach(sid=>{
+        db.collection("sellers").doc(sid).get().then(d=>{
+          if(d.exists) setSellers(s=>({...s,[sid]:{id:sid,...d.data()}}));
+        });
+      });
+      setLoading(false);
+    },()=>setLoading(false));
+  },[region]);
+
+  const results = allProducts
+    .map(p=>({...p,_score:scoreProduct(p,params)}))
+    .filter(p=>p._score>=2)
+    .sort((a,b)=>{
+      if(a.availability!==b.availability) return a.availability==="in_stock"?-1:1;
+      return (a.price||9999)-(b.price||9999);
+    });
+
   const removeParam=k=>setParams(p=>({...p,[k]:null}));
   const pLabels={brand:AZ.paramBrand,model:AZ.paramModel,year:AZ.paramYear,engine:AZ.paramEngine,partType:AZ.paramPart};
   const active=Object.entries(params).filter(([,v])=>v!==null);
+
   return(
-    <div style={{display:"flex",flexDirection:"column",minHeight:"calc(100dvh - 57px)"}}>
+    <div>
       <div className="results-header">
         <button className="back-btn" onClick={onBack}><Icon name="arrowLeft" size={14} strokeWidth={2}/> {AZ.back}</button>
         <div className="results-title">{params.partType||"Hissələr"}{params.brand?` · ${params.brand}`:""}{params.model?` ${params.model}`:""}</div>
@@ -608,36 +567,48 @@ function ResultsPage({query,products,region,onBack,onProduct}){
           ))}
         </div>
       </div>
-      <div className="results-meta">{results.length===0?"Nəticə tapılmadı":`${results.length} ${AZ.listingsFound}`}</div>
-      {results.length===0?(
-        <div className="no-results"><div className="no-results-icon">🔍</div><h3>{AZ.noResults}</h3><p>{AZ.noResultsSub}</p></div>
-      ):results.map(p=>{
-        const s=sellerMap[p.sellerId]||{};
-        return(
-          <div key={p.id} className="result-item" onClick={()=>onProduct(p)}>
-            <div className="result-left">
-              <div className="result-name">{p.name}</div>
-              <div className="result-sub">{s.name} · {s.city}</div>
+      {loading?<Spinner/>:<>
+        <div className="results-meta">{results.length===0?"Nəticə tapılmadı":`${results.length} ${AZ.listingsFound}`}</div>
+        {results.length===0?(
+          <div className="no-results"><div className="no-results-icon">🔍</div><h3>{AZ.noResults}</h3><p>{AZ.noResultsSub}</p></div>
+        ):results.map(p=>{
+          const s=sellers[p.sellerId]||{};
+          return(
+            <div key={p.id} className="result-item" onClick={()=>onProduct(p,s)}>
+              <div className="result-left">
+                <div className="result-name">{p.name}</div>
+                <div className="result-sub">{s.shopName||"—"} · {s.city||""}</div>
+              </div>
+              <div className="result-right">
+                {p.price?<div className="result-price">₼ {p.price}</div>:<div className="result-price no-price">{AZ.callForPrice}</div>}
+                <div className="avail"><div className={`avail-dot ${p.availability==="in_stock"?"green":"grey"}`}/>{p.availability==="in_stock"?AZ.inStock:AZ.onOrder}</div>
+              </div>
             </div>
-            <div className="result-right">
-              {p.price?<div className="result-price">₼ {p.price}</div>:<div className="result-price no-price">{AZ.callForPrice}</div>}
-              <div className="avail"><div className={`avail-dot ${p.availability==="in_stock"?"green":"grey"}`}/>{p.availability==="in_stock"?AZ.inStock:AZ.onOrder}</div>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </>}
     </div>
   );
 }
 
-// ── PRODUCT SHEET ── category + close on same row
-function ProductSheet({product,seller,onClose}){
+// ── PRODUCT SHEET ──
+function ProductSheet({product,seller,onClose,onContact}){
   const [open,setOpen]=useState(false);
-  useEffect(()=>{setTimeout(()=>setOpen(true),10);},[]);
+  useEffect(()=>{setTimeout(()=>setOpen(true),10);return()=>document.body.classList.remove("sheet-open");},[]);
+  useEffect(()=>{open?document.body.classList.add("sheet-open"):document.body.classList.remove("sheet-open");},[open]);
   const close=()=>{setOpen(false);setTimeout(onClose,360);};
   const s=seller||{};
+
+  const trackContact=(type)=>{
+    if(!product?.sellerId) return;
+    const today=new Date().toISOString().slice(0,10);
+    const ref=db.collection("sellers").doc(product.sellerId).collection("events").doc(today);
+    ref.set({[type]:firebase.firestore.FieldValue.increment(1)},{merge:true});
+    if(onContact) onContact();
+  };
+
   const fields=[
-    product.price!=null&&{label:"Qiymət",value:`₼ ${product.price}`,cls:"big"},
+    {label:"Qiymət",value:product.price!=null?`₼ ${product.price}`:AZ.callForPrice,cls:product.price!=null?"big":"muted"},
     {label:"Vəziyyət",value:product.condition||"—"},
     product.brand&&{label:"Marka",value:product.brand},
     product.model&&{label:"Model",value:product.model},
@@ -646,15 +617,14 @@ function ProductSheet({product,seller,onClose}){
     {label:"Mövcudluq",value:product.availability==="in_stock"?AZ.inStock:AZ.onOrder,cls:product.availability==="in_stock"?"green":""},
     product.notes&&{label:"Qeydlər",value:product.notes},
   ].filter(Boolean);
+
   return(
     <>
       <div className={`sheet-overlay ${open?"open":""}`} onClick={close}/>
       <div className={`sheet ${open?"open":""}`}>
         <div className="sheet-toprow">
           <span className="sheet-cat">{product.partType||""}</span>
-          <button className="sheet-close" onClick={close} aria-label="Bağla">
-            <Icon name="x" size={13} color="var(--g700)" strokeWidth={2.5}/>
-          </button>
+          <button className="sheet-close" onClick={close}><Icon name="x" size={13} color="var(--g700)" strokeWidth={2.5}/></button>
         </div>
         <div className="sheet-body">
           <div className="sheet-title">{product.name}</div>
@@ -666,30 +636,111 @@ function ProductSheet({product,seller,onClose}){
               </div>
             ))}
           </div>
-          {s.name&&(<div className="seller-box"><div className="seller-box-name"><div className="dot-live"/>{s.name}</div><div className="seller-box-meta">{s.city} · 2 {AZ.daysAgo} {AZ.updated}</div></div>)}
-          {s.whatsapp&&<a href={`https://wa.me/${s.whatsapp.replace(/\D/g,"")}`} style={{textDecoration:"none"}}><button className="cta-btn"><Icon name="whatsapp" size={17} color="white"/>WhatsApp</button></a>}
-          {s.phone&&<a href={`tel:${s.phone}`} style={{textDecoration:"none"}}><button className="cta-btn secondary"><Icon name="phone" size={15} strokeWidth={2}/>{s.phone}</button></a>}
-          {s.email&&!s.whatsapp&&<a href={`mailto:${s.email}`} style={{textDecoration:"none"}}><button className="cta-btn secondary"><Icon name="mail" size={15}/>{s.email}</button></a>}
+          {s.shopName&&(
+            <div className="seller-box">
+              <div className="seller-box-name"><div className="dot-live"/>{s.shopName}</div>
+              <div className="seller-box-meta">{s.city}</div>
+            </div>
+          )}
+          <div className="cta-wrap">
+            {s.whatsapp&&(
+              <a href={`https://wa.me/${s.whatsapp.replace(/\D/g,"")}`} style={{textDecoration:"none"}} onClick={()=>trackContact("contacts")}>
+                <button className="cta-btn"><Icon name="whatsapp" size={17} color="white"/>WhatsApp</button>
+              </a>
+            )}
+            {s.phone&&(
+              <a href={`tel:${s.phone}`} style={{textDecoration:"none"}} onClick={()=>trackContact("contacts")}>
+                <button className="cta-btn secondary"><Icon name="phone" size={15} strokeWidth={2}/>{s.phone}</button>
+              </a>
+            )}
+            {s.email&&!s.whatsapp&&(
+              <a href={`mailto:${s.email}`} style={{textDecoration:"none"}} onClick={()=>trackContact("contacts")}>
+                <button className="cta-btn secondary"><Icon name="mail" size={15}/>{s.email}</button>
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </>
   );
 }
 
-// ── LOGIN ──
+// ── LOGIN — real Firebase Phone Auth ──
 function LoginPage({onLogin,onBack}){
   const [step,setStep]=useState("phone");
-  const [phone,setPhone]=useState(""); // raw 9 digits
+  const [phone,setPhone]=useState("");
   const [otp,setOtp]=useState(["","","",""]);
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState("");
+  const [confirmResult,setConfirmResult]=useState(null);
   const refs=[useRef(),useRef(),useRef(),useRef()];
-  const sendCode=()=>{if(phone.length<9)return;setStep("otp");setTimeout(()=>refs[0].current?.focus(),120);};
+
+  // Set up invisible reCAPTCHA once
+  const recaptchaRef=useRef(null);
+  useEffect(()=>{
+    if(!recaptchaRef.current){
+      recaptchaRef.current=new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
+    }
+    return()=>{
+      try{recaptchaRef.current?.clear();}catch(e){}
+      recaptchaRef.current=null;
+    };
+  },[]);
+
+  const sendCode=async()=>{
+    if(phone.length<9){setError(AZ.errPhone);return;}
+    setError("");setLoading(true);
+    try{
+      const fullPhone="+994"+phone;
+      const result=await auth.signInWithPhoneNumber(fullPhone,recaptchaRef.current);
+      setConfirmResult(result);
+      setStep("otp");
+      setTimeout(()=>refs[0].current?.focus(),120);
+    }catch(e){
+      console.error(e);
+      setError(AZ.errGeneral);
+      // Reset recaptcha on error
+      try{recaptchaRef.current?.clear();}catch(e2){}
+      recaptchaRef.current=new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
+    }finally{setLoading(false);}
+  };
+
   const handleOtp=(i,val)=>{
     if(!/^\d?$/.test(val))return;
     const n=[...otp];n[i]=val;setOtp(n);
     if(val&&i<3)refs[i+1].current?.focus();
-    if(n.every(d=>d)&&val)setTimeout(()=>onLogin({phone:"+994"+phone,shopName:"Mənim Mağazam",city:"Bakı",email:"",whatsapp:"",lastUpload:null}),200);
+    if(n.every(d=>d)&&val) verifyCode(n.join(""));
   };
   const handleKey=(i,e)=>{if(e.key==="Backspace"&&!otp[i]&&i>0)refs[i-1].current?.focus();};
+
+  const verifyCode=async(code)=>{
+    if(!confirmResult)return;
+    setError("");setLoading(true);
+    try{
+      const result=await confirmResult.confirm(code);
+      const uid=result.user.uid;
+      const phone_num=result.user.phoneNumber;
+      // Check if seller profile exists
+      const sellerDoc=await db.collection("sellers").doc(uid).get();
+      if(sellerDoc.exists){
+        onLogin({uid,phone:phone_num,...sellerDoc.data()},false);
+      }else{
+        // New seller — create minimal profile, go to settings
+        await db.collection("sellers").doc(uid).set({
+          phone:phone_num,shopName:"",city:"Bakı",whatsapp:"",email:"",
+          createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+          lastUpload:null,
+        });
+        onLogin({uid,phone:phone_num,shopName:"",city:"Bakı",whatsapp:"",email:"",lastUpload:null},true);
+      }
+    }catch(e){
+      console.error(e);
+      setError(AZ.errCode);
+      setOtp(["","","",""]);
+      setTimeout(()=>refs[0].current?.focus(),100);
+    }finally{setLoading(false);}
+  };
+
   return(
     <div className="login-page">
       <div style={{marginBottom:32}}><button className="back-btn" onClick={onBack}><Icon name="arrowLeft" size={14} strokeWidth={2}/> {AZ.back}</button></div>
@@ -698,9 +749,11 @@ function LoginPage({onLogin,onBack}){
       {step==="phone"&&(
         <div className="login-step">
           <div className="login-field-label">{AZ.phoneLabel}</div>
-          <PhoneInput value={phone} onChange={setPhone}/>
-          <button className="login-btn" onClick={sendCode} disabled={phone.length<9}>{AZ.sendCode}</button>
-          <div className="mock-note">ℹ️ {AZ.mockNote}</div>
+          <PhoneInput value={phone} onChange={setPhone} autoFocus/>
+          {error&&<div className="error-msg">{error}</div>}
+          <button className="login-btn" onClick={sendCode} disabled={phone.length<9||loading}>
+            {loading?<span className="loading-dots">Göndərilir</span>:AZ.sendCode}
+          </button>
         </div>
       )}
       {step==="otp"&&(
@@ -709,18 +762,15 @@ function LoginPage({onLogin,onBack}){
           <div className="otp-boxes">
             {otp.map((d,i)=>(
               <input key={i} ref={refs[i]} className="otp-box" type="tel" inputMode="numeric"
-                maxLength={1} value={d}
-                onChange={e=>handleOtp(i,e.target.value)}
-                onKeyDown={e=>handleKey(i,e)}
-              />
+                maxLength={1} value={d} onChange={e=>handleOtp(i,e.target.value)} onKeyDown={e=>handleKey(i,e)}/>
             ))}
           </div>
           <div className="login-hint">{AZ.codeSub}</div>
-          <button className="login-btn"
-            onClick={()=>onLogin({phone:"+994"+phone,shopName:"Mənim Mağazam",city:"Bakı",email:"",whatsapp:"",lastUpload:null})}
-            disabled={otp.some(d=>!d)}>{AZ.verify}</button>
-          <div style={{textAlign:"center",marginTop:16}}><button className="text-link" onClick={()=>{setStep("phone");setOtp(["","","",""])}}>{AZ.resend}</button></div>
-          <div className="mock-note">ℹ️ {AZ.mockNote}</div>
+          {error&&<div className="error-msg">{error}</div>}
+          {loading&&<div style={{textAlign:"center",marginTop:12,fontSize:13,color:"var(--g500)"}}>Yoxlanılır...</div>}
+          <div style={{textAlign:"center",marginTop:16}}>
+            <button className="text-link" onClick={()=>{setStep("phone");setOtp(["","","",""]);setError("");}}>{AZ.resend}</button>
+          </div>
         </div>
       )}
     </div>
@@ -730,7 +780,16 @@ function LoginPage({onLogin,onBack}){
 // ── SETTINGS ──
 function SettingsPage({seller,onSave,onLogout,onBack}){
   const [form,setForm]=useState({shopName:seller?.shopName||"",city:seller?.city||"Bakı",phone:seller?.phone||"",whatsapp:seller?.whatsapp||"",email:seller?.email||""});
+  const [saving,setSaving]=useState(false);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const handleSave=async()=>{
+    setSaving(true);
+    try{
+      await db.collection("sellers").doc(seller.uid).update({...form,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+      onSave(form);
+    }catch(e){console.error(e);}
+    finally{setSaving(false);}
+  };
   return(
     <div>
       <div className="settings-header"><button className="icon-btn" onClick={onBack}><Icon name="arrowLeft" size={16} strokeWidth={2}/></button><div className="form-title">{AZ.settingsTitle}</div></div>
@@ -739,19 +798,14 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
           <div className="settings-section-title">{AZ.shopInfo}</div>
           <div className="field-group-form">
             <div className="field-wrap"><div className="field-label-form">{AZ.shopName}</div><input className="form-input" placeholder="Vera Auto Hissələri" value={form.shopName} onChange={e=>set("shopName",e.target.value)}/></div>
-            <div className="field-wrap">
-              <div className="field-label-form">{AZ.city}</div>
-              <select className="form-select" value={form.city} onChange={e=>set("city",e.target.value)}>
-                {AZ_CITIES.map(c=><option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
+            <div className="field-wrap"><div className="field-label-form">{AZ.city}</div><select className="form-select" value={form.city} onChange={e=>set("city",e.target.value)}>{AZ_CITIES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
             <div className="field-wrap"><div className="field-label-form">{AZ.phone}</div><input className="form-input" type="tel" placeholder="+994 50 000 00 00" value={form.phone} onChange={e=>set("phone",e.target.value)}/></div>
-            <div className="field-wrap"><div className="field-label-form">{AZ.whatsappNum} <span>{AZ.optional}</span></div><input className="form-input" type="tel" placeholder="+994 50 000 00 00" value={form.whatsapp} onChange={e=>set("whatsapp",e.target.value)}/></div>
-            <div className="field-wrap"><div className="field-label-form">{AZ.emailAddr} <span>{AZ.optional}</span></div><input className="form-input" type="email" placeholder="mağaza@example.az" value={form.email} onChange={e=>set("email",e.target.value)}/></div>
+            <div className="field-wrap"><div className="field-label-form">{AZ.whatsappNum}</div><input className="form-input" type="tel" placeholder="+994 50 000 00 00" value={form.whatsapp} onChange={e=>set("whatsapp",e.target.value)}/></div>
+            <div className="field-wrap"><div className="field-label-form">{AZ.emailAddr}</div><input className="form-input" type="email" placeholder="mağaza@example.az" value={form.email} onChange={e=>set("email",e.target.value)}/></div>
           </div>
         </div>
         <div style={{display:"flex",gap:10}}>
-          <button className="btn btn-primary" style={{flex:2}} onClick={()=>onSave(form)}>{AZ.saveSettings}</button>
+          <button className="btn btn-primary" style={{flex:2}} onClick={handleSave} disabled={saving}>{saving?AZ.saving:AZ.saveSettings}</button>
           <button className="btn btn-danger" style={{flex:1}} onClick={onLogout}><span style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><Icon name="logout" size={14} color="var(--red)" strokeWidth={2}/>{AZ.logout}</span></button>
         </div>
       </div>
@@ -760,18 +814,31 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
 }
 
 // ── DASHBOARD ──
-function Dashboard({products,seller,stats,onAdd,onEdit,onUpload,onSettings}){
-  const mine=products.filter(p=>p.sellerId===MY_SELLER_ID);
-  const live=mine.filter(p=>p._status!=="draft").length;
-  const draft=mine.filter(p=>p._status==="draft").length;
-  const lastUploadStr=seller?.lastUpload?formatDateAZ(seller.lastUpload):AZ.neverUploaded;
+function Dashboard({seller,onAdd,onEdit,onUpload,onSettings}){
+  const [products,setProducts]=useState([]);
+  const [todayStats,setTodayStats]=useState({views:0,contacts:0});
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    if(!seller?.uid) return;
+    // Real-time products listener
+    const unsub=db.collection("products").where("sellerId","==",seller.uid)
+      .onSnapshot(snap=>{setProducts(snap.docs.map(d=>({id:d.id,...d.data()})));setLoading(false);},()=>setLoading(false));
+    // Load today's stats
+    const today=new Date().toISOString().slice(0,10);
+    db.collection("sellers").doc(seller.uid).collection("events").doc(today).get()
+      .then(d=>{if(d.exists)setTodayStats({views:d.data().views||0,contacts:d.data().contacts||0});});
+    return unsub;
+  },[seller?.uid]);
+
+  const live=products.filter(p=>p.status==="live").length;
+  const draft=products.filter(p=>p.status==="draft").length;
+  const lastUploadStr=seller?.lastUpload?formatDateAZ(seller.lastUpload.toDate?seller.lastUpload.toDate():seller.lastUpload):AZ.neverUploaded;
+
   return(
     <div className="dash-wrap">
       <div className="dash-toprow">
-        <div className="dash-shop-name">
-          <div className="dot-sm"/>
-          {seller?.shopName||"Mağazam"}
-        </div>
+        <div className="dash-shop-name"><div className="dot-sm"/>{seller?.shopName||"Mağazam"}</div>
         <button className="icon-btn" onClick={onSettings}><Icon name="settings" size={15} strokeWidth={1.8}/></button>
       </div>
       <div className="dash-update-row">
@@ -779,7 +846,7 @@ function Dashboard({products,seller,stats,onAdd,onEdit,onUpload,onSettings}){
         <div className="dash-update-val">{lastUploadStr}</div>
       </div>
       <div className="stats-row">
-        <div className="stat"><div className="stat-num">{mine.length}</div><div className="stat-lbl">{AZ.totalListings}</div></div>
+        <div className="stat"><div className="stat-num">{products.length}</div><div className="stat-lbl">{AZ.totalListings}</div></div>
         <div className="stat"><div className="stat-num">{live}</div><div className="stat-lbl">{AZ.liveListings}</div></div>
         <div className="stat"><div className="stat-num">{draft}</div><div className="stat-lbl">{AZ.draftListings}</div></div>
       </div>
@@ -788,57 +855,106 @@ function Dashboard({products,seller,stats,onAdd,onEdit,onUpload,onSettings}){
         <button className="act-btn secondary" onClick={onUpload}>{AZ.uploadFile}<sub>{AZ.uploadFileSub}</sub></button>
       </div>
       <div className="section-label" style={{marginBottom:12}}>{AZ.yourListings}</div>
-      <div className="inv-table">
-        <div className="inv-table-head"><div className="th">{AZ.partName}</div><div className="th right">{AZ.price}</div><div className="th right">Status</div></div>
-        {mine.length===0?(<div className="empty-state"><p>Hələ məhsul yoxdur.<br/>Yuxarıda əlavə edin.</p></div>):mine.map(p=>(
-          <div key={p.id} className="inv-table-row" onClick={()=>onEdit(p)}>
-            <div><div className="td-name">{p.name}</div><div className="td-sub">{[p.brand,p.model,p.yearFrom].filter(Boolean).join(" · ")||"Məlumat yoxdur"}</div></div>
-            <div className={`td-price ${!p.price?"na":""}`}>{p.price?`₼ ${p.price}`:"—"}</div>
-            <div className="td-status"><span className={`badge ${p._status==="draft"?"badge-draft":"badge-live"}`}>{p._status==="draft"?AZ.draft:AZ.live}</span></div>
-          </div>
-        ))}
-      </div>
+      {loading?<Spinner/>:(
+        <div className="inv-table">
+          <div className="inv-table-head"><div className="th">{AZ.partName}</div><div className="th right">{AZ.price}</div><div className="th right">Status</div></div>
+          {products.length===0?(<div className="empty-state"><p>Hələ məhsul yoxdur.<br/>Yuxarıda əlavə edin.</p></div>):products.map(p=>(
+            <div key={p.id} className="inv-table-row" onClick={()=>onEdit(p)}>
+              <div><div className="td-name">{p.name}</div><div className="td-sub">{[p.brand,p.model,p.yearFrom].filter(Boolean).join(" · ")||"Məlumat yoxdur"}</div></div>
+              <div className={`td-price ${!p.price?"na":""}`}>{p.price?`₼ ${p.price}`:"—"}</div>
+              <div className="td-status"><span className={`badge ${p.status==="draft"?"badge-draft":"badge-live"}`}>{p.status==="draft"?AZ.draft:AZ.live}</span></div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 // ── PRODUCT FORM ──
-function ProductForm({product,onSave,onDelete,onBack}){
+function ProductForm({product,seller,onBack,onSaved,onDeleted}){
   const isEdit=!!product?.id;
-  const [form,setForm]=useState({name:product?.name||"",partType:product?.partType||"",brand:product?.brand||"",model:product?.model||"",yearFrom:product?.yearFrom||"",yearTo:product?.yearTo||"",engine:product?.engine||"",condition:product?.condition||AZ.condNew,price:product?.price||"",availability:product?.availability||"in_stock",notes:product?.notes||""});
+  const [form,setForm]=useState({
+    name:product?.name||"",partType:product?.partType||"",brand:product?.brand||"",
+    model:product?.model||"",yearFrom:product?.yearFrom||"",yearTo:product?.yearTo||"",
+    engine:product?.engine||"",condition:product?.condition||AZ.condNew,
+    price:product?.price||"",availability:product?.availability||"in_stock",notes:product?.notes||""
+  });
   const [errors,setErrors]=useState({});
+  const [saving,setSaving]=useState(false);
+  const nameRef=useRef();
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
-  const handleSave=(asDraft=false)=>{
-    if(!form.name.trim()){setErrors({name:true});return;}
-    onSave({...form,price:form.price?Number(form.price):null,yearFrom:form.yearFrom?Number(form.yearFrom):null,yearTo:form.yearTo?Number(form.yearTo):null,_status:asDraft?"draft":"live"});
+
+  const handleSave=async(asDraft=false)=>{
+    if(!form.name.trim()){setErrors({name:true});nameRef.current?.scrollIntoView({behavior:"smooth",block:"center"});nameRef.current?.focus();return;}
+    setErrors({});setSaving(true);
+    const data={
+      ...form,
+      price:form.price?Number(form.price):null,
+      yearFrom:form.yearFrom?Number(form.yearFrom):null,
+      yearTo:form.yearTo?Number(form.yearTo):null,
+      status:asDraft?"draft":"live",
+      sellerId:seller.uid,
+      region:seller.city==="Bakı"?"baku":seller.city==="Naxçıvan"?"nakh":seller.city==="Gəncə"?"ganja":"other",
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    try{
+      if(isEdit){await db.collection("products").doc(product.id).update(data);}
+      else{data.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("products").add(data);}
+      onSaved(asDraft);
+    }catch(e){console.error(e);}
+    finally{setSaving(false);}
   };
+
+  const handleDelete=async()=>{
+    if(!window.confirm(AZ.confirmDelete))return;
+    try{await db.collection("products").doc(product.id).delete();onDeleted();}
+    catch(e){console.error(e);}
+  };
+
   return(
     <div>
       <div className="form-header"><button className="icon-btn" onClick={onBack}><Icon name="arrowLeft" size={16} strokeWidth={2}/></button><div className="form-title">{isEdit?AZ.editProductTitle:AZ.addProductTitle}</div></div>
       <div className="form-body">
         <div className="form-section-title">{AZ.productSection}</div>
         <div className="field-group-form">
-          <div className="field-wrap"><div className="field-label-form">{AZ.partName} <span>*{AZ.required}</span></div><input className="form-input" placeholder="məs. Soyutma radiatoru" value={form.name} onChange={e=>set("name",e.target.value)} style={errors.name?{borderColor:"var(--red)"}:{}}/></div>
+          <div className="field-wrap" ref={nameRef}>
+            <div className="field-label-form">{AZ.partName} <span className="req">— {AZ.required}</span></div>
+            <input className={`form-input${errors.name?" error":""}`} placeholder="məs. Soyutma radiatoru"
+              value={form.name} onChange={e=>{set("name",e.target.value);if(errors.name)setErrors({});}}/>
+          </div>
           <div className="field-wrap"><div className="field-label-form">{AZ.partType}</div><select className="form-select" value={form.partType} onChange={e=>set("partType",e.target.value)}><option value="">{AZ.selectType}</option>{AZ.partTypes.map(t=><option key={t} value={t}>{t}</option>)}</select></div>
           <div className="field-wrap"><div className="field-label-form">{AZ.condition}</div><select className="form-select" value={form.condition} onChange={e=>set("condition",e.target.value)}><option value={AZ.condNew}>{AZ.condNew}</option><option value={AZ.condUsed}>{AZ.condUsed}</option><option value={AZ.condRefurb}>{AZ.condRefurb}</option></select></div>
         </div>
         <div className="form-section-title">{AZ.vehicleSection}</div>
         <div className="field-group-form">
-          <div className="form-row"><div className="field-wrap"><div className="field-label-form">{AZ.brand}</div><input className="form-input" placeholder="Peugeot" value={form.brand} onChange={e=>set("brand",e.target.value)}/></div><div className="field-wrap"><div className="field-label-form">{AZ.model}</div><input className="form-input" placeholder="308" value={form.model} onChange={e=>set("model",e.target.value)}/></div></div>
-          <div className="form-row"><div className="field-wrap"><div className="field-label-form">{AZ.yearFrom}</div><input className="form-input" type="number" placeholder="2014" value={form.yearFrom} onChange={e=>set("yearFrom",e.target.value)}/></div><div className="field-wrap"><div className="field-label-form">{AZ.yearTo}</div><input className="form-input" type="number" placeholder="2018" value={form.yearTo} onChange={e=>set("yearTo",e.target.value)}/></div></div>
-          <div className="field-wrap"><div className="field-label-form">{AZ.engine} <span>{AZ.optional}</span></div><input className="form-input" placeholder="1.6 benzin" value={form.engine} onChange={e=>set("engine",e.target.value)}/></div>
+          <div className="form-row">
+            <div className="field-wrap"><div className="field-label-form">{AZ.brand}</div><input className="form-input" placeholder="Peugeot" value={form.brand} onChange={e=>set("brand",e.target.value)}/></div>
+            <div className="field-wrap"><div className="field-label-form">{AZ.model}</div><input className="form-input" placeholder="308" value={form.model} onChange={e=>set("model",e.target.value)}/></div>
+          </div>
+          <div className="form-row">
+            <div className="field-wrap"><div className="field-label-form">{AZ.yearFrom}</div><input className="form-input" type="number" placeholder="2014" value={form.yearFrom} onChange={e=>set("yearFrom",e.target.value)}/></div>
+            <div className="field-wrap"><div className="field-label-form">{AZ.yearTo}</div><input className="form-input" type="number" placeholder="2018" value={form.yearTo} onChange={e=>set("yearTo",e.target.value)}/></div>
+          </div>
+          <div className="field-wrap"><div className="field-label-form">{AZ.engine}</div><input className="form-input" placeholder="1.6 benzin" value={form.engine} onChange={e=>set("engine",e.target.value)}/></div>
         </div>
         <div className="form-section-title">{AZ.pricingSection}</div>
         <div className="field-group-form">
-          <div className="field-wrap"><div className="field-label-form">{AZ.price} <span>{AZ.optional}</span></div><div style={{position:"relative"}}><span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:15,color:"var(--g500)"}}>₼</span><input className="form-input" type="number" placeholder="185" value={form.price} onChange={e=>set("price",e.target.value)} style={{paddingLeft:30}}/></div></div>
+          <div className="field-wrap">
+            <div className="field-label-form">{AZ.price}</div>
+            <div style={{position:"relative"}}>
+              <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:15,color:"var(--g500)"}}>₼</span>
+              <input className="form-input" type="number" placeholder="185" value={form.price} onChange={e=>set("price",e.target.value)} style={{paddingLeft:30}}/>
+            </div>
+          </div>
           <div className="field-wrap"><div className="field-label-form">{AZ.availability}</div><select className="form-select" value={form.availability} onChange={e=>set("availability",e.target.value)}><option value="in_stock">{AZ.inStockOpt}</option><option value="on_order">{AZ.onOrderOpt}</option></select></div>
         </div>
-        <div className="form-section-title" style={{marginTop:22}}>{AZ.notesSection} <span style={{fontWeight:400,fontSize:11,color:"var(--g400)",textTransform:"none",letterSpacing:0}}>{AZ.optional}</span></div>
+        <div className="form-section-title" style={{marginTop:22}}>{AZ.notesSection}</div>
         <textarea className="form-input" rows={3} placeholder={AZ.notesPlaceholder} value={form.notes} onChange={e=>set("notes",e.target.value)} style={{resize:"vertical"}}/>
         <div className="form-footer">
-          {isEdit&&<button className="btn btn-danger" onClick={()=>onDelete(product.id)}>{AZ.delete}</button>}
-          <button className="btn btn-secondary" onClick={()=>handleSave(true)}>{AZ.saveDraft}</button>
-          <button className="btn btn-primary" onClick={()=>handleSave(false)}>{AZ.publish}</button>
+          {isEdit&&<button className="btn btn-danger" onClick={handleDelete}>{AZ.delete}</button>}
+          <button className="btn btn-secondary" onClick={()=>handleSave(true)} disabled={saving}>{AZ.saveDraft}</button>
+          <button className="btn btn-primary" onClick={()=>handleSave(false)} disabled={saving}>{saving?AZ.saving:AZ.publish}</button>
         </div>
       </div>
     </div>
@@ -846,22 +962,16 @@ function ProductForm({product,onSave,onDelete,onBack}){
 }
 
 // ── UPLOAD ──
-function UploadScreen({onBack,onReview}){
+function UploadScreen({seller,onBack,onReview}){
   const [file,setFile]=useState(null);
   const [drag,setDrag]=useState(false);
   const [parsing,setParsing]=useState(false);
   const handleFile=f=>{if(!f)return;if(!["csv","xls","xlsx"].includes(f.name.split(".").pop().toLowerCase())){alert("Zəhmət olmasa CSV, XLS və ya XLSX fayl yükləyin.");return;}setFile(f);};
   const analyze=()=>{
     setParsing(true);
-    if(file.name.split(".").pop().toLowerCase()==="csv"){
-      Papa.parse(file,{header:true,skipEmptyLines:true,complete:r=>{setTimeout(()=>{const m=inferCols(r.meta.fields||[]);const rws=normalizeRows(r.data,m);setParsing(false);onReview({mappings:m,rows:rws,fileName:file.name});},1200);}});
-    }else{
-      setTimeout(()=>{
-        const mH=["Наименование товара","Марка/Модель/год","Цена AZN","Остаток","Примечания"];
-        const mR=[{"Наименование товара":"Radiator Peugeot 308","Марка/Модель/год":"Peugeot 308 2016","Цена AZN":"185","Остаток":"var","Примечания":""},{"Наименование товара":"Alternator Lada Granta","Марка/Модель/год":"Lada Granta 2019","Цена AZN":"120","Остаток":"var","Примечания":"işlənmiş"},{"Наименование товара":"Тормозные колодки","Марка/Модель/год":"","Цена AZN":"55","Остаток":"var","Примечания":""},{"Наименование товара":"","Марка/Модель/год":"","Цена AZN":"","Остаток":"","Примечания":""},{"Наименование товара":"Oil filter Toyota","Марка/Модель/год":"Toyota 2020","Цена AZN":"18","Остаток":"yoxdur","Примечания":""}];
-        const m=inferCols(mH);const rws=normalizeRows(mR,m);setParsing(false);onReview({mappings:m,rows:rws,fileName:file.name});
-      },1400);
-    }
+    Papa.parse(file,{header:true,skipEmptyLines:true,complete:r=>{
+      setTimeout(()=>{const m=inferCols(r.meta.fields||[]);const rws=normalizeRows(r.data,m);setParsing(false);onReview({mappings:m,rows:rws,fileName:file.name});},800);
+    },error:()=>{setParsing(false);alert("Fayl oxunarkən xəta baş verdi.");}});
   };
   return(
     <div>
@@ -871,28 +981,52 @@ function UploadScreen({onBack,onReview}){
           <input type="file" accept=".csv,.xls,.xlsx" className="upload-input" onChange={e=>handleFile(e.target.files[0])}/>
           <div className="upload-icon">📁</div>
           <div className="upload-main">{AZ.dropFile}</div>
-          <div className="upload-sub">CSV, XLS və ya XLSX · İstənilən sütun adları<br/>AI strukturu avtomatik müəyyən edəcək</div>
+          <div className="upload-sub">CSV, XLS və ya XLSX · İstənilən sütun adları</div>
         </div>
-        {file&&(<div className="file-info"><div className="file-icon">📄</div><div><div className="file-name">{file.name}</div><div className="file-meta">{(file.size/1024).toFixed(1)} KB · Analiz üçün hazırdır</div></div></div>)}
+        {file&&(<div className="file-info"><div style={{fontSize:22}}>📄</div><div><div style={{fontSize:14,fontWeight:500}}>{file.name}</div><div style={{fontSize:12,color:"var(--g500)"}}>{(file.size/1024).toFixed(1)} KB</div></div></div>)}
         <button className="analyze-btn" disabled={!file||parsing} onClick={analyze}>{parsing?<span className="loading-dots">{AZ.analyzing}</span>:AZ.analyzeBtn}</button>
-        <div style={{fontSize:12,color:"var(--g500)",lineHeight:1.6,textAlign:"center"}}>Fayl formatlaşdırılması tələb olunmur. Sistem sütunları avtomatik müəyyən edir.<br/>Dərc etməzdən əvvəl siz yoxlayıb təsdiq edirsiniz.</div>
-        <div style={{marginTop:20,textAlign:"center"}}><button className="text-link" onClick={()=>{const csv="Hissə adı,Marka,Model,İl,Qiymət,Vəziyyət,Mövcudluq\nRadiator OEM,Peugeot,308,2016,185,Yeni,var\nAlternator işlənmiş,Lada,Granta,,120,İşlənmiş,var\nTormoz bəndi,,,,55,Yeni,sifarişlə\nYağ filteri,Toyota,Camry,2020,18,Yeni,var";const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="numune_qiymet_siyahisi.csv";a.click();}}>{AZ.downloadSample}</button></div>
+        <div style={{textAlign:"center"}}><button className="text-link" onClick={()=>{const csv="Hissə adı,Marka,Model,İl,Qiymət,Vəziyyət,Mövcudluq\nRadiator OEM,Peugeot,308,2016,185,Yeni,var\nAlternator,Lada,Granta,,120,İşlənmiş,var";const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="numune.csv";a.click();}}>{AZ.downloadSample}</button></div>
       </div>
     </div>
   );
 }
 
 // ── REVIEW ──
-function ReviewScreen({data,onBack,onPublish}){
+function ReviewScreen({data,seller,onBack,onPublish}){
   const [tab,setTab]=useState("all");
   const [mappings,setMappings]=useState(data.mappings);
+  const [publishing,setPublishing]=useState(false);
   const rows=data.rows;
   const ok=rows.filter(r=>r._status==="ok"),warn=rows.filter(r=>r._status==="warn"),err=rows.filter(r=>r._status==="err");
   const display=tab==="all"?rows:tab==="warn"?warn:err;
   const opts=["partName","brand","model","year","engine","price","condition","availability","notes","ignore"];
   const upd=(i,val)=>setMappings(m=>m.map((item,idx)=>idx===i?{...item,inferred:val,confidence:"ok"}:item));
+
+  const handlePublish=async()=>{
+    setPublishing(true);
+    const region=seller.city==="Bakı"?"baku":seller.city==="Naxçıvan"?"nakh":seller.city==="Gəncə"?"ganja":"other";
+    const batch=db.batch();
+    const readyRows=[...ok,...warn].filter(r=>r._status!=="err");
+    readyRows.forEach(row=>{
+      const ref=db.collection("products").doc();
+      batch.set(ref,{
+        name:row.partName||"",brand:row.brand||"",model:row.model||"",
+        price:row.price?Number(row.price):null,condition:row.condition||AZ.condNew,
+        availability:row.availability||"in_stock",notes:row.notes||"",
+        partType:"",engine:"",yearFrom:null,yearTo:null,
+        status:"live",sellerId:seller.uid,region,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    });
+    await batch.commit();
+    await db.collection("sellers").doc(seller.uid).update({lastUpload:firebase.firestore.FieldValue.serverTimestamp()});
+    setPublishing(false);
+    onPublish(readyRows.length);
+  };
+
   return(
-    <div style={{display:"flex",flexDirection:"column",minHeight:"calc(100dvh - 57px)"}}>
+    <div>
       <div className="review-header">
         <button className="back-btn" onClick={onBack}><Icon name="arrowLeft" size={14} strokeWidth={2}/> {AZ.back}</button>
         <div className="review-title">{AZ.reviewTitle}</div>
@@ -921,7 +1055,7 @@ function ReviewScreen({data,onBack,onPublish}){
         {warn.length>0&&<button className={`rtab ${tab==="warn"?"active":""}`} onClick={()=>setTab("warn")}>{AZ.uncertainRows} ({warn.length})</button>}
         {err.length>0&&<button className={`rtab ${tab==="err"?"active":""}`} onClick={()=>setTab("err")}>{AZ.failedRows} ({err.length})</button>}
       </div>
-      <div style={{flex:1,overflowY:"auto"}}>
+      <div>
         {display.map((row,i)=>(
           <div key={i} className={`review-row ${row._status!=="ok"?row._status:""}`}>
             <div><div className="rr-name">{row.partName||<em style={{color:"var(--g400)"}}>Ad yoxdur</em>}</div><div className={`rr-issue ${row._status}`}>{row._issue}</div></div>
@@ -932,7 +1066,9 @@ function ReviewScreen({data,onBack,onPublish}){
       </div>
       <div className="review-footer">
         <button className="btn btn-secondary" style={{flex:1}} onClick={onBack}>{AZ.saveDrafts}</button>
-        <button className="btn btn-primary" style={{flex:2}} onClick={()=>onPublish(ok.length)}>{ok.length} {AZ.publishRows} →</button>
+        <button className="btn btn-primary" style={{flex:2}} onClick={handlePublish} disabled={publishing}>
+          {publishing?<span className="loading-dots">Dərc edilir</span>:`${ok.length+warn.length} ${AZ.publishRows} →`}
+        </button>
       </div>
     </div>
   );
@@ -940,75 +1076,101 @@ function ReviewScreen({data,onBack,onPublish}){
 
 // ── ROOT APP ──
 function App(){
+  const [authLoading,setAuthLoading]=useState(true);
   const [region,setRegion]=useState("baku");
   const [mode,setMode]=useState("buyer");
   const [screen,setScreen]=useState("home");
   const [query,setQuery]=useState("");
   const [selectedProduct,setSP]=useState(null);
+  const [selectedSeller,setSeller]=useState(null);
   const [editingProduct,setEP]=useState(null);
   const [uploadData,setUD]=useState(null);
-  const [loggedIn,setLoggedIn]=useState(false);
-  const [sellerInfo,setSI]=useState({
-    shopName:"Vera Auto Hissələri",city:"Bakı",
-    phone:"+994 50 123 45 67",whatsapp:"+994501234567",email:"vera@autoparts.az",
-    lastUpload:new Date(Date.now()-2*86400000).toISOString()
-  });
-  // Mock today's stats — would come from backend
-  const [todayStats] = useState({views:47, contacts:8});
-  const [products,setProducts]=useState(MOCK_PRODUCTS.map(p=>({...p,_status:"live"})));
+  const [currentUser,setCurrentUser]=useState(null); // Firebase auth user
+  const [sellerInfo,setSellerInfo]=useState(null);   // Firestore seller profile
+  const [sellerCounts,setSellerCounts]=useState({all:0,baku:0,ganja:0,nakh:0});
   const [toast,setToast]=useState(null);
   const showToast=msg=>setToast(msg);
-  const onlineCount=REGIONS.find(r=>r.id===region)?.sellerCount||0;
+
+  // Auth state listener
+  useEffect(()=>{
+    return auth.onAuthStateChanged(async user=>{
+      if(user){
+        setCurrentUser(user);
+        const doc=await db.collection("sellers").doc(user.uid).get();
+        if(doc.exists){setSellerInfo({uid:user.uid,...doc.data()});setMode("seller");}
+      }else{
+        setCurrentUser(null);setSellerInfo(null);
+      }
+      setAuthLoading(false);
+    });
+  },[]);
+
+  // Live seller counts
+  useEffect(()=>{
+    return db.collection("sellers").onSnapshot(snap=>{
+      const counts={all:snap.size,baku:0,ganja:0,nakh:0,other:0};
+      snap.docs.forEach(d=>{const r=d.data().region||"other";if(counts[r]!==undefined)counts[r]++;});
+      // baku sellers also count toward "all" already
+      setSellerCounts(counts);
+    });
+  },[]);
+
   const goHome=()=>{setMode("buyer");setScreen("home");setSP(null);};
-  const handleLogin=info=>{setSI(s=>({...s,...info}));setLoggedIn(true);setScreen("settings");setMode("seller");};
-  const handleLogout=()=>{setLoggedIn(false);setMode("buyer");setScreen("home");showToast("Çıxış edildi");};
-  const handleSaveSettings=form=>{setSI(s=>({...s,...form}));setScreen("dashboard");showToast(AZ.settingsSaved);};
-  const handleSaveProduct=form=>{
-    if(editingProduct?.id){setProducts(ps=>ps.map(p=>p.id===editingProduct.id?{...p,...form}:p));showToast(form._status==="draft"?AZ.draftSaved:AZ.productUpdated);}
-    else{setProducts(ps=>[...ps,{...form,id:Date.now(),sellerId:MY_SELLER_ID}]);showToast(form._status==="draft"?AZ.draftSaved:AZ.productAdded);}
-    setScreen("dashboard");setEP(null);
-  };
-  const handleDelete=id=>{if(!window.confirm(AZ.confirmDelete))return;setProducts(ps=>ps.filter(p=>p.id!==id));setScreen("dashboard");setEP(null);showToast(AZ.productDeleted);};
-  const handlePublish=count=>{
-    setSI(s=>({...s,lastUpload:new Date().toISOString()}));
-    showToast(`${count} ${AZ.published}`);setScreen("dashboard");setUD(null);
+
+  const handleLogin=(info, isNew)=>{
+    setSellerInfo(info);setCurrentUser({uid:info.uid});
+    setMode("seller");setScreen(isNew?"settings":"dashboard");
   };
 
-  const renderBuyer=()=>{
-    if(screen==="results")return <ResultsPage query={query} products={products} region={region} onBack={()=>setScreen("home")} onProduct={setSP}/>;
-    if(screen==="login")return <LoginPage onLogin={handleLogin} onBack={()=>setScreen("home")}/>;
-    return <BuyerHome onSearch={q=>{setQuery(q);setScreen("results");}} onSellerLogin={()=>setScreen("login")} sellerCount={onlineCount}/>;
+  const handleLogout=async()=>{
+    await auth.signOut();
+    setCurrentUser(null);setSellerInfo(null);
+    setMode("buyer");setScreen("home");
+    showToast("Çıxış edildi");
   };
+
+  const handleSaveSettings=async(form)=>{
+    const updated={...sellerInfo,...form};setSellerInfo(updated);
+    setScreen("dashboard");showToast(AZ.settingsSaved);
+  };
+
+  if(authLoading) return <div className="app"><div className="topnav"><div className="topnav-logo" dangerouslySetInnerHTML={{__html:LOGO_SVG+'Partal'}}/></div><Spinner/></div>;
+
+  const renderBuyer=()=>{
+    if(screen==="results")return <ResultsPage query={query} region={region} onBack={()=>setScreen("home")} onProduct={(p,s)=>{setSP(p);setSeller(s);}} onContact={()=>{}}/>;
+    if(screen==="login")return <LoginPage onLogin={handleLogin} onBack={()=>setScreen("home")}/>;
+    return <BuyerHome onSearch={q=>{setQuery(q);setScreen("results");}} onSellerLogin={()=>setScreen("login")} sellerCounts={sellerCounts} region={region} onRegion={setRegion}/>;
+  };
+
   const renderSeller=()=>{
-    if(!loggedIn)return <LoginPage onLogin={handleLogin} onBack={goHome}/>;
-    if(screen==="form")return <ProductForm product={editingProduct} onSave={handleSaveProduct} onDelete={handleDelete} onBack={()=>{setScreen("dashboard");setEP(null);}}/>;
-    if(screen==="upload")return <UploadScreen onBack={()=>setScreen("dashboard")} onReview={d=>{setUD(d);setScreen("review");}}/>;
-    if(screen==="review"&&uploadData)return <ReviewScreen data={uploadData} onBack={()=>setScreen("upload")} onPublish={handlePublish}/>;
-    if(screen==="settings")return <SettingsPage seller={sellerInfo} onSave={handleSaveSettings} onLogout={handleLogout} onBack={()=>setScreen("dashboard")}/>;
-    return <Dashboard products={products} seller={sellerInfo} stats={todayStats} onAdd={()=>{setEP(null);setScreen("form");}} onEdit={p=>{setEP(p);setScreen("form");}} onUpload={()=>setScreen("upload")} onSettings={()=>setScreen("settings")}/>;
+    if(!currentUser)return <LoginPage onLogin={handleLogin} onBack={goHome}/>;
+    if(screen==="form")return <ProductForm product={editingProduct} seller={sellerInfo} onBack={()=>{setScreen("dashboard");setEP(null);}} onSaved={(isDraft)=>{setScreen("dashboard");setEP(null);showToast(isDraft?AZ.draftSaved:editingProduct?.id?AZ.productUpdated:AZ.productAdded);}} onDeleted={()=>{setScreen("dashboard");setEP(null);showToast(AZ.productDeleted);}}/>;
+    if(screen==="upload")return <UploadScreen seller={sellerInfo} onBack={()=>setScreen("dashboard")} onReview={d=>{setUD(d);setScreen("review");}}/>;
+    if(screen==="review"&&uploadData)return <ReviewScreen data={uploadData} seller={sellerInfo} onBack={()=>setScreen("upload")} onPublish={count=>{showToast(`${count} ${AZ.published}`);setScreen("dashboard");setUD(null);}}/>;
+    if(screen==="settings")return <SettingsPage seller={sellerInfo} onSave={handleSaveSettings} onLogout={handleLogout} onBack={()=>setScreen(sellerInfo?.shopName?"dashboard":"settings")}/>;
+    return <Dashboard seller={sellerInfo} onAdd={()=>{setEP(null);setScreen("form");}} onEdit={p=>{setEP(p);setScreen("form");}} onUpload={()=>setScreen("upload")} onSettings={()=>setScreen("settings")}/>;
   };
 
   return(
     <div className="app">
       <nav className="topnav">
-        <div className="topnav-logo" onClick={goHome}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 22H12V2H4V22ZM17 2C14.2386 2 12 4.23858 12 7C12 9.76142 14.2386 12 17 12C19.7614 12 22 9.76142 22 7C22 4.23858 19.7614 2 17 2Z" fill="#0D0D0B"/></svg>Partal</div>
-        {mode==="buyer" && <RegionSelector region={region} onChange={setRegion}/>}
-        {mode==="seller" && loggedIn && (
+        <div className="topnav-logo" onClick={goHome} dangerouslySetInnerHTML={{__html:LOGO_SVG+'Partal'}}/>
+        {mode==="buyer"&&<RegionSelector region={region} onChange={setRegion} sellerCounts={sellerCounts}/>}
+        {mode==="seller"&&currentUser&&sellerInfo&&(
           <div className="topnav-stats">
             <div className="topnav-stats-label">{AZ.todayStats}</div>
-            <div>{todayStats.views} {AZ.views} · {todayStats.contacts} {AZ.contacts}</div>
+            <div id="header-stats">— {AZ.views} · — {AZ.contacts}</div>
           </div>
         )}
       </nav>
       <main className="main">{mode==="buyer"?renderBuyer():renderSeller()}</main>
-      {selectedProduct&&<ProductSheet product={selectedProduct} seller={MOCK_SELLERS.find(s=>s.id===selectedProduct.sellerId)} onClose={()=>setSP(null)}/>}
+      {selectedProduct&&<ProductSheet product={selectedProduct} seller={selectedSeller} onClose={()=>{setSP(null);setSeller(null);}} onContact={()=>{}}/>}
       {toast&&<Toast message={toast} onDone={()=>setToast(null)}/>}
     </div>
   );
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-
 </script>
 </body>
 </html>
