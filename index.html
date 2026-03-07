@@ -397,30 +397,113 @@ function cityToRegion(city) {
   return "other";
 }
 
+
+// ── CAR DATABASE (Azerbaijan market) ──
+const CAR_DB = {
+  "Toyota":     ["Camry","Corolla","Land Cruiser","Land Cruiser Prado","RAV4","Yaris","Hilux","Fortuner","Auris","Avensis","Venza","Highlander","Sequoia","4Runner"],
+  "Hyundai":    ["Accent","Elantra","Sonata","Tucson","Santa Fe","Creta","i30","i20","Grandeur","Genesis","Getz","Terracan"],
+  "Kia":        ["Rio","Cerato","Sportage","Sorento","Optima","Picanto","Stinger","Carnival","Mohave","Cadenza"],
+  "Lada/VAZ":   ["2101","2102","2103","2104","2105","2106","2107","2108","2109","21099","2110","2111","2112","2114","2115","Granta","Priora","Kalina","Niva","4x4"],
+  "Peugeot":    ["206","207","208","301","306","307","308","405","406","407","2008","3008","4008","5008","Partner","Expert"],
+  "Volkswagen": ["Golf","Polo","Passat","Tiguan","Touareg","Jetta","Caddy","Transporter","Amarok","Sharan","Touran"],
+  "BMW":        ["3 Seriya","5 Seriya","7 Seriya","X1","X3","X5","X6","X7","1 Seriya","2 Seriya","4 Seriya","6 Seriya","M3","M5"],
+  "Mercedes":   ["C Klass","E Klass","S Klass","GLC","GLE","GLS","A Klass","B Klass","Sprinter","Vito","ML","GL","CLA","CLS"],
+  "Audi":       ["A3","A4","A5","A6","A7","A8","Q3","Q5","Q7","Q8","TT","80","100"],
+  "Nissan":     ["Sunny","Almera","Altima","Maxima","Qashqai","X-Trail","Patrol","Pathfinder","Murano","Tiida","Micra","Note","Juke","Navara"],
+  "Mitsubishi": ["Lancer","Galant","Outlander","Pajero","Eclipse","L200","ASX","Grandis","Space Star","Colt"],
+  "Honda":      ["Civic","Accord","CR-V","HR-V","Fit","Jazz","Pilot","Odyssey","City","Stream","Element"],
+  "Chevrolet":  ["Cruze","Malibu","Cobalt","Lacetti","Captiva","Equinox","Traverse","Tahoe","Silverado","Aveo","Spark","Trax","Orlando"],
+  "Opel":       ["Astra","Vectra","Zafira","Corsa","Insignia","Antara","Mokka","Meriva","Omega","Kadett","Rekord"],
+  "Ford":       ["Focus","Mondeo","Fiesta","Fusion","Explorer","Edge","Escape","Ranger","F-150","Transit","Kuga","EcoSport","Galaxy"],
+  "Mazda":      ["3","6","CX-5","CX-7","CX-9","323","626","MX-5","RX-8","Tribute","MPV","BT-50"],
+  "Subaru":     ["Impreza","Legacy","Forester","Outback","XV","WRX","BRZ","Tribeca"],
+  "Suzuki":     ["Swift","Vitara","Grand Vitara","Jimny","Baleno","SX4","Alto","Wagon R","Ignis","Liana"],
+  "Renault":    ["Logan","Sandero","Duster","Megane","Laguna","Clio","Fluence","Koleos","Symbol","Kangoo","Master","Scenic","Captur"],
+  "Skoda":      ["Octavia","Fabia","Superb","Rapid","Yeti","Kodiaq","Karoq","Roomster"],
+  "Seat":       ["Ibiza","Leon","Toledo","Altea","Arona","Ateca","Alhambra"],
+  "Daewoo":     ["Nexia","Matiz","Gentra","Lanos","Nubira","Leganza","Tacuma","Espero"],
+  "GAZ":        ["Volqa 21","Volqa 24","Volqa 31","Qazel","Saxta","3110"],
+  "UAZ":        ["469","452","Patriot","Hunter","Pickup"],
+  "Geely":      ["Emgrand","Emgrand X7","Atlas","Coolray","Tugella","MK","GC6"],
+  "Chery":      ["Tiggo","Tiggo 7","Tiggo 8","Arrizo","A15","QQ","Fulwin"],
+  "Haval":      ["H6","H9","F7","Jolion","Dargo"],
+  "BYD":        ["F3","F0","Han","Tang","Song","Seal"],
+  "Porsche":    ["Cayenne","Macan","Panamera","911","Boxster","Cayman"],
+  "Lexus":      ["RX","ES","IS","GX","LX","NX","LS","UX"],
+  "Infiniti":   ["QX56","QX60","QX80","FX35","FX50","G35","G37","Q50","Q70"],
+  "Acura":      ["MDX","RDX","TL","TSX","RL","ILX"],
+  "Volvo":      ["S40","S60","S80","XC60","XC90","V40","V60","V70","XC40"],
+  "Jeep":       ["Grand Cherokee","Wrangler","Cherokee","Compass","Renegade","Commander","Patriot"],
+  "Land Rover": ["Discovery","Freelander","Range Rover","Defender","Discovery Sport","Range Rover Sport","Range Rover Evoque"],
+  "Cadillac":   ["Escalade","SRX","CTS","ATS","CT6","XT5"],
+  "Ssangyong":  ["Rexton","Actyon","Kyron","Tivoli","Musso","Korando"],
+  "Isuzu":      ["D-Max","MU-X","Trooper","Rodeo","Elf"],
+  "Diğər":      [],
+};
+
+const CAR_MAKES = Object.keys(CAR_DB);
+const CURRENT_YEAR = new Date().getFullYear();
+const YEAR_OPTIONS = Array.from({length: CURRENT_YEAR - 1970 + 1}, (_, i) => CURRENT_YEAR - i);
+
 // ── QUERY PARSER (client-side) ──
 const BRAND_MAP={"peugeot":"Peugeot","pejo":"Peugeot","lada":"Lada","vaz":"VAZ","toyota":"Toyota","hyundai":"Hyundai","bmw":"BMW","mercedes":"Mercedes","ford":"Ford","opel":"Opel","volkswagen":"Volkswagen","vw":"Volkswagen","kia":"KIA","honda":"Honda","nissan":"Nissan","chevrolet":"Chevrolet"};
 const MODEL_MAP={"308":"308","207":"207","206":"206","2008":"2008","granta":"Granta","priora":"Priora","camry":"Camry","corolla":"Corolla","yaris":"Yaris","accent":"Accent","tucson":"Tucson","elantra":"Elantra","golf":"Golf","passat":"Passat","polo":"Polo","focus":"Focus","2107":"2107","2106":"2106"};
-const PART_MAP={"radiator":"Radiator","radyator":"Radiator","alternator":"Alternator","generator":"Alternator","tormoz":"Tormoz bəndi","brake":"Tormoz bəndi","yağ filteri":"Yağ filteri","oil filter":"Yağ filteri","amortizator":"Amortizator","shock":"Amortizator","vaxt kəməri":"Vaxt kəməri","timing":"Vaxt kəməri","su pompası":"Su pompası","pompa":"Su pompası","starter":"Starter motor"};
+const PART_MAP={"radiator":"Radiator","radyator":"Radiator","alternator":"Alternator","generator":"Alternator","генератор":"Alternator","tormoz":"Tormoz bəndi","brake":"Tormoz bəndi","колодки":"Tormoz bəndi","yağ filteri":"Yağ filteri","oil filter":"Yağ filteri","amortizator":"Amortizator","shock":"Amortizator","амортизатор":"Amortizator","vaxt kəməri":"Vaxt kəməri","timing":"Vaxt kəməri","su pompası":"Su pompası","pompa":"Su pompası","starter":"Starter motor","mühərrik":"Digər","motor":"Digər","двигатель":"Digər","mator":"Digər","sükan":"Digər","transmissiya":"Digər","КПП":"Digər","şüşə":"Digər","bamper":"Digər","фара":"Digər","stoplar":"Digər"};
 
 function parseQuery(raw){
   const q=raw.toLowerCase().trim(),tokens=q.split(/[\s,\-\/]+/);
   const p={brand:null,model:null,year:null,engine:null,partType:null};
   for(const a of Object.keys(PART_MAP).sort((a,b)=>b.length-a.length)){if(q.includes(a)){p.partType=PART_MAP[a];break;}}
-  for(const t of tokens){if(BRAND_MAP[t]){p.brand=BRAND_MAP[t];break;}}
-  for(const t of tokens){if(MODEL_MAP[t]){p.model=MODEL_MAP[t];break;}}
+  // Match brand from CAR_DB keys
+  for(const make of CAR_MAKES){
+    if(q.includes(make.toLowerCase())){p.brand=make;break;}
+  }
+  // Fallback to legacy BRAND_MAP
+  if(!p.brand){for(const t of tokens){if(BRAND_MAP[t]){p.brand=BRAND_MAP[t];break;}}}
+  // Match model from CAR_DB
+  if(p.brand && CAR_DB[p.brand]){
+    for(const model of CAR_DB[p.brand]){
+      if(q.includes(model.toLowerCase())){p.model=model;break;}
+    }
+  }
+  if(!p.model){for(const t of tokens){if(MODEL_MAP[t]){p.model=MODEL_MAP[t];break;}}}
   const yr=q.match(/\b(19[5-9]\d|20[0-2]\d)\b/);if(yr)p.year=parseInt(yr[1]);
   const eng=q.match(/\b(\d+\.\d+)\b/);if(eng)p.engine=eng[1];
   return p;
 }
 
 // Score a product against parsed query params
-function scoreProduct(p, params) {
+function scoreProduct(p, params, rawQuery) {
   let score = 0;
   if(params.partType && p.partType===params.partType) score+=3;
-  if(params.brand && p.brand===params.brand) score+=2;
-  if(params.model && p.model===params.model) score+=2;
-  if(params.year && p.yearFrom && p.yearTo && params.year>=p.yearFrom && params.year<=p.yearTo) score+=1;
+
+  // Check compatibility array (new format) or legacy flat fields
+  const compat = p.compatibility && p.compatibility.length > 0 ? p.compatibility : null;
+  if(compat){
+    let compatScore = 0;
+    for(const entry of compat){
+      let es = 0;
+      if(params.brand && entry.make===params.brand) es+=2;
+      if(params.model && entry.model===params.model) es+=2;
+      if(params.year && entry.yearFrom && entry.yearTo && params.year>=entry.yearFrom && params.year<=entry.yearTo) es+=1;
+      compatScore = Math.max(compatScore, es);
+    }
+    score += compatScore;
+  } else {
+    // Legacy flat fields
+    if(params.brand && p.brand===params.brand) score+=2;
+    if(params.model && p.model===params.model) score+=2;
+    if(params.year && p.yearFrom && p.yearTo && params.year>=p.yearFrom && params.year<=p.yearTo) score+=1;
+  }
   if(params.engine && p.engine && p.engine.includes(params.engine)) score+=1;
+
+  // Name-based fallback
+  if(rawQuery && score===0){
+    const tokens=rawQuery.toLowerCase().split(/[\s,\-\/]+/).filter(t=>t.length>2);
+    const compatText = compat ? compat.map(e=>[e.make,e.model].filter(Boolean).join(" ")).join(" ") : [p.brand,p.model].filter(Boolean).join(" ");
+    const haystack=[p.name,p.partType,compatText].filter(Boolean).join(" ").toLowerCase();
+    if(tokens.some(t=>haystack.includes(t))) score=1;
+  }
   return score;
 }
 
@@ -554,12 +637,12 @@ function ResultsPage({query,region,onBack,onProduct,onContact}){
   },[region]);
 
   const results = allProducts
-    .map(p=>({...p,_score:scoreProduct(p,params)}))
+    .map(p=>({...p,_score:scoreProduct(p,params,query)}))
     .filter(p=>{
-      if(p._score<2) return false;
+      if(p._score<1) return false;
       if(region==="all") return true;
-      // client-side region filter: match region field or derive from seller city
-      const pr=p.region||cityToRegion(p.city)||"other";
+      // client-side region filter
+      const pr=p.region||"other";
       return pr===region;
     })
     .sort((a,b)=>{
@@ -624,13 +707,17 @@ function ProductSheet({product,seller,onClose,onContact}){
     if(onContact) onContact();
   };
 
+  // Build compatibility string
+  const compatLines = product.compatibility && product.compatibility.length > 0
+    ? product.compatibility.map(e=>[e.make,e.model,e.yearFrom&&e.yearTo?`${e.yearFrom}–${e.yearTo}`:e.yearFrom||e.yearTo||""].filter(Boolean).join(" ")).join("\n")
+    : product.brand ? [product.brand,product.model,product.yearFrom&&product.yearTo?`${product.yearFrom}–${product.yearTo}`:""].filter(Boolean).join(" ") : null;
+
   const fields=[
     {label:"Qiymət",value:product.price!=null?`₼ ${product.price}`:AZ.callForPrice,cls:product.price!=null?"big":"muted"},
     {label:"Vəziyyət",value:product.condition||"—"},
-    product.brand&&{label:"Marka",value:product.brand},
-    product.model&&{label:"Model",value:product.model},
-    (product.yearFrom||product.yearTo)&&{label:"İl",value:product.yearFrom&&product.yearTo?`${product.yearFrom} – ${product.yearTo}`:product.yearFrom||product.yearTo},
+    product.manufacturerBrand&&{label:"İstehsalçı",value:product.manufacturerBrand+(product.manufacturerCountry?" · "+product.manufacturerCountry:"")},
     product.engine&&{label:"Mühərrik",value:product.engine},
+    compatLines&&{label:"Uyğunluq",value:compatLines,multiline:true},
     {label:"Mövcudluq",value:product.availability==="in_stock"?AZ.inStock:AZ.onOrder,cls:product.availability==="in_stock"?"green":""},
     product.notes&&{label:"Qeydlər",value:product.notes},
   ].filter(Boolean);
@@ -647,9 +734,12 @@ function ProductSheet({product,seller,onClose,onContact}){
           <div className="sheet-title">{product.name}</div>
           <div className="field-table">
             {fields.map(f=>(
-              <div key={f.label} className="field-row">
+              <div key={f.label} className={`field-row${f.multiline?" field-row-top":""}`}>
                 <span className="field-lbl">{f.label}</span>
-                <span className={`field-val ${f.cls||""}`}>{f.value}</span>
+                {f.multiline
+                  ? <span className={`field-val ${f.cls||""}`} style={{whiteSpace:"pre-line",textAlign:"right"}}>{f.value}</span>
+                  : <span className={`field-val ${f.cls||""}`}>{f.value}</span>
+                }
               </div>
             ))}
           </div>
@@ -889,27 +979,101 @@ function Dashboard({seller,onAdd,onEdit,onUpload,onSettings}){
 }
 
 // ── PRODUCT FORM ──
+function CompatRow({entry, index, onChange, onRemove, showRemove}){
+  const models = entry.make && CAR_DB[entry.make] ? CAR_DB[entry.make] : [];
+  return(
+    <div style={{background:"var(--g50)",border:"1px solid var(--g200)",borderRadius:"var(--r-sm)",padding:"12px 14px",display:"flex",flexDirection:"column",gap:10}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span style={{fontSize:11,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"var(--g500)"}}>Avtomobil {index+1}</span>
+        {showRemove&&<button onClick={()=>onRemove(index)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--g400)",fontSize:18,lineHeight:1,padding:"0 2px"}}>×</button>}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div className="field-wrap">
+          <div className="field-label-form">Marka</div>
+          <select className="form-select" value={entry.make||""} onChange={e=>{
+            onChange(index,{...entry,make:e.target.value,model:""});
+          }}>
+            <option value="">— Seçin —</option>
+            {CAR_MAKES.map(m=><option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="field-wrap">
+          <div className="field-label-form">Model</div>
+          {models.length>0?(
+            <select className="form-select" value={entry.model||""} onChange={e=>onChange(index,{...entry,model:e.target.value})}>
+              <option value="">— Seçin —</option>
+              {models.map(m=><option key={m} value={m}>{m}</option>)}
+            </select>
+          ):(
+            <input className="form-input" placeholder="Model" value={entry.model||""} onChange={e=>onChange(index,{...entry,model:e.target.value})}/>
+          )}
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div className="field-wrap">
+          <div className="field-label-form">İldən</div>
+          <select className="form-select" value={entry.yearFrom||""} onChange={e=>onChange(index,{...entry,yearFrom:e.target.value?Number(e.target.value):null})}>
+            <option value="">—</option>
+            {YEAR_OPTIONS.map(y=><option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+        <div className="field-wrap">
+          <div className="field-label-form">İlə qədər</div>
+          <select className="form-select" value={entry.yearTo||""} onChange={e=>onChange(index,{...entry,yearTo:e.target.value?Number(e.target.value):null})}>
+            <option value="">—</option>
+            {YEAR_OPTIONS.filter(y=>!entry.yearFrom||y>=entry.yearFrom).map(y=><option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProductForm({product,seller,onBack,onSaved,onDeleted}){
   const isEdit=!!product?.id;
+
+  // Migrate legacy flat fields to compatibility array on edit
+  const initCompat=()=>{
+    if(product?.compatibility && product.compatibility.length>0) return product.compatibility;
+    if(product?.brand||product?.model) return [{make:product.brand||"",model:product.model||"",yearFrom:product.yearFrom||null,yearTo:product.yearTo||null}];
+    return [{make:"",model:"",yearFrom:null,yearTo:null}];
+  };
+
   const [form,setForm]=useState({
-    name:product?.name||"",partType:product?.partType||"",brand:product?.brand||"",
-    model:product?.model||"",yearFrom:product?.yearFrom||"",yearTo:product?.yearTo||"",
-    engine:product?.engine||"",condition:product?.condition||AZ.condNew,
-    price:product?.price||"",availability:product?.availability||"in_stock",notes:product?.notes||""
+    name:product?.name||"",
+    partType:product?.partType||"",
+    manufacturerBrand:product?.manufacturerBrand||"",
+    manufacturerCountry:product?.manufacturerCountry||"",
+    condition:product?.condition||AZ.condNew,
+    price:product?.price||"",
+    availability:product?.availability||"in_stock",
+    notes:product?.notes||"",
+    engine:product?.engine||"",
   });
+  const [compat,setCompat]=useState(initCompat);
   const [errors,setErrors]=useState({});
   const [saving,setSaving]=useState(false);
   const nameRef=useRef();
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
 
+  const updateCompat=(i,val)=>setCompat(arr=>arr.map((e,idx)=>idx===i?val:e));
+  const addCompat=()=>setCompat(arr=>[...arr,{make:"",model:"",yearFrom:null,yearTo:null}]);
+  const removeCompat=(i)=>setCompat(arr=>arr.filter((_,idx)=>idx!==i));
+
   const handleSave=async(asDraft=false)=>{
     if(!form.name.trim()){setErrors({name:true});nameRef.current?.scrollIntoView({behavior:"smooth",block:"center"});nameRef.current?.focus();return;}
     setErrors({});setSaving(true);
+    // Filter out empty compat rows
+    const cleanCompat=compat.filter(e=>e.make||e.model);
     const data={
       ...form,
       price:form.price?Number(form.price):null,
-      yearFrom:form.yearFrom?Number(form.yearFrom):null,
-      yearTo:form.yearTo?Number(form.yearTo):null,
+      compatibility:cleanCompat,
+      // Keep legacy fields for backward compat with search on old docs
+      brand:cleanCompat[0]?.make||"",
+      model:cleanCompat[0]?.model||"",
+      yearFrom:cleanCompat[0]?.yearFrom||null,
+      yearTo:cleanCompat[0]?.yearTo||null,
       status:asDraft?"draft":"live",
       sellerId:seller.uid,
       region:cityToRegion(seller.city),
@@ -929,33 +1093,78 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
     catch(e){console.error(e);}
   };
 
+  const COUNTRIES=["Azərbaycan","Türkiyə","Almaniya","Çin","Yaponiya","Cənubi Koreya","ABŞ","Fransa","İtaliya","İspaniya","Rusiya","Polşa","Çexiya","Hindistan","Tailand","Digər"];
+
   return(
     <div>
-      <div className="form-header"><button className="icon-btn" onClick={onBack}><Icon name="arrowLeft" size={16} strokeWidth={2}/></button><div className="form-title">{isEdit?AZ.editProductTitle:AZ.addProductTitle}</div></div>
+      <div className="form-header">
+        <button className="icon-btn" onClick={onBack}><Icon name="arrowLeft" size={16} strokeWidth={2}/></button>
+        <div className="form-title">{isEdit?AZ.editProductTitle:AZ.addProductTitle}</div>
+      </div>
       <div className="form-body">
+
+        {/* ── Part info ── */}
         <div className="form-section-title">{AZ.productSection}</div>
         <div className="field-group-form">
           <div className="field-wrap" ref={nameRef}>
             <div className="field-label-form">{AZ.partName} <span className="req">— {AZ.required}</span></div>
-            <input className={`form-input${errors.name?" error":""}`} placeholder="məs. Soyutma radiatoru"
+            <input className={`form-input${errors.name?" error":""}`} placeholder="məs. Ön tormoz bəndləri"
               value={form.name} onChange={e=>{set("name",e.target.value);if(errors.name)setErrors({});}}/>
           </div>
-          <div className="field-wrap"><div className="field-label-form">{AZ.partType}</div><select className="form-select" value={form.partType} onChange={e=>set("partType",e.target.value)}><option value="">{AZ.selectType}</option>{AZ.partTypes.map(t=><option key={t} value={t}>{t}</option>)}</select></div>
-          <div className="field-wrap"><div className="field-label-form">{AZ.condition}</div><select className="form-select" value={form.condition} onChange={e=>set("condition",e.target.value)}><option value={AZ.condNew}>{AZ.condNew}</option><option value={AZ.condUsed}>{AZ.condUsed}</option><option value={AZ.condRefurb}>{AZ.condRefurb}</option></select></div>
+          <div className="field-wrap">
+            <div className="field-label-form">{AZ.partType}</div>
+            <select className="form-select" value={form.partType} onChange={e=>set("partType",e.target.value)}>
+              <option value="">{AZ.selectType}</option>
+              {AZ.partTypes.map(t=><option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="field-wrap">
+            <div className="field-label-form">{AZ.condition}</div>
+            <select className="form-select" value={form.condition} onChange={e=>set("condition",e.target.value)}>
+              <option value={AZ.condNew}>{AZ.condNew}</option>
+              <option value={AZ.condUsed}>{AZ.condUsed}</option>
+              <option value={AZ.condRefurb}>{AZ.condRefurb}</option>
+            </select>
+          </div>
         </div>
-        <div className="form-section-title">{AZ.vehicleSection}</div>
+
+        {/* ── Manufacturer ── */}
+        <div className="form-section-title">İstehsalçı</div>
         <div className="field-group-form">
           <div className="form-row">
-            <div className="field-wrap"><div className="field-label-form">{AZ.brand}</div><input className="form-input" placeholder="Peugeot" value={form.brand} onChange={e=>set("brand",e.target.value)}/></div>
-            <div className="field-wrap"><div className="field-label-form">{AZ.model}</div><input className="form-input" placeholder="308" value={form.model} onChange={e=>set("model",e.target.value)}/></div>
+            <div className="field-wrap">
+              <div className="field-label-form">Marka</div>
+              <input className="form-input" placeholder="Bosch, Brembo..." value={form.manufacturerBrand} onChange={e=>set("manufacturerBrand",e.target.value)}/>
+            </div>
+            <div className="field-wrap">
+              <div className="field-label-form">Ölkə</div>
+              <select className="form-select" value={form.manufacturerCountry} onChange={e=>set("manufacturerCountry",e.target.value)}>
+                <option value="">— Seçin —</option>
+                {COUNTRIES.map(ct=><option key={ct} value={ct}>{ct}</option>)}
+              </select>
+            </div>
           </div>
-          <div className="form-row">
-            <div className="field-wrap"><div className="field-label-form">{AZ.yearFrom}</div><input className="form-input" type="number" placeholder="2014" value={form.yearFrom} onChange={e=>set("yearFrom",e.target.value)}/></div>
-            <div className="field-wrap"><div className="field-label-form">{AZ.yearTo}</div><input className="form-input" type="number" placeholder="2018" value={form.yearTo} onChange={e=>set("yearTo",e.target.value)}/></div>
+          <div className="field-wrap">
+            <div className="field-label-form">Mühərrik</div>
+            <input className="form-input" placeholder="1.6 benzin, 2.0 dizel..." value={form.engine} onChange={e=>set("engine",e.target.value)}/>
           </div>
-          <div className="field-wrap"><div className="field-label-form">{AZ.engine}</div><input className="form-input" placeholder="1.6 benzin" value={form.engine} onChange={e=>set("engine",e.target.value)}/></div>
         </div>
-        <div className="form-section-title">{AZ.pricingSection}</div>
+
+        {/* ── Compatibility ── */}
+        <div className="form-section-title" style={{marginTop:22}}>Avtomobil uyğunluğu</div>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {compat.map((entry,i)=>(
+            <CompatRow key={i} entry={entry} index={i} onChange={updateCompat} onRemove={removeCompat} showRemove={compat.length>1}/>
+          ))}
+          <button onClick={addCompat} style={{background:"none",border:"2px dashed var(--g200)",borderRadius:"var(--r-sm)",padding:"11px",fontSize:13,color:"var(--g500)",cursor:"pointer",fontFamily:"var(--font-b)",fontWeight:600,transition:"border-color .15s,color .15s"}}
+            onMouseOver={e=>{e.target.style.borderColor="var(--g300)";e.target.style.color="var(--black)";}}
+            onMouseOut={e=>{e.target.style.borderColor="var(--g200)";e.target.style.color="var(--g500)";}}>
+            + Avtomobil əlavə et
+          </button>
+        </div>
+
+        {/* ── Pricing ── */}
+        <div className="form-section-title" style={{marginTop:22}}>{AZ.pricingSection}</div>
         <div className="field-group-form">
           <div className="field-wrap">
             <div className="field-label-form">{AZ.price}</div>
@@ -964,10 +1173,19 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
               <input className="form-input" type="number" placeholder="185" value={form.price} onChange={e=>set("price",e.target.value)} style={{paddingLeft:30}}/>
             </div>
           </div>
-          <div className="field-wrap"><div className="field-label-form">{AZ.availability}</div><select className="form-select" value={form.availability} onChange={e=>set("availability",e.target.value)}><option value="in_stock">{AZ.inStockOpt}</option><option value="on_order">{AZ.onOrderOpt}</option></select></div>
+          <div className="field-wrap">
+            <div className="field-label-form">{AZ.availability}</div>
+            <select className="form-select" value={form.availability} onChange={e=>set("availability",e.target.value)}>
+              <option value="in_stock">{AZ.inStockOpt}</option>
+              <option value="on_order">{AZ.onOrderOpt}</option>
+            </select>
+          </div>
         </div>
+
+        {/* ── Notes ── */}
         <div className="form-section-title" style={{marginTop:22}}>{AZ.notesSection}</div>
         <textarea className="form-input" rows={3} placeholder={AZ.notesPlaceholder} value={form.notes} onChange={e=>set("notes",e.target.value)} style={{resize:"vertical"}}/>
+
         <div className="form-footer">
           {isEdit&&<button className="btn btn-danger" onClick={handleDelete}>{AZ.delete}</button>}
           <button className="btn btn-secondary" onClick={()=>handleSave(true)} disabled={saving}>{AZ.saveDraft}</button>
@@ -1114,9 +1332,15 @@ function App(){
       if(user){
         setCurrentUser(user);
         const doc=await db.collection("sellers").doc(user.uid).get();
-        if(doc.exists){setSellerInfo({uid:user.uid,...doc.data()});setMode("seller");}
+        if(doc.exists){
+          setSellerInfo({uid:user.uid,...doc.data()});
+          setMode("seller");
+          // If user lands on login screen while already authed, redirect to dashboard
+          setScreen(prev=>prev==="login"?"dashboard":prev);
+        }
       }else{
         setCurrentUser(null);setSellerInfo(null);
+        setMode("buyer");
       }
       setAuthLoading(false);
     });
@@ -1140,7 +1364,9 @@ function App(){
   const goHome=()=>{setMode("buyer");setScreen("home");setSP(null);};
 
   const handleLogin=(info, isNew)=>{
-    setSellerInfo(info);setCurrentUser({uid:info.uid});
+    // Don't set currentUser manually — onAuthStateChanged fires automatically
+    // after Firebase auth and sets the real user object reliably
+    setSellerInfo(info);
     setMode("seller");setScreen(isNew?"settings":"dashboard");
   };
 
@@ -1161,11 +1387,11 @@ function App(){
   const renderBuyer=()=>{
     if(screen==="results")return <ResultsPage query={query} region={region} onBack={()=>setScreen("home")} onProduct={(p,s)=>{setSP(p);setSeller(s);}} onContact={()=>{}}/>;
     if(screen==="login")return <LoginPage onLogin={handleLogin} onBack={()=>setScreen("home")}/>;
-    return <BuyerHome onSearch={q=>{setQuery(q);setScreen("results");}} onSellerLogin={()=>setScreen("login")} sellerCounts={sellerCounts} region={region} onRegion={setRegion}/>;
+    return <BuyerHome onSearch={q=>{setQuery(q);setScreen("results");}} onSellerLogin={()=>{if(currentUser&&sellerInfo){setMode("seller");setScreen("dashboard");}else{setScreen("login");}}} sellerCounts={sellerCounts} region={region} onRegion={setRegion}/>;
   };
 
   const renderSeller=()=>{
-    if(!currentUser)return <LoginPage onLogin={handleLogin} onBack={goHome}/>;
+    if(!currentUser)return authLoading?<Spinner/>:<LoginPage onLogin={handleLogin} onBack={goHome}/>;
     if(screen==="form")return <ProductForm product={editingProduct} seller={sellerInfo} onBack={()=>{setScreen("dashboard");setEP(null);}} onSaved={(isDraft)=>{setScreen("dashboard");setEP(null);showToast(isDraft?AZ.draftSaved:editingProduct?.id?AZ.productUpdated:AZ.productAdded);}} onDeleted={()=>{setScreen("dashboard");setEP(null);showToast(AZ.productDeleted);}}/>;
     if(screen==="upload")return <UploadScreen seller={sellerInfo} onBack={()=>setScreen("dashboard")} onReview={d=>{setUD(d);setScreen("review");}}/>;
     if(screen==="review"&&uploadData)return <ReviewScreen data={uploadData} seller={sellerInfo} onBack={()=>setScreen("upload")} onPublish={count=>{showToast(`${count} ${AZ.published}`);setScreen("dashboard");setUD(null);}}/>;
