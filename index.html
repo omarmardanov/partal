@@ -687,6 +687,9 @@ function Toast({message,onDone}){
   return <div className="toast">{message}</div>;
 }
 
+function ErrorScreen({message,onRetry}){
+  return(<div className="error-screen"><div className="error-icon">⚠️</div><div className="error-title">Xəta baş verdi</div><div className="error-sub">{message||"Məlumatlar yüklənmədi. İnternet bağlıntınızı yoxlayın."}</div>{onRetry&&<button className="error-retry" onClick={onRetry}>Yenidən cəhd et</button>}</div>);
+}
 function Spinner() { return <div className="full-loading"><div className="spinner"/></div>; }
 
 // ── REGION SELECTOR ──
@@ -766,6 +769,7 @@ function ResultsPage({query,region,onBack,onProduct,onContact}){
   const [allProducts,setAllProducts]=useState([]);
   const [sellers,setSellers]=useState({});
   const [loading,setLoading]=useState(true);
+  const [loadError,setLoadError]=useState(null);
 
   useEffect(()=>{
     // Load active products from Firestore
@@ -783,7 +787,7 @@ function ResultsPage({query,region,onBack,onProduct,onContact}){
         });
       });
       setLoading(false);
-    },()=>setLoading(false));
+    },()=>{setLoading(false);setLoadError("Məhsullar yüklənmədi. İnternet bağlıntınızı yoxlayın.");});
   },[region]);
 
   const results = allProducts
@@ -823,7 +827,7 @@ function ResultsPage({query,region,onBack,onProduct,onContact}){
           ))}
         </div>
       </div>
-      {loading?<Spinner/>:<>
+      {loadError?<ErrorScreen message={loadError} onRetry={()=>window.location.reload()}/>:loading?<Spinner/>:<>
         <div className="results-meta">{results.length===0?"Nəticə tapılmadı":`${results.length} ${AZ.listingsFound}`}</div>
         {results.length===0?(
           <div className="no-results"><div className="no-results-icon">🔍</div><h3>{AZ.noResults}</h3><p>{AZ.noResultsSub}</p></div>
@@ -1133,6 +1137,7 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
     email:seller?.email||"",
   });
   const [saving,setSaving]=useState(false);
+  const [settingsError,setSettingsError]=useState(null);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
 
   const handleSave=async()=>{
@@ -1145,7 +1150,7 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
         updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
       });
       onSave(form);
-    }catch(e){console.error(e);}
+    }catch(e){console.error(e);setSettingsError("Saxlama mümkün olmadı. Yenidən cəhd edin.");}
     finally{setSaving(false);}
   };
 
@@ -1174,6 +1179,7 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
             <EmailInput label={AZ.emailAddr} value={form.email} onChange={v=>set("email",v)}/>
           </div>
         </div>
+        {settingsError&&<div className="inline-error">{settingsError}</div>}
         <div style={{display:"flex",gap:10}}>
           <button className="btn btn-primary" style={{flex:2}} onClick={handleSave} disabled={saving}>
             {saving?AZ.saving:AZ.saveSettings}
@@ -1328,6 +1334,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
   const [compat,setCompat]=useState(initCompat);
   const [errors,setErrors]=useState({});
   const [saving,setSaving]=useState(false);
+  const [saveError,setSaveError]=useState(null);
   const nameRef=useRef();
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
 
@@ -1358,7 +1365,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
       if(isEdit){await db.collection("products").doc(product.id).update(data);}
       else{data.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("products").add(data);}
       onSaved(asDraft);
-    }catch(e){console.error(e);}
+    }catch(e){console.error(e);setSaveError("Saxlama mümkün olmadı. Yenidən cəhd edin.");}
     finally{setSaving(false);}
   };
 
@@ -1461,6 +1468,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
         <div className="form-section-title" style={{marginTop:22}}>{AZ.notesSection}</div>
         <textarea className="form-input" rows={3} placeholder={AZ.notesPlaceholder} value={form.notes} onChange={e=>set("notes",e.target.value)} style={{resize:"vertical"}}/>
 
+        {saveError&&<div className="inline-error">{saveError}</div>}
         <div className="form-footer">
           {isEdit&&<button className="btn btn-danger" onClick={handleDelete}>{AZ.delete}</button>}
           <button className="btn btn-secondary" onClick={()=>handleSave(true)} disabled={saving}>{AZ.saveDraft}</button>
@@ -1615,6 +1623,7 @@ function ReviewScreen({data,seller,onBack,onPublish}){
 // ── ROOT APP ──
 function App(){
   const [authLoading,setAuthLoading]=useState(true);
+  const [appError,setAppError]=useState(null);
   const [region,setRegion]=useState("baku");
   const [mode,setMode]=useState("buyer");
   const [screen,setScreen]=useState("home");
@@ -1632,23 +1641,27 @@ function App(){
   // Auth state listener
   useEffect(()=>{
     return auth.onAuthStateChanged(async user=>{
-      if(user){
-        setCurrentUser(user);
-        const doc=await db.collection("sellers").doc(user.uid).get();
-        if(doc.exists){
-          setSellerInfo({uid:user.uid,...doc.data()});
-          setMode("seller");
-          // If user lands on login screen while already authed, redirect to dashboard
-          setScreen(prev=>prev==="login"?"dashboard":prev);
-        } else if(user) {
-          // New seller — first login
-          window.gaEvent("seller_registered",{method:"phone"});
+      try{
+        if(user){
+          setCurrentUser(user);
+          const doc=await db.collection("sellers").doc(user.uid).get();
+          if(doc.exists){
+            setSellerInfo({uid:user.uid,...doc.data()});
+            setMode("seller");
+            setScreen(prev=>prev==="login"?"dashboard":prev);
+          } else {
+            window.gaEvent("seller_registered",{method:"phone"});
+          }
+        }else{
+          setCurrentUser(null);setSellerInfo(null);
+          setMode("buyer");
         }
-      }else{
-        setCurrentUser(null);setSellerInfo(null);
-        setMode("buyer");
+      }catch(e){
+        console.error("Auth error:",e);
+        setAppError("Hesaba giriş mümkün olmadı. Səhifəni yenилəyin.");
+      }finally{
+        setAuthLoading(false);
       }
-      setAuthLoading(false);
     });
   },[]);
 
@@ -1684,6 +1697,7 @@ function App(){
   };
 
   if(authLoading) return <div className="app"><div className="topnav"><div className="topnav-logo" dangerouslySetInnerHTML={{__html:LOGO_SVG+'Partal'}}/></div><Spinner/></div>;
+  if(appError) return <div className="app"><div className="topnav"><div className="topnav-logo" dangerouslySetInnerHTML={{__html:LOGO_SVG+'Partal'}}/></div><ErrorScreen message={appError} onRetry={()=>window.location.reload()}/></div>;
 
   const renderBuyer=()=>{
     if(screen==="results")return <ResultsPage query={query} region={region} onBack={()=>setScreen("home")} onProduct={(p,s)=>{setSP(p);setSeller(s);}} onContact={()=>{}}/>;
