@@ -44,11 +44,14 @@
     const auth = firebase.auth();
 
     // App Check — protects Firestore from unauthorized API access
-    const appCheck = firebase.appCheck();
-    appCheck.activate(
-      new firebase.appCheck.ReCaptchaV3Provider('6LcgA5EsAAAAALU19hxwlcOUlIfdXHaSOkZsuIvr'),
-      true // auto-refresh tokens
-    );
+    // Initialize after a tick to avoid conflicting with phone auth reCAPTCHA
+    try {
+      const appCheck = firebase.appCheck();
+      appCheck.activate(
+        new firebase.appCheck.ReCaptchaV3Provider('6LcgA5EsAAAAALU19hxwlcOUlIfdXHaSOkZsuIvr'),
+        true // auto-refresh tokens
+      );
+    } catch(e) { console.warn("App Check init:", e); }
   </script>
 
   <style>
@@ -954,10 +957,17 @@ function LoginPage({onLogin,onBack}){
   // Set up invisible reCAPTCHA once
   const recaptchaRef=useRef(null);
   useEffect(()=>{
-    if(!recaptchaRef.current){
-      recaptchaRef.current=new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
-    }
+    // Small delay to ensure DOM is ready before reCAPTCHA tries to render
+    const timer = setTimeout(()=>{
+      try{
+        if(!recaptchaRef.current){
+          recaptchaRef.current=new firebase.auth.RecaptchaVerifier("recaptcha-container",{size:"invisible"});
+          recaptchaRef.current.render().catch(e=>console.warn("reCAPTCHA render:",e));
+        }
+      }catch(e){console.warn("reCAPTCHA init:",e);}
+    }, 100);
     return()=>{
+      clearTimeout(timer);
       try{recaptchaRef.current?.clear();}catch(e){}
       recaptchaRef.current=null;
     };
