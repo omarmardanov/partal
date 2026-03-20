@@ -747,7 +747,7 @@ function SearchTextarea({value,onChange,onSubmit,placeholder}){
   useEffect(()=>{const el=ref.current;if(!el)return;el.style.height="auto";el.style.height=Math.max(90,el.scrollHeight)+"px";},[value]);
   return(
     <div className="search-box">
-      <textarea ref={ref} className="search-input" placeholder={placeholder} value={value} rows={2}
+      <textarea ref={ref} className="search-input" placeholder={placeholder} value={value} rows={2} maxLength={200}
         onChange={e=>onChange(e.target.value)}
         onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();onSubmit();}}}/>
       <button className="search-go" onClick={onSubmit}><Icon name="arrowRight" size={14} color="white" strokeWidth={2.5}/></button>
@@ -805,7 +805,7 @@ function ResultsPage({query,region,onBack,onProduct,onContact}){
   const results = allProducts
     .map(p=>({...p,_score:scoreProduct(p,params,query)}))
     .filter(p=>{
-      if(p._score<2) return false;
+      if(p._score<1) return false;
       if(region==="all") return true;
       // For dynamic city keys, match against seller's city
       if(region.startsWith("city_")){
@@ -1138,7 +1138,7 @@ function EmailInput({value, onChange, label}){
     <div className="field-wrap">
       <div className="field-label-form">{label}</div>
       <input className={`form-input${invalid?" error":""}`} type="email"
-        placeholder="mağaza@example.az"
+        placeholder="mağaza@example.az" maxLength={100}
         value={value}
         onChange={e=>onChange(e.target.value.replace(/\s/g,""))}
         onBlur={()=>setTouched(true)}/>
@@ -1185,7 +1185,7 @@ function SettingsPage({seller,onSave,onLogout,onBack}){
           <div className="field-group-form">
             <div className="field-wrap">
               <div className="field-label-form">{AZ.shopName}</div>
-              <input className="form-input" placeholder="Vera Auto Hissələri" value={form.shopName} onChange={e=>set("shopName",e.target.value)}/>
+              <input className="form-input" placeholder="Vera Auto Hissələri" maxLength={80} value={form.shopName} onChange={e=>set("shopName",e.target.value)}/>
             </div>
             <div className="field-wrap">
               <div className="field-label-form">{AZ.city}</div>
@@ -1305,7 +1305,7 @@ function CompatRow({entry, index, onChange, onRemove, showRemove}){
               {models.map(m=><option key={m} value={m}>{m}</option>)}
             </select>
           ):(
-            <input className="form-input" placeholder="Model" value={entry.model||""} onChange={e=>onChange(index,{...entry,model:e.target.value})}/>
+            <input className="form-input" placeholder="Model" maxLength={50} value={entry.model||""} onChange={e=>onChange(index,{...entry,model:e.target.value})}/>
           )}
         </div>
       </div>
@@ -1409,7 +1409,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
         <div className="field-group-form">
           <div className="field-wrap" ref={nameRef}>
             <div className="field-label-form">{AZ.partName} <span className="req">— {AZ.required}</span></div>
-            <input className={`form-input${errors.name?" error":""}`} placeholder="məs. Ön tormoz bəndləri"
+            <input className={`form-input${errors.name?" error":""}`} placeholder="məs. Ön tormoz bəndləri" maxLength={100}
               value={form.name} onChange={e=>{set("name",e.target.value);if(errors.name)setErrors({});}}/>
           </div>
           <div className="field-wrap">
@@ -1435,7 +1435,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
           <div className="form-row">
             <div className="field-wrap">
               <div className="field-label-form">Marka</div>
-              <input className="form-input" placeholder="Bosch, Brembo..." value={form.manufacturerBrand} onChange={e=>set("manufacturerBrand",e.target.value)}/>
+              <input className="form-input" placeholder="Bosch, Brembo..." maxLength={50} value={form.manufacturerBrand} onChange={e=>set("manufacturerBrand",e.target.value)}/>
             </div>
             <div className="field-wrap">
               <div className="field-label-form">Ölkə</div>
@@ -1447,7 +1447,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
           </div>
           <div className="field-wrap">
             <div className="field-label-form">Mühərrik</div>
-            <input className="form-input" placeholder="1.6 benzin, 2.0 dizel..." value={form.engine} onChange={e=>set("engine",e.target.value)}/>
+            <input className="form-input" placeholder="1.6 benzin, 2.0 dizel..." maxLength={50} value={form.engine} onChange={e=>set("engine",e.target.value)}/>
           </div>
         </div>
 
@@ -1471,7 +1471,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
             <div className="field-label-form">{AZ.price}</div>
             <div style={{position:"relative"}}>
               <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:15,color:"var(--g500)"}}>₼</span>
-              <input className="form-input" type="number" placeholder="185" value={form.price} onChange={e=>set("price",e.target.value)} style={{paddingLeft:30}}/>
+              <input className="form-input" type="number" placeholder="185" max={999999} value={form.price} onChange={e=>set("price",e.target.value)} style={{paddingLeft:30}}/>
             </div>
           </div>
           <div className="field-wrap">
@@ -1485,7 +1485,7 @@ function ProductForm({product,seller,onBack,onSaved,onDeleted}){
 
         {/* ── Notes ── */}
         <div className="form-section-title" style={{marginTop:22}}>{AZ.notesSection}</div>
-        <textarea className="form-input" rows={3} placeholder={AZ.notesPlaceholder} value={form.notes} onChange={e=>set("notes",e.target.value)} style={{resize:"vertical"}}/>
+        <textarea className="form-input" rows={3} placeholder={AZ.notesPlaceholder} maxLength={500} value={form.notes} onChange={e=>set("notes",e.target.value)} style={{resize:"vertical"}}/>
 
         {saveError&&<div className="inline-error">{saveError}</div>}
         <div className="form-footer">
