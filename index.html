@@ -43,15 +43,16 @@
     const db   = firebase.firestore();
     const auth = firebase.auth();
 
-    // App Check — protects Firestore from unauthorized API access
-    // Initialize after a tick to avoid conflicting with phone auth reCAPTCHA
-    try {
-      const appCheck = firebase.appCheck();
-      appCheck.activate(
-        new firebase.appCheck.ReCaptchaV3Provider('6LcgA5EsAAAAALU19hxwlcOUlIfdXHaSOkZsuIvr'),
-        true // auto-refresh tokens
-      );
-    } catch(e) { console.warn("App Check init:", e); }
+    // App Check — initialize after DOM is fully ready
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const appCheck = firebase.appCheck();
+        appCheck.activate(
+          new firebase.appCheck.ReCaptchaV3Provider('6LcgA5EsAAAAALU19hxwlcOUlIfdXHaSOkZsuIvr'),
+          true
+        );
+      } catch(e) { console.warn("App Check init:", e); }
+    });
   </script>
 
   <style>
