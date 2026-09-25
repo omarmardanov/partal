@@ -3,1119 +3,569 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Partal — Ehtiyat hissələrinizi satın</title>
+  <title>Partal — ehtiyat hissəsi satıcıları üçün</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M4%2022H12V2H4V22ZM17%202C14.2386%202%2012%204.23858%2012%207C12%209.76142%2014.2386%2012%2017%2012C19.7614%2012%2022%209.76142%2022%207C22%204.23858%2019.7614%202%2017%202Z%22%20fill%3D%22%230D0D0B%22/%3E%0A%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAC0ALQDASIAAhEBAxEB/8QAHQABAAMBAAMBAQAAAAAAAAAAAAcICQYBAwQFAv/EAEAQAAEDAwEFAwYLBwUAAAAAAAABAgMEBQYRBwg4hLQSITETFBdBUYEJGFVXYXGRlJXS0yIyM1JygrEjQlNiY//EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/EABYRAQEBAAAAAAAAAAAAAAAAAAABEf/aAAwDAQACEQMRAD8AuWAAAB8d6utrslslud5uVHbaCHs+VqaudsMUerkanae5URNVVETVfFUQD7Acf6VNmHzj4f8AjdN+celTZh84+H/jdN+cDsAcf6VNmHzj4f8AjdN+celTZh84+H/jdN+cDsAcf6VNmHzj4f8AjdN+celTZh84+H/jdN+cDsAcf6VNmHzj4f8AjdN+c6Sy3W13u2RXOzXKjuVBN2vJVNJO2aKTRytXsvaqouioqLoviioB9gAAA8OVGtVzlRERNVVfUc3cdoOBW6RY7hm+NUb08Wz3WCNU9yuA6UH4FpzfC7vIkdpy/H697vBtNcoZVX3Ncp++AAAAAAAAAAAAh7fP4ass5PrICYSHt8/hqyzk+sgAzdABkAAAAAA0i3MOGrE+c6yczdNItzDhqxPnOsnLBL8skcUT5ZXtjjY1XPe5dEaieKqvqQq1tz3s7bZJ6ixbOIILtXRqrJLpNqtLGqdy+TanfKv/AG1Rvs7SHA7423eoyK6Vmz7Ea3sWKlesVxqond9bK1f2o0X/AImqmnd+8qL4pprWEaOszraRnOb1D5coye43Bj118g6XsQN/piboxPBPBDkwCAd3s92vbRcEnjdj+T1zKZi99FUPWamcnrTyb9UTX2t0X6ThABf3YNvQY5nNTBYcrghx2/SqjIXdtVpKp3sa5e+Ny+prlXXuRHKq6FhjHwuduY7eKm6TU2zfMq3ytUjOxZ66Vyq6VET+A9fW5ET9lV8dOz46a3RbUAFAAAAAAIe3z+GrLOT6yAmEh7fP4ass5PrIAM3QAZAAAAAALfW7aJJs/wBw/HW2+d0N5vLq2gonMdo6JFq51klT1p2W6oip3o5zVKgnZZxf5LhgWA2FsmsFptlU7s6+Es1dUOcvva2L7CjjQAQAAAAAA91FVVFFWQVlJM+CpgkbLFKxdHMe1dWuRfUqKiKekAakbA86btG2V2fJnuj89kjWGvYzwZUMXsv7vVr3ORPY5DuyoHwcuQSujyzFZXuWNiw3CBvqRV1jkX36RfYW/NAAAAAAEPb5/DVlnJ9ZATCQ9vn8NWWcn1kAGboAMgAAAAAHsldI5kSP17LWaM+rtKv+VU9Z1GX2OS3Ynhl3Rn+jdrZPIj9PGSOtqI3J7mtYv9yAcuAAAAAAAAAALK/B3uk9MV6an8NcflV31+cU+n+VL3FNfg5LJI65Zbkj2KkccMFDE7+ZXK57093ZZ9pcosAAFAAACHt8/hqyzk+sgJhIe3z+GrLOT6yADN0AGQAAAAAC01ywGbLtxPEr3bqd01yx2Suqka3vc6mdVzJMiJ9CI1/1MX2lWTSHc0YyTdnxVj2tcxyVqOa5NUVPPJ+5SjN4E7b2OxGr2c5JNkFipHyYlcJe1E5qapRSO71hd7G6/uL7O7xTvgkgAAAAAB5aiucjWoqqq6Iies8FptyzYhUXi70u0jKqJ0dqo3pLaaeVunnUyL3TKi/7GL3p/M5EXwRdaLI7suAu2dbIbXZqqPsXOp1rrimmipPIifsr9LWoxn9pJgBQAAAAACHt8/hqyzk+sgJhIe3z+GrLOT6yADN0AGQAAAAADSLcw4asT5zrJzN00i3MOGrE+c6ycsErXi2W+82uptd1ooK2hqY1jnp52I9kjV9SopTXbhukXSiqZ7zsxf5/QuVXutFRKiTw+vSJ7u6Rvj3OVHJone9VLqgoyJvVpulkuMluvNtq7dWRLo+CqhdFI362uRFPiNcMhx6w5FSeaX+y266wJrpHWUzJmpr7Eci6e4j25buuxe4SrJPglGxyrqqU9TPAn2RyNRCYM0T9bFsZyHKbk23Y5Za+61S9/k6WB0itT2u07mp9K6IaO2nd82NWyVslNgdvkc1UVEqZZahPekr3IpIlntVrs1E2itFto7dSs/dhpYGxRp9TWoiDBVPYNumMo56e/wC1B0NRI3R8dlhf2o0X/wB3p3O/pb3e1VTVC2sEUUEEcEEbIoo2oxjGNRrWtRNERETwREP7BQAAAAAAAAIe3z+GrLOT6yAmEh7fP4ass5PrIAM3QAZAAAAAANItzDhqxPnOsnM3TSLcw4asT5zrJywTCACgAAAAAAAAAAAAAAAAQ9vn8NWWcn1kBMJD2+fw1ZZyfWQAZugAyAAAAAAaRbmHDVifOdZOZumkW5hw1YnznWTlgmEAFAAAAAAAAAAAAAAAAAh7fP4ass5PrICYSHt8/hqyzk+sgAzdABkAAAAAA0i3MOGrE+c6yczdNItzDhqxPnOsnLBMIAKAAAAAAAAAAAAAAAABD2+fw1ZZyfWQEwkPb5/DVlnJ9ZABm6ADIAAAAABpFuYcNWJ851k5m6aRbmHDVifOdZOWCYQAUAAAAAAAAAAAAAAAADg94HDLptB2RXvELNPR09fX+b+Skq3ubEnk6iORe0rWuXwYumiL36HeAChvxNNp/wAu4f8Ae6n9AfE02n/LuH/e6n9AvkCYKG/E02n/AC7h/wB7qf0B8TTaf8u4f97qf0C+QGChvxNNp/y7h/3up/QHxNNp/wAu4f8Ae6n9AvkBgob8TTaf8u4f97qf0C2279hl02fbIrJiF5no6ivoPOPKyUj3OiXylRJInZVzWr4PTXVE79TvAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/2Q==">
-  <meta name="description" content="Partal — ehtiyat hissəsi satıcıları üçün ixtisaslaşmış platforma. Kataloqunuzu yükləyin, alıcılar sizi tapsın. Tamamilə pulsuzdur."/>
+  <meta name="description" content="Partal — ehtiyat hissəsi satıcıları üçün axtarış platforması. Qiymət siyahınızı göndərin, kataloqu özümüz yükləyək. Alıcılar birbaşa sizə zəng edir. Pulsuz."/>
+  <meta property="og:title" content="Partal — ehtiyat hissənizi axtaranlar sizi tapsın"/>
+  <meta property="og:description" content="Qiymət siyahınızı göndərin, kataloqu özümüz yükləyək. Alıcılar birbaşa sizə zəng edir. Pulsuz, faizsiz."/>
+  <meta property="og:url" content="https://partal.app"/>
+  <meta property="og:type" content="website"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --black:  #0d0d0b;
       --g700:   #4a4a46;
-      --g500:   #888880;
-      --g400:   #aaaaaa;
+      --g500:   #7a7a72;
+      --g400:   #a3a39b;
       --g300:   #ccccc4;
-      --g200:   #e0e0d8;
+      --g200:   #e4e4dc;
       --g100:   #f2f2ee;
       --g50:    #f9f9f6;
       --white:  #ffffff;
       --green:  #2e7d55;
       --green-bg: #edf5f0;
+      --red:    #b83232;
+      --red-bg: #fdf0f0;
+      --wa:     #1a7f45;
       --font-d: 'Playfair Display', Georgia, serif;
-      --font-b: 'Plus Jakarta Sans', sans-serif;
-      --container: 1160px;
-      --r: 16px;
-      --r-sm: 10px;
+      --font-b: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --container: 1120px;
+      --r: 18px;
+      --r-sm: 12px;
     }
 
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font-b); background: var(--white); color: var(--black); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-
-    /* ── CONTAINER ── */
+    body { font-family: var(--font-b); background: var(--white); color: var(--black); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; }
     .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+    .ico { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--g200);
-      padding: 16px 0;
-    }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--black); font-family: var(--font-d); font-weight: 700; font-size: 20px; letter-spacing: -.01em; }
-    .nav-logo svg { flex-shrink: 0; }
-    .nav-cta { background: var(--black); color: var(--white); border: none; border-radius: 24px; padding: 10px 22px; font-size: 14px; font-weight: 600; font-family: var(--font-b); cursor: pointer; text-decoration: none; transition: background .15s; white-space: nowrap; }
-    .nav-cta:hover { background: var(--g700); }
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-    .nav-link { font-size: 14px; font-weight: 500; color: var(--g700); text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: color .15s, background .15s; white-space: nowrap; }
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--g100); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; font-family: var(--font-d); font-weight: 700; font-size: 20px; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { font-size: 14px; font-weight: 500; color: var(--g700); text-decoration: none; padding: 7px 12px; border-radius: 8px; transition: color .15s, background .15s; }
     .nav-link:hover { color: var(--black); background: var(--g50); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .lang-switcher { display: flex; align-items: center; background: var(--g100); border-radius: 20px; padding: 3px; gap: 2px; }
-    .lang-btn { background: none; border: none; font-size: 11px; font-weight: 700; font-family: var(--font-b); color: var(--g500); padding: 5px 9px; border-radius: 16px; cursor: pointer; transition: background .15s, color .15s; letter-spacing: .04em; }
-    .lang-btn.active { background: var(--white); color: var(--black); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .lang-switcher { display: flex; }
-      .nav-right { gap: 8px; }
-      .nav-cta { padding: 8px 14px; font-size: 13px; }
-      .lang-btn { padding: 5px 7px; font-size: 10px; }
-    }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .lang { display: flex; background: var(--g100); border-radius: 20px; padding: 3px; gap: 2px; }
+    .lang button { background: none; border: none; font: 700 11px var(--font-b); letter-spacing: .04em; color: var(--g500); padding: 5px 9px; border-radius: 16px; cursor: pointer; }
+    .lang button.active { background: var(--white); color: var(--black); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .nav-login { font-size: 14px; font-weight: 600; text-decoration: none; padding: 9px 16px; border: 1.5px solid var(--g200); border-radius: 22px; transition: border-color .15s; white-space: nowrap; }
+    .nav-login:hover { border-color: var(--black); }
 
-    /* ── HERO ── */
-    .hero {
-      padding: 100px 0 80px;
-      border-bottom: 1px solid var(--g100);
-    }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    @media (max-width: 768px) { .hero-content { order: 1; } .hero-visual { order: 2; } }
-    .hero-label { display: inline-flex; align-items: center; gap: 6px; background: var(--green-bg); color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 24px; }
-    .hero-label::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-    .hero h1 { font-family: var(--font-d); font-size: clamp(38px, 4.5vw, 58px); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; margin-bottom: 20px; }
-    .hero h1 em { font-style: italic; color: var(--g500); }
-    .hero-sub { font-size: 17px; color: var(--g700); line-height: 1.65; margin-bottom: 36px; max-width: 460px; }
-    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .btn-primary { background: var(--black); color: var(--white); border: none; border-radius: 28px; padding: 14px 28px; font-size: 15px; font-weight: 600; font-family: var(--font-b); cursor: pointer; text-decoration: none; transition: background .15s; display: inline-block; }
-    .btn-primary:hover { background: var(--g700); }
-    .btn-secondary { background: none; color: var(--black); border: 1.5px solid var(--g300); border-radius: 28px; padding: 13px 24px; font-size: 15px; font-weight: 600; font-family: var(--font-b); cursor: pointer; text-decoration: none; transition: border-color .15s, color .15s; display: inline-block; }
-    .btn-secondary:hover { border-color: var(--black); }
-    .hero-trust { margin-top: 24px; font-size: 13px; color: var(--g500); display: flex; align-items: center; gap: 6px; }
-    .hero-trust::before { content: '✓'; color: var(--green); font-weight: 700; }
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 30px; padding: 15px 26px; font: 600 15px var(--font-b); text-decoration: none; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; border: none; white-space: nowrap; }
+    .btn:active { transform: scale(.98); }
+    .btn-wa { background: var(--wa); color: #fff; }
+    .btn-wa:hover { background: #146a39; }
+    .btn-wa .wa-dot { display: flex; }
+    .btn-wa .wa-dot svg { width: 20px; height: 20px; fill: #fff; }
+    .btn-ghost { background: transparent; color: var(--black); border: 1.5px solid var(--g300); padding: 13.5px 24px; }
+    .btn-ghost:hover { border-color: var(--black); }
 
-    /* Hero visual */
-    .hero-visual { position: relative; }
-    .hero-card {
-      background: var(--white);
-      border: 1px solid var(--g200);
-      border-radius: var(--r);
-      padding: 20px;
-      box-shadow: 0 4px 24px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
-    }
-    .hero-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .hero-card-title { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g500); }
-    .hero-stat { text-align: right; }
-    .hero-stat-num { font-size: 24px; font-weight: 700; font-family: var(--font-b); color: var(--black); line-height: 1; }
-    .hero-stat-lbl { font-size: 11px; color: var(--g500); margin-top: 2px; }
-    .hero-search-mock { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--r-sm); padding: 14px 16px; font-size: 14px; color: var(--g500); margin-bottom: 12px; font-style: italic; }
-    .hero-results { display: flex; flex-direction: column; gap: 8px; }
-    .hero-result-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: var(--g50); border-radius: var(--r-sm); border: 1px solid var(--g100); }
-    .hero-result-name { font-size: 14px; font-weight: 500; }
-    .hero-result-sub { font-size: 12px; color: var(--g500); margin-top: 2px; }
-    .hero-result-price { font-size: 14px; font-weight: 700; text-align: right; }
-    .hero-result-avail { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 2px; text-align: right; }
-    .hero-badge { position: absolute; bottom: -16px; right: 24px; background: var(--black); color: var(--white); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.15); display: flex; align-items: center; gap: 8px; }
-    .hero-badge-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+    /* HERO */
+    .hero { padding: 88px 0 96px; }
+    .hero-inner { display: grid; grid-template-columns: 1.05fr 1fr; gap: 72px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green); background: var(--green-bg); padding: 6px 12px; border-radius: 20px; margin-bottom: 24px; }
+    .eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    h1 { font-family: var(--font-d); font-size: clamp(40px, 5.2vw, 64px); font-weight: 700; line-height: 1.04; letter-spacing: -.02em; margin-bottom: 24px; text-wrap: balance; }
+    h1 em, h2 em { font-style: italic; color: var(--g500); font-weight: 600; }
+    .hero-sub { font-size: 18px; color: var(--g700); line-height: 1.6; max-width: 480px; margin-bottom: 36px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 28px; font-size: 13px; color: var(--g500); }
+    .facts span { display: inline-flex; align-items: center; gap: 6px; }
+    .facts svg { width: 15px; height: 15px; stroke: var(--green); stroke-width: 2.4; }
 
-    /* ── LOGOS / SOCIAL PROOF ── */
-    .proof-strip { padding: 40px 0; border-bottom: 1px solid var(--g100); }
-    .proof-inner { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
-    .proof-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--g400); white-space: nowrap; }
-    .proof-divider { width: 1px; height: 20px; background: var(--g200); flex-shrink: 0; }
-    .proof-items { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-    .proof-item { font-size: 14px; font-weight: 600; color: var(--g400); display: flex; align-items: center; gap: 6px; }
-    .proof-item span { font-size: 12px; font-weight: 400; }
+    /* Search demo */
+    .demo { background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); padding: 18px; box-shadow: 0 24px 60px -24px rgba(13,13,11,.18), 0 2px 6px rgba(13,13,11,.04); }
+    .demo-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .demo-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g400); }
+    .demo-dots { display: flex; gap: 5px; }
+    .demo-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--g200); }
+    .demo-search { display: flex; align-items: center; gap: 10px; background: var(--g50); border: 1px solid var(--g200); border-radius: var(--r-sm); padding: 13px 14px; font-size: 15px; margin-bottom: 12px; min-height: 50px; }
+    .demo-search svg { color: var(--g400); }
+    .demo-q::after { content: ''; display: inline-block; width: 1.5px; height: 17px; background: var(--black); margin-left: 2px; vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .demo-results { display: flex; flex-direction: column; gap: 8px; transition: opacity .25s; }
+    .demo-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--g100); border-radius: var(--r-sm); background: var(--white); }
+    .demo-name { font-size: 14px; font-weight: 600; }
+    .demo-sub { font-size: 12px; color: var(--g500); margin-top: 1px; }
+    .demo-right { text-align: right; flex-shrink: 0; }
+    .demo-price { font-size: 15px; font-weight: 700; }
+    .demo-avail { font-size: 11px; font-weight: 600; color: var(--green); }
+    .demo-avail.order { color: var(--g500); }
+    .demo-call { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: var(--r-sm); background: var(--black); color: var(--white); font-size: 13px; font-weight: 600; }
+    .demo-call .wa-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--wa); display: flex; align-items: center; justify-content: center; }
+    .demo-call .wa-dot svg { width: 13px; height: 13px; fill: #fff; }
+    .demo-note { font-size: 12px; color: var(--g400); text-align: center; margin-top: 12px; }
 
-    /* ── PROBLEM ── */
-    .problem { padding: 96px 0; background: var(--g50); border-bottom: 1px solid var(--g100); }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g500); margin-bottom: 16px; }
-    .section-title { font-family: var(--font-d); font-size: clamp(28px, 3.5vw, 42px); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 20px; }
-    .section-title em { font-style: italic; color: var(--g500); }
-    .section-sub { font-size: 17px; color: var(--g700); line-height: 1.65; max-width: 540px; }
-    .problem-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    .problem-points { display: flex; flex-direction: column; gap: 20px; margin-top: 36px; }
-    .problem-point { display: flex; align-items: flex-start; gap: 14px; }
-    .problem-icon { width: 36px; height: 36px; background: var(--white); border: 1px solid var(--g200); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-    .problem-text strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-    .problem-text p { font-size: 14px; color: var(--g700); line-height: 1.5; }
-    .problem-visual { display: flex; flex-direction: column; gap: 10px; }
-    .classifieds-mock { background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); padding: 16px; }
-    .classifieds-header { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--g400); margin-bottom: 12px; }
-    .classifieds-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--g100); font-size: 13px; }
-    .classifieds-item:last-child { border-bottom: none; }
-    .classifieds-item.irrelevant { opacity: .35; text-decoration: line-through; }
-    .classifieds-item.relevant { font-weight: 600; }
-    .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-    .tag-bad { background: #fef2f2; color: #b83232; }
-    .tag-good { background: var(--green-bg); color: var(--green); }
+    /* SECTIONS */
+    section { scroll-margin-top: 64px; }
+    .band { padding: 104px 0; }
+    .band.alt { background: var(--g50); border-top: 1px solid var(--g100); border-bottom: 1px solid var(--g100); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g500); margin-bottom: 14px; }
+    h2 { font-family: var(--font-d); font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; line-height: 1.12; letter-spacing: -.02em; margin-bottom: 18px; text-wrap: balance; }
+    .lead { font-size: 17px; color: var(--g700); line-height: 1.65; max-width: 540px; }
+    .center { text-align: center; }
+    .center .lead { margin: 0 auto; }
 
-    /* ── HOW IT WORKS ── */
-    .how { padding: 96px 0; border-bottom: 1px solid var(--g100); }
-    .how-header { text-align: center; max-width: 560px; margin: 0 auto 64px; }
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--g100); border-radius: var(--r); overflow: hidden; }
-    .step { background: var(--white); padding: 36px 32px; position: relative; }
-    .step-num { font-family: var(--font-d); font-size: 48px; font-weight: 700; color: var(--g200); line-height: 1; margin-bottom: 20px; }
-    .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; letter-spacing: -.01em; }
-    .step p { font-size: 14px; color: var(--g700); line-height: 1.6; }
-    .step-arrow { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: var(--g100); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; }
-    .step:last-child .step-arrow { display: none; }
+    /* COMPARE */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; align-items: start; }
+    .cmp { background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); padding: 24px; }
+    .cmp.good { border-color: var(--black); box-shadow: 0 16px 40px -24px rgba(13,13,11,.25); }
+    .cmp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .cmp-title { font-size: 15px; font-weight: 700; }
+    .cmp-q { font-size: 13px; color: var(--g500); margin-bottom: 14px; }
+    .pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+    .pill-bad { background: var(--red-bg); color: var(--red); }
+    .pill-good { background: var(--green-bg); color: var(--green); }
+    .cmp-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--g100); font-size: 14px; }
+    .cmp-row.off { color: var(--g400); }
+    .cmp-row.off span:first-child { text-decoration: line-through; text-decoration-color: var(--g300); }
+    .cmp-row b { font-weight: 700; }
+    .cmp-foot { margin-top: 14px; font-size: 13px; color: var(--g700); display: flex; gap: 8px; align-items: flex-start; }
+    .cmp-foot svg { width: 16px; height: 16px; margin-top: 2px; }
+    .cmp:not(.good) .cmp-foot { color: var(--g500); }
 
-    /* ── BENEFITS ── */
-    .benefits { padding: 96px 0; background: var(--g50); border-bottom: 1px solid var(--g100); }
-    .benefits-header { max-width: 560px; margin-bottom: 56px; }
-    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--g300); border-radius: var(--r); overflow: hidden; border: 1px solid var(--g300); }
-    .benefit-card { background: var(--white); padding: 36px; }
-    .benefit-icon { font-size: 28px; margin-bottom: 18px; }
-    .benefit-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; letter-spacing: -.01em; }
-    .benefit-card p { font-size: 14px; color: var(--g700); line-height: 1.65; }
-    .benefit-card.highlight { background: var(--black); color: var(--white); }
-    .benefit-card.highlight h3 { color: var(--white); }
-    .benefit-card.highlight p { color: var(--g400); }
+    /* STEPS */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; counter-reset: step; }
+    .step { border-top: 2px solid var(--black); padding-top: 22px; }
+    .step-num { font-family: var(--font-d); font-size: 15px; font-weight: 700; font-style: italic; color: var(--g500); margin-bottom: 14px; }
+    .step h3 { font-size: 19px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 8px; }
+    .step p { font-size: 15px; color: var(--g700); line-height: 1.6; }
+    .step .alt-path { margin-top: 10px; font-size: 13px; color: var(--g500); }
+    .step .alt-path a { color: var(--black); font-weight: 600; }
 
-    /* ── DIRECT CONTACT ── */
-    .direct { padding: 80px 0; border-bottom: 1px solid var(--g100); }
-    .direct-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    .direct-quote { font-family: var(--font-d); font-size: clamp(22px, 2.5vw, 30px); font-weight: 600; font-style: italic; line-height: 1.4; color: var(--black); border-left: 3px solid var(--black); padding-left: 24px; margin: 24px 0; }
-    .direct-visual { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--r); padding: 28px; }
-    .flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--g100); }
-    .flow-step:last-child { border-bottom: none; }
-    .flow-dot { width: 32px; height: 32px; background: var(--black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--white); flex-shrink: 0; margin-top: 2px; }
-    .flow-dot.green { background: var(--green); }
-    .flow-content strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .flow-content span { font-size: 13px; color: var(--g500); }
+    /* PRINCIPLES */
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--g200); border: 1px solid var(--g200); border-radius: var(--r); overflow: hidden; margin-top: 56px; }
+    .principle { background: var(--white); padding: 32px 28px; }
+    .principle .ico-wrap { width: 40px; height: 40px; border-radius: 12px; background: var(--g100); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .principle h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .principle p { font-size: 14px; color: var(--g700); line-height: 1.6; }
 
-    /* ── PRICING ── */
-    .pricing { padding: 96px 0; background: var(--g50); border-bottom: 1px solid var(--g100); }
-    .pricing-header { text-align: center; max-width: 480px; margin: 0 auto 56px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 0 auto; }
-    .pricing-card { background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); padding: 32px; position: relative; }
-    .pricing-card.current { border-color: var(--black); border-width: 2px; }
-    .pricing-card.future { opacity: .6; }
-    .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--black); color: var(--white); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
-    .pricing-tier { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g500); margin-bottom: 12px; }
-    .pricing-price { font-family: var(--font-b); font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-    .pricing-price sup { font-size: 18px; font-weight: 600; vertical-align: super; }
-    .pricing-price-sub { font-size: 13px; color: var(--g500); margin-bottom: 24px; }
-    .pricing-features { display: flex; flex-direction: column; gap: 10px; }
-    .pricing-feature { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-    .pricing-feature::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
-    .pricing-feature.dim { color: var(--g400); }
-    .pricing-feature.dim::before { color: var(--g300); content: '—'; }
-
-    /* ── FAQ ── */
-    .faq { padding: 96px 0; border-bottom: 1px solid var(--g100); }
-    .faq-header { max-width: 480px; margin-bottom: 48px; }
-    .faq-list { max-width: 720px; display: flex; flex-direction: column; }
-    .faq-item { border-bottom: 1px solid var(--g100); }
-    .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; cursor: pointer; gap: 16px; user-select: none; }
-    .faq-q-text { font-size: 16px; font-weight: 600; line-height: 1.4; }
-    .faq-icon { width: 24px; height: 24px; border: 1.5px solid var(--g300); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1; flex-shrink: 0; transition: transform .2s, background .2s; padding-bottom: 1px; }
-    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--black); border-color: var(--black); color: var(--white); }
-    .faq-a { font-size: 15px; color: var(--g700); line-height: 1.7; padding-bottom: 20px; display: none; }
+    /* FAQ */
+    .faq-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: 72px; align-items: start; }
+    .faq-item { border-bottom: 1px solid var(--g200); }
+    .faq-item:first-child { border-top: 1px solid var(--g200); }
+    .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; background: none; border: none; font: 600 16px var(--font-b); color: var(--black); text-align: left; cursor: pointer; }
+    .faq-q svg { width: 18px; height: 18px; transition: transform .2s; color: var(--g500); }
+    .faq-item.open .faq-q svg { transform: rotate(45deg); color: var(--black); }
+    .faq-a { display: none; padding: 0 32px 20px 0; font-size: 15px; color: var(--g700); line-height: 1.7; }
     .faq-item.open .faq-a { display: block; }
 
-    /* ── CTA FINAL ── */
-    .cta-final { padding: 100px 0; text-align: center; }
-    .cta-final h2 { font-family: var(--font-d); font-size: clamp(32px, 4vw, 52px); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 20px; }
-    .cta-final h2 em { font-style: italic; color: var(--g500); }
-    .cta-final p { font-size: 17px; color: var(--g700); margin-bottom: 36px; max-width: 440px; margin-left: auto; margin-right: auto; }
-    .cta-final-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
-    .cta-trust { margin-top: 20px; font-size: 13px; color: var(--g500); }
+    /* CTA */
+    .cta { padding: 112px 0; text-align: center; background: var(--black); color: var(--white); }
+    .cta h2 { font-size: clamp(34px, 4.4vw, 54px); margin-bottom: 18px; }
+    .cta h2 em { color: #9a9a90; }
+    .cta p { font-size: 17px; color: #b9b9b0; max-width: 460px; margin: 0 auto 36px; }
+    .cta .btn-ghost { color: var(--white); border-color: #4a4a46; }
+    .cta .btn-ghost:hover { border-color: var(--white); }
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    /* ── SUPPORT ── */
-    .support { padding: 96px 0; background: var(--g50); border-bottom: 1px solid var(--g100); }
-    .support-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-    .support-items { display: flex; flex-direction: column; gap: 24px; }
-    .support-item { display: flex; align-items: flex-start; gap: 14px; }
-    .support-item-icon { font-size: 22px; margin-top: 2px; flex-shrink: 0; }
-    .support-item strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-    .support-item p { font-size: 14px; color: var(--g700); line-height: 1.55; }
-    .support-card { background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,.04); }
-    .support-card-header { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--g500); margin-bottom: 20px; }
-    .support-checklist { display: flex; flex-direction: column; gap: 12px; }
-    .support-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 500; line-height: 1.4; }
-    .support-check.no { color: var(--g500); }
-    .check-icon { font-size: 13px; font-weight: 700; color: var(--green); flex-shrink: 0; margin-top: 1px; }
-    .check-icon.no { color: var(--g400); }
-    @media (max-width: 768px) { .support-inner { grid-template-columns: 1fr; gap: 40px; } }
+    /* FOOTER */
+    footer { padding: 32px 0; border-top: 1px solid #222220; background: var(--black); color: #8a8a82; font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .footer-inner a { text-decoration: none; }
+    .footer-inner a:hover { color: var(--white); }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
 
-    /* ── FOOTER ── */
-    footer { background: var(--g50); border-top: 1px solid var(--g100); padding: 40px 0; }
-    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-    .footer-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; color: var(--black); text-decoration: none; }
-    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-    .footer-links a { font-size: 13px; color: var(--g500); text-decoration: none; transition: color .15s; }
-    .footer-links a:hover { color: var(--black); }
-    .footer-copy { font-size: 13px; color: var(--g400); }
-
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      .hero { padding: 64px 0 56px; }
+    /* MOBILE */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero { padding: 56px 0 72px; }
       .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      /* hero order handled above */
-      .hero-badge { display: none; }
-      .problem-inner { grid-template-columns: 1fr; gap: 48px; }
-      .problem-visual { order: 2; }
-      .steps { grid-template-columns: 1fr; }
-      .step-arrow { display: none; }
-      .benefits-grid { grid-template-columns: 1fr; }
-      .direct-inner { grid-template-columns: 1fr; gap: 40px; }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
-      .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .proof-inner { gap: 16px; }
+      .compare, .steps, .principles { grid-template-columns: 1fr; }
+      .steps { gap: 32px; }
+      .faq-wrap { grid-template-columns: 1fr; gap: 32px; }
+      .band { padding: 80px 0; }
     }
     @media (max-width: 480px) {
       .container { padding: 0 16px; }
-      .hero h1 { font-size: 34px; }
-      .section-title { font-size: 28px; }
+      .nav-login { padding: 8px 12px; font-size: 13px; }
+      .lang button { padding: 5px 7px; }
+      .hero-sub { font-size: 17px; }
+      .hero-actions .btn, .cta-actions .btn { width: 100%; }
+      .demo { padding: 14px; }
+      .cta { padding: 88px 0; }
     }
-    /* Scroll animations */
-    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
-    .fade-up.visible { opacity: 1; transform: none; }
+    @media (max-width: 360px) {
+      .nav-logo span { display: none; }
+    }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .demo-q::after { animation: none; }
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2z"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-6-2.4l-3.6-3.6a2 2 0 0 1 2.8-2.8L7 15"/></symbol>
+</svg>
+
 <nav>
-  <div class="container">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 22H12V2H4V22ZM17 2C14.2386 2 12 4.23858 12 7C12 9.76142 14.2386 12 17 12C19.7614 12 22 9.76142 22 7C22 4.23858 19.7614 2 17 2Z" fill="#0D0D0B"/></svg>
-        Partal
-      </a>
-      <div class="nav-links" id="navLinks">
-        <a href="#how" class="nav-link" data-az="Necə işləyir" data-ru="Как работает" data-en="How it works">Necə işləyir</a>
-        <a href="#benefits" class="nav-link" data-az="Üstünlüklər" data-ru="Преимущества" data-en="Benefits">Üstünlüklər</a>
-        <a href="#pricing" class="nav-link" data-az="Qiymətlər" data-ru="Цены" data-en="Pricing">Qiymətlər</a>
-        <a href="#faq" class="nav-link" data-az="Suallar" data-ru="Вопросы" data-en="FAQ">Suallar</a>
-        <a href="#support" class="nav-link" data-az="Dəstək" data-ru="Поддержка" data-en="Support">Dəstək</a>
+  <div class="container nav-inner">
+    <a href="#top" class="nav-logo" aria-label="Partal">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 22H12V2H4V22ZM17 2C14.2386 2 12 4.23858 12 7C12 9.76142 14.2386 12 17 12C19.7614 12 22 9.76142 22 7C22 4.23858 19.7614 2 17 2Z" fill="#0D0D0B"/></svg>
+      <span>Partal</span>
+    </a>
+    <div class="nav-links">
+      <a href="#compare" class="nav-link" data-i18n="nav-compare">Tap.az ilə fərq</a>
+      <a href="#how" class="nav-link" data-i18n="nav-how">Necə işləyir</a>
+      <a href="#faq" class="nav-link" data-i18n="nav-faq">Suallar</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="az" class="active">AZ</button>
+        <button type="button" data-lang="ru">RU</button>
+        <button type="button" data-lang="en" hidden>EN</button>
       </div>
-      <div class="nav-right">
-        <div class="lang-switcher">
-          <button class="lang-btn active" data-lang="az" onclick="setLang('az')">AZ</button>
-          <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
-          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-        </div>
-        <a href="https://az.partal.app" class="nav-cta" data-az="Pulsuz başla →" data-ru="Начать бесплатно →" data-en="Start free →">Pulsuz başla →</a>
-      </div>
+      <a href="https://az.partal.app" class="nav-login" data-i18n="nav-login">Daxil ol</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
+<main id="top">
+
 <section class="hero">
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-label"><span id="hero-label-text">Azərbaycan üçün</span></div>
-        <h1 id="hero-h1">Ehtiyat hissənizi<br/><em>axtaranlar var.</em></h1>
-        <p class="hero-sub" id="hero-sub">Partal — ehtiyat hissəsi satıcıları üçün ixtisaslaşmış platforma. Alıcılar sizin məhsulu axtarır — siz sadəcə kataloqunuzu yükləyin.</p>
-        <div class="hero-actions">
-          <a href="https://az.partal.app" class="btn-primary">Pulsuz qeydiyyat →</a>
-          <a href="#how" class="btn-secondary">Necə işləyir</a>
-        </div>
-        <div class="hero-trust" id="hero-trust">Kart tələb olunmur. Heç bir öhdəlik yoxdur.</div>
+  <div class="container hero-inner">
+    <div>
+      <div class="eyebrow" data-i18n="hero-eyebrow">Ehtiyat hissəsi satıcıları üçün</div>
+      <h1 data-i18n="hero-h1">Ehtiyat hissənizi<br/><em>axtaranlar var.</em></h1>
+      <p class="hero-sub" data-i18n="hero-sub">Qiymət siyahınızı WhatsApp-a göndərin — kataloqu özümüz yükləyək. Alıcı maşınının markasını yazır, sizin hissəni görür və birbaşa sizə zəng edir.</p>
+      <div class="hero-actions">
+        <a class="btn btn-wa js-wa" href="#" target="_blank" rel="noopener">
+          <span class="wa-dot"><svg><use href="#i-wa"/></svg></span>
+          <span data-i18n="cta-wa">WhatsApp-a yazın</span>
+        </a>
+        <a class="btn btn-ghost" href="https://az.partal.app" data-i18n="cta-self">Özüm qeydiyyatdan keçim</a>
       </div>
-      <div class="hero-visual">
-        <div class="hero-card">
-          <div class="hero-card-header">
-            <div class="hero-card-title">Canlı axtarış</div>
-            <div class="hero-stat">
-              <div class="hero-stat-num">2 san</div>
-              <div class="hero-stat-lbl">orta cavab vaxtı</div>
-            </div>
-          </div>
-          <div class="hero-search-mock">Toyota Camry 2016 radiator…</div>
-          <div class="hero-results">
-            <div class="hero-result-item">
-              <div>
-                <div class="hero-result-name">Soyutma radiatoru OEM</div>
-                <div class="hero-result-sub">Nissens · Bakı</div>
-              </div>
-              <div>
-                <div class="hero-result-price">₼185</div>
-                <div class="hero-result-avail">● Stokda var</div>
-              </div>
-            </div>
-            <div class="hero-result-item">
-              <div>
-                <div class="hero-result-name">Radiator aftermarket</div>
-                <div class="hero-result-sub">Çin · Bakı</div>
-              </div>
-              <div>
-                <div class="hero-result-price">₼120</div>
-                <div class="hero-result-avail">● Stokda var</div>
-              </div>
-            </div>
-            <div class="hero-result-item">
-              <div>
-                <div class="hero-result-name">Radiator + ventilyator</div>
-                <div class="hero-result-sub">Valeo · Gəncə</div>
-              </div>
-              <div>
-                <div class="hero-result-price">₼220</div>
-                <div class="hero-result-avail" style="color:var(--g500)">Sifarişlə</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-badge">
-          <div class="hero-badge-dot"></div>
-          Alıcılar indi onlayndır
-        </div>
+      <div class="facts">
+        <span><svg class="ico"><use href="#i-check"/></svg><span data-i18n="fact-1">Pulsuz</span></span>
+        <span><svg class="ico"><use href="#i-check"/></svg><span data-i18n="fact-2">Satışdan faiz yoxdur</span></span>
+        <span><svg class="ico"><use href="#i-check"/></svg><span data-i18n="fact-3">Kart və müqavilə yoxdur</span></span>
+      </div>
+    </div>
+
+    <div class="demo" aria-label="Partal axtarış nümunəsi">
+      <div class="demo-top">
+        <div class="demo-label" data-i18n="demo-label">Alıcı belə axtarır</div>
+        <div class="demo-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <div class="demo-search"><svg class="ico"><use href="#i-search"/></svg><span class="demo-q" id="demoQ">Toyota Camry 2016 radiator</span></div>
+      <div class="demo-results" id="demoResults"></div>
+      <div class="demo-call"><span class="wa-dot"><svg><use href="#i-wa"/></svg></span><span data-i18n="demo-call">Bir toxunuşla satıcıya yazır — Partal araya girmir</span></div>
+      <div class="demo-note" data-i18n="demo-note">Nümunə. Qiymətlər şərtidir.</div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="compare">
+  <div class="container">
+    <div class="center">
+      <div class="kicker" data-i18n="cmp-kicker">Niyə Partal</div>
+      <h2 data-i18n="cmp-h2">Tap.az hər şey üçündür.<br/><em>Partal — yalnız ehtiyat hissəsi.</em></h2>
+      <p class="lead" data-i18n="cmp-lead">Ümumi elan saytında alıcı sizin elanınızı mebel, telefon və qızdırıcıların arasında axtarır. Partalda marka, model və il üzrə axtarır — və dərhal sizi tapır.</p>
+    </div>
+    <div class="compare">
+      <div class="cmp reveal">
+        <div class="cmp-head"><div class="cmp-title" data-i18n="cmp-a-title">Ümumi elan saytı</div><span class="pill pill-bad" data-i18n="cmp-a-pill">Qarışıq</span></div>
+        <div class="cmp-q" data-i18n="cmp-q">Axtarış: «radiator»</div>
+        <div class="cmp-row off"><span data-i18n="cmp-a1">Radiator qızdırıcı (ev üçün)</span></div>
+        <div class="cmp-row off"><span data-i18n="cmp-a2">Radiator boyası, 1 L</span></div>
+        <div class="cmp-row"><span data-i18n="cmp-a3">Toyota Camry radiatoru</span></div>
+        <div class="cmp-row off"><span data-i18n="cmp-a4">Kompüter üçün radiator fan</span></div>
+        <div class="cmp-row off"><span data-i18n="cmp-a5">İşlənmiş radiator batareyası</span></div>
+        <div class="cmp-foot"><svg class="ico"><use href="#i-x"/></svg><span data-i18n="cmp-a-foot">Hər məhsulu əllə elan kimi yerləşdirirsiniz</span></div>
+      </div>
+      <div class="cmp good reveal">
+        <div class="cmp-head"><div class="cmp-title">Partal</div><span class="pill pill-good" data-i18n="cmp-b-pill">Dəqiq</span></div>
+        <div class="cmp-q" data-i18n="cmp-q2">Axtarış: «radiator Toyota Camry 2016»</div>
+        <div class="cmp-row"><span data-i18n="cmp-b1">Radiator OEM · Denso</span><b>₼185</b></div>
+        <div class="cmp-row"><span data-i18n="cmp-b2">Radiator · Nissens</span><b>₼140</b></div>
+        <div class="cmp-row"><span data-i18n="cmp-b3">Radiator · işlənmiş</span><b>₼70</b></div>
+        <div class="cmp-foot"><svg class="ico" style="stroke:var(--green)"><use href="#i-check"/></svg><span data-i18n="cmp-b-foot">Bütün qiymət siyahınız bir dəfəyə yüklənir</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROOF STRIP -->
-<section class="proof-strip">
+<section class="band" id="how">
   <div class="container">
-    <div class="proof-inner">
-      <div class="proof-label"><span id="proof-label-text">Tanınmış brendlər kataloqda</span></div>
-      <div class="proof-divider"></div>
-      <div class="proof-items">
-        <div class="proof-item">Bosch</div>
-        <div class="proof-item">Brembo</div>
-        <div class="proof-item">KYB</div>
-        <div class="proof-item">Mann</div>
-        <div class="proof-item">Gates</div>
-        <div class="proof-item">NGK</div>
-        <div class="proof-item">Sachs</div>
-        <div class="proof-item">Valeo</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROBLEM -->
-<section class="problem">
-  <div class="container">
-    <div class="problem-inner">
-      <div>
-        <div class="section-label"><span id="problem-label-text">Problem</span></div>
-        <h2 class="section-title" id="problem-title">Elanlarınız <em>itib gedir.</em></h2>
-        <p class="section-sub" id="problem-sub">Tap.az, OLX, Lalafo — bu platformalar hər şey üçündür. Alıcı ehtiyat hissəsi axtaranda mebellərin, telefonların, ev heyvanlarının arasında sizin elanınızı tapmaq çətindir.</p>
-        <div class="problem-points">
-          <div class="problem-point">
-            <div class="problem-icon">📋</div>
-            <div class="problem-text">
-              <strong>Hər elanı əllə əlavə etmək lazımdır</strong>
-              <p>Yüzlərlə məhsulunuz varsa, hər birini ayrıca yükləmək saatlar aparır.</p>
-            </div>
-          </div>
-          <div class="problem-point">
-            <div class="problem-icon">🔍</div>
-            <div class="problem-text">
-              <strong>Uyğun olmayan axtarış nəticələri</strong>
-              <p>Alıcı "Toyota Camry radiator" yazanda başqa şeylər görünür — siz yox.</p>
-            </div>
-          </div>
-          <div class="problem-point">
-            <div class="problem-icon">📞</div>
-            <div class="problem-text">
-              <strong>Vaxtınız itirilir</strong>
-              <p>Məhsulun olub-olmadığını soruşmaq üçün zəng edənlər — çünki kataloqunuz yoxdur.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="problem-visual">
-        <div class="classifieds-mock">
-          <div class="classifieds-header">Ümumi elan platforması — "radiator" axtarışı</div>
-          <div class="classifieds-item irrelevant"><span>Radiator qızdırıcı (ev)</span><span class="tag tag-bad">Uyğun deyil</span></div>
-          <div class="classifieds-item irrelevant"><span>Radiator boyası, 1L</span><span class="tag tag-bad">Uyğun deyil</span></div>
-          <div class="classifieds-item relevant"><span>Toyota Camry radiatoru</span><span class="tag tag-good">Uyğun</span></div>
-          <div class="classifieds-item irrelevant"><span>Radiator qapağı (tikinti)</span><span class="tag tag-bad">Uyğun deyil</span></div>
-          <div class="classifieds-item irrelevant"><span>İşlənmiş radiator batareyası</span><span class="tag tag-bad">Uyğun deyil</span></div>
-          <div class="classifieds-item relevant"><span>Peugeot 308 radiatoru</span><span class="tag tag-good">Uyğun</span></div>
-          <div class="classifieds-item irrelevant"><span>Radiator fan (kompüter)</span><span class="tag tag-bad">Uyğun deyil</span></div>
-        </div>
-        <div style="text-align:center; font-size:13px; color:var(--g500); margin-top:12px;">Partalda — yalnız ehtiyat hissəsi nəticələri</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="container">
-    <div class="how-header">
-      <div class="section-label"><span id="how-label-text">Necə işləyir</span></div>
-      <h2 class="section-title" id="how-title">3 addımda <em>başlayın</em></h2>
-      <p id="how-sub" style="font-size:16px; color:var(--g700); line-height:1.65;">Qeydiyyatdan 10 dəqiqə sonra məhsullarınız axtarışda görünə bilər.</p>
-    </div>
+    <div class="kicker" data-i18n="how-kicker">Necə işləyir</div>
+    <h2 data-i18n="how-h2">Sizdən — siyahı.<br/><em>Qalanı bizdən.</em></h2>
     <div class="steps">
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">01</div>
-        <h3 id="step1-title">Qeydiyyat</h3>
-        <p id="step1-body">Telefon nömrənizlə 30 saniyəyə qeydiyyatdan keçin. Kart, müqavilə, sənəd tələb olunmur.</p>
-        <div class="step-arrow">→</div>
+        <h3 data-i18n="s1-h">Siyahını göndərin</h3>
+        <p data-i18n="s1-p">WhatsApp-a Excel faylı, qiymət siyahısının şəkli və ya dəftərin fotosu — hansı varsa.</p>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">02</div>
-        <h3 id="step2-title">Kataloqunuzu yükləyin</h3>
-        <p id="step2-body">CSV, XLS, XLSX formatında qiymət siyahınızı yükləyin. Sistem avtomatik olaraq sütunları tanıyır və məhsul kartları yaradır.</p>
-        <div class="step-arrow">→</div>
+        <h3 data-i18n="s2-h">Kataloqu biz yükləyirik</h3>
+        <p data-i18n="s2-p">Hər hissəni uyğun maşınlarla birlikdə Partala əlavə edirik. Siz yoxlayırsınız — hazırdır.</p>
+        <p class="alt-path" data-i18n="s2-alt">Özünüz etmək istəyirsiniz? <a href="https://az.partal.app">CSV və ya Excel yükləyin →</a></p>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">03</div>
-        <h3 id="step3-title">Alıcılar sizi tapır</h3>
-        <p id="step3-body">Alıcı marka, model, il və hissə adını yazır — sizin məhsulunuz dərhal görünür. Əlaqə birbaşa sizinlə.</p>
-        <div class="step-arrow">→</div>
+        <h3 data-i18n="s3-h">Alıcılar sizə zəng edir</h3>
+        <p data-i18n="s3-p">Alıcı markanı, modeli və hissəni yazır, sizin məhsulu görür və birbaşa zəng edir və ya WhatsApp-a yazır.</p>
+      </div>
+    </div>
+
+    <div class="principles">
+      <div class="principle reveal">
+        <div class="ico-wrap"><svg class="ico"><use href="#i-percent"/></svg></div>
+        <h3 data-i18n="p1-h">Faiz yoxdur</h3>
+        <p data-i18n="p1-p">Satışdan pay almırıq. Qiyməti də, müştərini də siz idarə edirsiniz.</p>
+      </div>
+      <div class="principle reveal">
+        <div class="ico-wrap"><svg class="ico"><use href="#i-phone"/></svg></div>
+        <h3 data-i18n="p2-h">Birbaşa əlaqə</h3>
+        <p data-i18n="p2-p">Alıcı sizin nömrənizə zəng edir. Partal araya girmir, sifarişi saxlamır.</p>
+      </div>
+      <div class="principle reveal">
+        <div class="ico-wrap"><svg class="ico"><use href="#i-hand"/></svg></div>
+        <h3 data-i18n="p3-h">Texniki bilik lazım deyil</h3>
+        <p data-i18n="p3-p">Sualınız olsa — yazın və ya zəng edin. Hər addımda kömək edirik.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BENEFITS -->
-<section class="benefits" id="benefits">
-  <div class="container">
-    <div class="benefits-header">
-      <div class="section-label"><span id="benefits-label-text">Üstünlüklər</span></div>
-      <h2 class="section-title" id="benefits-title">Niyə <em>Partal?</em></h2>
+<section class="band alt" id="faq">
+  <div class="container faq-wrap">
+    <div>
+      <div class="kicker" data-i18n="faq-kicker">Suallar</div>
+      <h2 data-i18n="faq-h2">Tez-tez <em>soruşulanlar</em></h2>
     </div>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <div class="benefit-icon">🎯</div>
-        <h3 id="b1-title">İxtisaslaşmış auditoriya</h3>
-        <p id="b1-body">Partalda yalnız ehtiyat hissəsi axtaranlar var. Hər ziyarətçi potensial alıcınızdır — mebel, telefon, ev heyvanı axtaranlar yox.</p>
-      </div>
-      <div class="benefit-card highlight">
-        <div class="benefit-icon">⚡</div>
-        <h3 id="b2-title">Ağıllı yükləmə</h3>
-        <p id="b2-body">Mövcud qiymət siyahınızı yükləyin — sistem sütunları özü tanıyır, məhsul kartlarını avtomatik yaradır. Əllə daxiletmə tələb olunmur.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">🕐</div>
-        <h3 id="b3-title">24/7 işləyir</h3>
-        <p id="b3-body">Kataloqnuz gecə-gündüz onlayndır. Siz yatarkən də alıcılar sizi tapır, zəng üçün nömrənizi görür.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">📊</div>
-        <h3 id="b4-title">Satış analitikası</h3>
-        <p id="b4-body">Hansı məhsullarınıza daha çox baxıldığını, neçə nəfərin sizinlə əlaqə saxladığını izləyin. Qərарlarınızı data ilə qəbul edin.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DIRECT CONTACT -->
-<section class="direct">
-  <div class="container">
-    <div class="direct-inner">
-      <div>
-        <div class="section-label"><span id="direct-label-text">Şəffaflıq</span></div>
-        <h2 class="section-title" id="direct-title">Biz arada <em>durmuruq.</em></h2>
-        <blockquote class="direct-quote" id="direct-quote">"Alıcı birbaşa sizinlə əlaqə saxlayır. Zəng, WhatsApp — istədiyiniz üsulla."</blockquote>
-        <p id="direct-body" style="font-size:15px; color:var(--g700); line-height:1.7;">Partal sadəcə sizi tapılabilir edir. Satışdan pay almırıq, əməliyyatlarınıza nəzarət etmirik. Biznes məlumatlarınız yalnız sizə məxsusdur.</p>
-      </div>
-      <div class="direct-visual">
-        <div class="flow-step">
-          <div class="flow-dot">1</div>
-          <div class="flow-content">
-            <strong id="flow1-title">Alıcı axtarış edir</strong>
-            <span id="flow1-sub">"Hyundai Accent 2018 tormoz bəndi" — Partalda</span>
-          </div>
-        </div>
-        <div class="flow-step">
-          <div class="flow-dot">2</div>
-          <div class="flow-content">
-            <strong id="flow2-title">Sizin məhsulunuzu tapır</strong>
-            <span id="flow2-sub">Qiymət, vəziyyət, uyğunluq — hamısı göründü</span>
-          </div>
-        </div>
-        <div class="flow-step">
-          <div class="flow-dot green">3</div>
-          <div class="flow-content">
-            <strong id="flow3-title">Birbaşa sizinlə əlaqə saxlayır</strong>
-            <span id="flow3-sub">WhatsApp və ya telefon — Partal araya girmir</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="pricing" id="pricing">
-  <div class="container">
-    <div class="pricing-header">
-      <div class="section-label"><span id="pricing-label-text">Qiymətlər</span></div>
-      <h2 class="section-title" id="pricing-title">Sadə və <em>şəffaf.</em></h2>
-      <p id="pricing-sub" style="font-size:16px; color:var(--g700); line-height:1.65; margin-top:12px;">İndi tamamilə pulsuzdur. Kart tələb olunmur.</p>
-    </div>
-    <div class="pricing-grid">
-      <div class="pricing-card current">
-        <div class="pricing-badge"><span id="pricing-badge-text">İndi aktiv</span></div>
-        <div class="pricing-tier" id="tier1">Başlanğıc</div>
-        <div class="pricing-price" id="price1">Pulsuz</div>
-        <div class="pricing-price-sub" id="price1-sub">Kart tələb olunmur</div>
-        <div class="pricing-features">
-          <div class="pricing-feature" id="feat1-1">Limitsiz məhsul</div>
-          <div class="pricing-feature" id="feat1-2">CSV/XLS yükləmə</div>
-          <div class="pricing-feature" id="feat1-3">Axtarışda görünmə</div>
-          <div class="pricing-feature" id="feat1-4">Əlaqə statistikası</div>
-          <div class="pricing-feature" id="feat1-5">WhatsApp inteqrasiyası</div>
-        </div>
-      </div>
-      <div class="pricing-card future">
-        <div class="pricing-tier" id="tier2">Pro</div>
-        <div class="pricing-price"><sup>₼</sup>29</div>
-        <div class="pricing-price-sub" id="price2-sub">aylıq · tezliklə</div>
-        <div class="pricing-features">
-          <div class="pricing-feature" id="feat2-1">Başlanğıcdakı hər şey</div>
-          <div class="pricing-feature" id="feat2-2">Prioritet yerləşdirmə</div>
-          <div class="pricing-feature" id="feat2-3">Detallı analitika</div>
-          <div class="pricing-feature" id="feat2-4">Çoxlu mağaza</div>
-          <div class="pricing-feature dim">Tezliklə</div>
-        </div>
-      </div>
-      <div class="pricing-card future">
-        <div class="pricing-tier" id="tier3">Biznes</div>
-        <div class="pricing-price"><sup>₼</sup>79</div>
-        <div class="pricing-price-sub" id="price3-sub">aylıq · tezliklə</div>
-        <div class="pricing-features">
-          <div class="pricing-feature" id="feat3-1">Pro-dakı hər şey</div>
-          <div class="pricing-feature" id="feat3-2">API inteqrasiyası</div>
-          <div class="pricing-feature" id="feat3-3">Xüsusi dəstək</div>
-          <div class="pricing-feature" id="feat3-4">Toplu qiymətlər</div>
-          <div class="pricing-feature dim">Tezliklə</div>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:40px;">
-      <a href="https://az.partal.app" class="btn-primary" style="font-size:15px; padding:14px 32px;" id="pricing-cta">Pulsuz başla — kart tələb olunmur →</a>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq" id="faq">
-  <div class="container">
-    <div class="faq-header">
-      <div class="section-label"><span id="faq-label-text">Suallar</span></div>
-      <h2 class="section-title" id="faq-title">Tez-tez <em>soruşulanlar</em></h2>
-    </div>
-    <div class="faq-list">
+    <div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" id="faq1-q">OLX-də artıq satıram — Partal nə verir?</span>
-          <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a" id="faq1-a">OLX ümumi bir platformadır — alıcılar orada minlərlə fərqli kateqoriyadan axtarış edir. Partalda isə yalnız ehtiyat hissəsi axtaran insanlar var. Bu o deməkdir ki, sizin məhsulunuzu görən hər kəs potensial alıcıdır. Üstəlik, Partalda axtarış çox daha dəqiqdir — marka, model, il üzrə filtrasiya var.</div>
+        <button class="faq-q" type="button"><span data-i18n="q1">Tap.az-da artıq satıram. Partal nə verir?</span><svg class="ico"><use href="#i-plus"/></svg></button>
+        <div class="faq-a" data-i18n="a1">Tap.az-da hər məhsulu ayrıca elan kimi yerləşdirirsiniz və alıcı onu başqa kateqoriyaların arasında axtarır. Partalda bütün qiymət siyahınız bir dəfəyə yüklənir, alıcı isə marka, model və il üzrə axtarıb dərhal uyğun hissəni görür. Tap.az-dan çıxmaq lazım deyil — Partal əlavə kanaldır.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" id="faq2-q">Məhsulları əllə daxil etmək lazımdırmı?</span>
-          <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a" id="faq2-a">Xeyr. Mövcud qiymət siyahınızı (CSV, Excel) yükləsəniz, sistem avtomatik olaraq sütunları tanıyır və məhsul kartlarını yaradır. Əgər qiymət siyahınız yoxdursa, tək-tək də əlavə edə bilərsiniz.</div>
+        <button class="faq-q" type="button"><span data-i18n="q2">Pullu olacaqmı?</span><svg class="ico"><use href="#i-plus"/></svg></button>
+        <div class="faq-a" data-i18n="a2">İndi Partal tamamilə pulsuzdur, kart tələb olunmur. Gələcəkdə əlavə imkanlar üçün ödənişli plan ola bilər — amma bu barədə əvvəlcədən xəbər verəcəyik və əsas imkanlar pulsuz qalacaq.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" id="faq3-q">Satışdan faiz götürürsünüzmü?</span>
-          <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a" id="faq3-a">Xeyr, heç vaxt. Partal sizinlə alıcı arasında körpüdür — alıcı birbaşa sizinlə əlaqə saxlayır (zəng, WhatsApp). Biz satış əməliyyatına qatışmırıq, pay almırıq. Biznes məlumatlarınız yalnız sizə məxsusdur.</div>
+        <button class="faq-q" type="button"><span data-i18n="q3">Qiymət siyahım yoxdur, hər şey dəftərdədir.</span><svg class="ico"><use href="#i-plus"/></svg></button>
+        <div class="faq-a" data-i18n="a3">Problem deyil. Dəftərin şəklini WhatsApp-a göndərin — məhsulları özümüz sistemə daxil edəcəyik və sizə yoxlamaq üçün göstərəcəyik.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" id="faq4-q">Nə vaxtdan pullu olacaq?</span>
-          <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a" id="faq4-a">Hazırda platforma tamamilə pulsuzdur və yaxın gələcəkdə belə qalacaq. Ödənişli plan gəldikdə, pulsuz versiya hər zaman mövcud olacaq — yalnız əlavə funksiyalar ödənişli olacaq. Kart məlumatı tələb olunmur.</div>
+        <button class="faq-q" type="button"><span data-i18n="q4">Qeydiyyat necədir?</span><svg class="ico"><use href="#i-plus"/></svg></button>
+        <div class="faq-a" data-i18n="a4">Google hesabı və ya e-poçtla bir dəqiqədə. Sonra mağazanın adını, telefon və WhatsApp nömrənizi yazırsınız — alıcılar sizinlə məhz bu nömrələrlə əlaqə saxlayacaq.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" id="faq5-q">Hansı şəhərlərdə işləyir?</span>
-          <span class="faq-icon">+</span>
-        </div>
-        <div class="faq-a" id="faq5-a">Hazırda Bakı, Gəncə, Naxçıvan və bütün Azərbaycan üzrə işləyir. Digər şəhərlərdəki satıcılar da qeydiyyatdan keçə bilər — onların şəhəri axtarış filtrlərinə avtomatik əlavə olunur.</div>
+        <button class="faq-q" type="button"><span data-i18n="q5">Hansı şəhərlərdə işləyir?</span><svg class="ico"><use href="#i-plus"/></svg></button>
+        <div class="faq-a" data-i18n="a5">Bakıdan başlayırıq. Gəncə, Naxçıvan və digər şəhərlərdən olan satıcılar da qoşula bilər — alıcı axtarışda şəhər üzrə seçim edə bilir.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SUPPORT BLOCK -->
-<section class="support" id="support">
+<section class="cta">
   <div class="container">
-    <div class="support-inner">
-      <div class="support-content">
-        <div class="section-label"><span id="support-label-text">Dəstək</span></div>
-        <h2 class="section-title" id="support-title">Texniki biliklər <em>tələb olunmur.</em></h2>
-        <p id="support-sub" style="font-size:16px; color:var(--g700); line-height:1.7; margin:16px 0 28px;">İnternetdə yeni platformalara qoşulmaq həmişə asan olmur. Bilirik. Ona görə də ilk addımda sizə şəxsən kömək edirik — pulsuz.</p>
-        <div class="support-items">
-          <div class="support-item">
-            <div class="support-item-icon">📞</div>
-            <div>
-              <strong id="support-i1-title">Şəxsi köməklik</strong>
-              <p id="support-i1-body">Qeydiyyat zamanı probleminiz varsa — zəng edin. Hər addımda yanınızdayıq.</p>
-            </div>
-          </div>
-          <div class="support-item">
-            <div class="support-item-icon">📋</div>
-            <div>
-              <strong id="support-i2-title">Məhsul əlavəsini biz edirik</strong>
-              <p id="support-i2-body">Qiymət siyahınız yoxdur? Problem deyil. Sizin məhsulları biz sistemə daxil edirik — siz yalnız məlumatları göndərirsiniz.</p>
-            </div>
-          </div>
-          <div class="support-item">
-            <div class="support-item-icon">🎓</div>
-            <div>
-              <strong id="support-i3-title">Pulsuz təlim</strong>
-              <p id="support-i3-body">Platformadan necə istifadə etməyi, kataloqunuzu necə idarə etməyi öyrədirik. Video, zəng, yazışma — sizə necə rahatdırsa.</p>
-            </div>
-          </div>
-        </div>
-        <a href="https://az.partal.app" class="btn-primary" style="margin-top:28px; display:inline-block;" id="support-cta">Əlaqəyə keçin →</a>
-      </div>
-      <div class="support-visual">
-        <div class="support-card">
-          <div class="support-card-header" id="support-card-header">Başlamaq üçün nə lazımdır?</div>
-          <div class="support-checklist">
-            <div class="support-check" id="support-check1"><span class="check-icon">✓</span> Telefon nömrəsi</div>
-            <div class="support-check" id="support-check2"><span class="check-icon">✓</span> Satdığınız məhsulların siyahısı (kağız üzərində olsa belə)</div>
-            <div class="support-check" id="support-check3"><span class="check-icon">✓</span> WhatsApp və ya telefon nömrəsi</div>
-            <div class="support-check no" id="support-check4"><span class="check-icon no">✗</span> Texniki bilik tələb olunmur</div>
-            <div class="support-check no" id="support-check5"><span class="check-icon no">✗</span> Kart tələb olunmur</div>
-            <div class="support-check no" id="support-check6"><span class="check-icon no">✗</span> Müqavilə tələb olunmur</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FINAL CTA -->
-<section class="cta-final">
-  <div class="container">
-    <h2 id="cta-title">İndi başlayın —<br/><em>tamamilə pulsuzdur.</em></h2>
-    <p id="cta-sub">Qeydiyyat 30 saniyə çəkir. Kart tələb olunmur. İstənilən vaxt çıxa bilərsiniz.</p>
-    <div class="cta-final-actions">
-      <a href="https://az.partal.app" class="btn-primary" style="font-size:16px; padding:16px 32px;">Pulsuz qeydiyyat →</a>
-    </div>
-    <div class="cta-trust"><span id="cta-registered">Artıq qeydiyyatdan keçmisiniz?</span> <a href="https://az.partal.app" id="cta-login" style="color:var(--black); font-weight:600;">Daxil olun →</a></div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-inner">
-      <a href="#" class="footer-logo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 22H12V2H4V22ZM17 2C14.2386 2 12 4.23858 12 7C12 9.76142 14.2386 12 17 12C19.7614 12 22 9.76142 22 7C22 4.23858 19.7614 2 17 2Z" fill="#0D0D0B"/></svg>
-        Partal
+    <h2 data-i18n="cta-h2">Siyahını göndərin —<br/><em>qalanını biz edək.</em></h2>
+    <p data-i18n="cta-p">Pulsuz. Satışdan faiz yoxdur. İstədiyiniz vaxt çıxa bilərsiniz.</p>
+    <div class="cta-actions">
+      <a class="btn btn-wa js-wa" href="#" target="_blank" rel="noopener">
+        <span class="wa-dot"><svg><use href="#i-wa"/></svg></span>
+        <span data-i18n="cta-wa">WhatsApp-a yazın</span>
       </a>
-      <div class="footer-links">
-        <a href="https://az.partal.app" class="footer-link-app">Tətbiqə keç</a>
-        <a href="#how" class="footer-link-how">Necə işləyir</a>
-        <a href="#faq" class="footer-link-faq">Suallar</a>
-      </div>
-      <div class="footer-copy" id="footer-copy">© 2026 Partal. Bütün hüquqlar qorunur.</div>
+      <a class="btn btn-ghost" href="https://az.partal.app" data-i18n="cta-self">Özüm qeydiyyatdan keçim</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>© 2026 Partal</div>
+    <div class="footer-links">
+      <a href="https://az.partal.app" data-i18n="f-app">Ehtiyat hissəsi axtar</a>
+      <a href="https://az.partal.app" data-i18n="nav-login">Daxil ol</a>
+      <a class="js-wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
 </footer>
 
 <script>
-  function toggleFaq(el) {
-    const item = el.parentElement;
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
+  // WhatsApp number for sellers: digits only, with country code (e.g. 994501234567)
+  const WA_NUMBER = "994993039300";
 
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
-  });
-
-  // Language switcher
-  const TRANSLATIONS = {
-    az: {
-      'hero-label': 'Azərbaycan üçün',
-      'hero-h1': 'Ehtiyat hissənizi<br/><em>axtaranlar var.</em>',
-      'hero-sub': 'Partal — ehtiyat hissəsi satıcıları üçün ixtisaslaşmış platforma. Alıcılar sizin məhsulu axtarır — siz sadəcə kataloqunuzu yükləyin.',
-      'hero-trust': 'Kart tələb olunmur. Heç bir öhdəlik yoxdur.',
-      'proof-label': 'Tanınmış brendlər kataloqda',
-      'problem-label': 'Problem',
-      'problem-title': 'Elanlarınız <em>itib gedir.</em>',
-      'how-label': 'Necə işləyir',
-      'how-title': '3 addımda <em>başlayın</em>',
-      'benefits-label': 'Üstünlüklər',
-      'benefits-title': 'Niyə <em>Partal?</em>',
-      'direct-label': 'Şəffaflıq',
-      'direct-title': 'Biz arada <em>durmuruq.</em>',
-      'pricing-label': 'Qiymətlər',
-      'pricing-title': 'Sadə və <em>şəffaf.</em>',
-      'faq-label': 'Suallar',
-      'faq-title': 'Tez-tez <em>soruşulanlar</em>',
-      'cta-title': 'İndi başlayın —<br/><em>tamamilə pulsuzdur.</em>',
-      'cta-sub': 'Qeydiyyat 30 saniyə çəkir. Kart tələb olunmur. İstənilən vaxt çıxa bilərsiniz.',
-      'nav-cta': 'Pulsuz başla →',
-      'pricing-cta': 'Pulsuz başla — kart tələb olunmur →',
-      'problem-sub': 'Tap.az, OLX, Lalafo — bu platformalar hər şey üçündür. Alıcı ehtiyat hissəsi axtaranda mebellərin, telefonların, ev heyvanlarının arasında sizin elanınızı tapmaq çətindir.',
-      'how-sub': 'Qeydiyyatdan 10 dəqiqə sonra məhsullarınız axtarışda görünə bilər.',
-      'step1-title': 'Qeydiyyat', 'step1-body': 'Telefon nömrənizlə 30 saniyəyə qeydiyyatdan keçin. Kart, müqavilə, sənəd tələb olunmur.',
-      'step2-title': 'Kataloqunuzu yükləyin', 'step2-body': 'CSV, XLS, XLSX formatında qiymət siyahınızı yükləyin. Sistem avtomatik olaraq sütunları tanıyır və məhsul kartları yaradır.',
-      'step3-title': 'Alıcılar sizi tapır', 'step3-body': 'Alıcı marka, model, il və hissə adını yazır — sizin məhsulunuz dərhal görünür. Əlaqə birbaşa sizinlə.',
-      'b1-title': 'İxtisaslaşmış auditoriya', 'b1-body': 'Partalda yalnız ehtiyat hissəsi axtaranlar var. Hər ziyarətçi potensial alıcınızdır.',
-      'b2-title': 'Ağıllı yükləmə', 'b2-body': 'Mövcud qiymət siyahınızı yükləyin — sistem sütunları özü tanıyır, məhsul kartlarını avtomatik yaradır.',
-      'b3-title': '24/7 işləyir', 'b3-body': 'Kataloqnuz gecə-gündüz onlayndır. Siz yatarkən də alıcılar sizi tapır.',
-      'b4-title': 'Satış analitikası', 'b4-body': 'Hansı məhsullarınıza daha çox baxıldığını izləyin. Qərарlarınızı data ilə qəbul edin.',
-      'direct-quote': '"Alıcı birbaşa sizinlə əlaqə saxlayır. Zəng, WhatsApp, istədiyiniz üsulla. Partal sadəcə sizi tapılabilir edir."',
-      'direct-body': 'Partal sadəcə sizi tapılabilir edir. Satışdan pay almırıq, əməliyyatlarınıza nəzarət etmirik. Biznes məlumatlarınız yalnız sizə məxsusdur.',
-      'flow1-title': 'Alıcı axtarış edir', 'flow1-sub': '"Hyundai Accent 2018 tormoz bəndi" — Partalda',
-      'flow2-title': 'Sizin məhsulunuzu tapır', 'flow2-sub': 'Qiymət, vəziyyət, uyğunluq — hamısı göründü',
-      'flow3-title': 'Birbaşa sizinlə əlaqə saxlayır', 'flow3-sub': 'WhatsApp və ya telefon — Partal araya girmir',
-      'pricing-sub': 'İndi tamamilə pulsuzdur. Kart tələb olunmur.',
-      'tier1': 'Başlanğıc', 'tier2': 'Pro', 'tier3': 'Biznes',
-      'price1': 'Pulsuz', 'price1-sub': 'Kart tələb olunmur',
-      'price2-sub': 'aylıq · tezliklə', 'price3-sub': 'aylıq · tezliklə',
-      'feat1-1': 'Limitsiz məhsul', 'feat1-2': 'CSV/XLS yükləmə', 'feat1-3': 'Axtarışda görünmə', 'feat1-4': 'Əlaqə statistikası', 'feat1-5': 'WhatsApp inteqrasiyası',
-      'feat2-1': 'Başlanğıcdakı hər şey', 'feat2-2': 'Prioritet yerləşdirmə', 'feat2-3': 'Detallı analitika', 'feat2-4': 'Çoxlu mağaza',
-      'feat3-1': 'Pro-dakı hər şey', 'feat3-2': 'API inteqrasiyası', 'feat3-3': 'Xüsusi dəstək', 'feat3-4': 'Toplu qiymətlər',
-      'pricing-badge': 'İndi aktiv',
-      'faq1-q': 'OLX-də artıq satıram — Partal nə verir?', 'faq1-a': 'OLX ümumi bir platformadır — alıcılar orada minlərlə fərqli kateqoriyadan axtarış edir. Partalda isə yalnız ehtiyat hissəsi axtaran insanlar var.',
-      'faq2-q': 'Məhsulları əllə daxil etmək lazımdırmı?', 'faq2-a': 'Xeyr. Mövcud qiymət siyahınızı (CSV, Excel) yükləsəniz, sistem avtomatik olaraq sütunları tanıyır.',
-      'faq3-q': 'Satışdan faiz götürürsünüzmü?', 'faq3-a': 'Xeyr, heç vaxt. Partal sizinlə alıcı arasında körpüdür — alıcı birbaşa sizinlə əlaqə saxlayır.',
-      'faq4-q': 'Nə vaxtdan pullu olacaq?', 'faq4-a': 'Hazırda platforma tamamilə pulsuzdur və yaxın gələcəkdə belə qalacaq.',
-      'faq5-q': 'Hansı şəhərlərdə işləyir?', 'faq5-a': 'Hazırda Bakı, Gəncə, Naxçıvan və bütün Azərbaycan üzrə işləyir.',
-      'cta-registered': 'Artıq qeydiyyatdan keçmisiniz?', 'cta-login': 'Daxil olun →',
-      'footer-app': 'Tətbiqə keç', 'footer-how': 'Necə işləyir', 'footer-faq': 'Suallar',
-      'footer-copy': '© 2026 Partal. Bütün hüquqlar qorunur.',
-      'support-label': 'Dəstək', 'support-title': 'Texniki biliklər <em>tələb olunmur.</em>',
-      'support-sub': 'İnternetdə yeni platformalara qoşulmaq həmişə asan olmur. Bilirik. Ona görə də ilk addımda sizə şəxsən kömək edirik — pulsuz.',
-      'support-i1-title': 'Şəxsi köməklik', 'support-i1-body': 'Qeydiyyat zamanı probleminiz varsa — zəng edin. Hər addımda yanınızdayıq.',
-      'support-i2-title': 'Məhsul əlavəsini biz edirik', 'support-i2-body': 'Qiymət siyahınız yoxdur? Problem deyil. Sizin məhsulları biz sistemə daxil edirik — siz yalnız məlumatları göndərirsiniz.',
-      'support-i3-title': 'Pulsuz təlim', 'support-i3-body': 'Platformadan necə istifadə etməyi öyrədirik. Video, zəng, yazışma — sizə necə rahatdırsa.',
-      'support-cta': 'Əlaqəyə keçin →',
-      'support-card-header': 'Başlamaq üçün nə lazımdır?',
-      'support-check1': '<span class="check-icon">✓</span> Telefon nömrəsi',
-      'support-check2': '<span class="check-icon">✓</span> Satdığınız məhsulların siyahısı (kağız üzərində olsa belə)',
-      'support-check3': '<span class="check-icon">✓</span> WhatsApp və ya telefon nömrəsi',
-      'support-check4': '<span class="check-icon no">✗</span> Texniki bilik tələb olunmur',
-      'support-check5': '<span class="check-icon no">✗</span> Kart tələb olunmur',
-      'support-check6': '<span class="check-icon no">✗</span> Müqavilə tələb olunmur',
-    },
+  const T = {
     ru: {
-      'hero-label': 'Для Азербайджана',
-      'hero-h1': 'Покупатели ищут<br/><em>ваши запчасти.</em>',
-      'hero-sub': 'Partal — специализированная платформа для продавцов автозапчастей. Покупатели ищут ваш товар — просто загрузите каталог.',
-      'hero-trust': 'Карта не нужна. Никаких обязательств.',
-      'proof-label': 'Известные бренды в каталоге',
-      'problem-label': 'Проблема',
-      'problem-title': 'Ваши объявления <em>теряются.</em>',
-      'problem-sub': 'Tap.az, OLX, Lalafo — эти платформы для всего подряд. Когда покупатель ищет запчасть, ваше объявление тонет среди мебели, телефонов и животных.',
-      'how-label': 'Как работает',
-      'how-title': 'Начните за <em>3 шага</em>',
-      'how-sub': 'Через 10 минут после регистрации ваши товары могут появиться в поиске.',
-      'step1-title': 'Регистрация',
-      'step1-body': 'Зарегистрируйтесь по номеру телефона за 30 секунд. Карта, договор, документы не нужны.',
-      'step2-title': 'Загрузите каталог',
-      'step2-body': 'Загрузите прайс-лист в формате CSV, XLS или XLSX. Система автоматически распознаёт столбцы и создаёт карточки товаров.',
-      'step3-title': 'Покупатели находят вас',
-      'step3-body': 'Покупатель вводит марку, модель, год и название детали — ваш товар появляется сразу. Контакт напрямую с вами.',
-      'benefits-label': 'Преимущества',
-      'benefits-title': 'Почему <em>Partal?</em>',
-      'b1-title': 'Целевая аудитория',
-      'b1-body': 'На Partal только те, кто ищет запчасти. Каждый посетитель — потенциальный покупатель, а не искатель мебели или телефонов.',
-      'b2-title': 'Умная загрузка',
-      'b2-body': 'Загрузите существующий прайс-лист — система сама распознаёт столбцы и создаёт карточки товаров. Ручной ввод не нужен.',
-      'b3-title': 'Работает 24/7',
-      'b3-body': 'Ваш каталог онлайн круглосуточно. Пока вы отдыхаете, покупатели находят вас и видят ваш номер для звонка.',
-      'b4-title': 'Аналитика продаж',
-      'b4-body': 'Отслеживайте, какие товары просматривают чаще всего и сколько человек связалось с вами. Принимайте решения на основе данных.',
-      'direct-label': 'Прозрачность',
-      'direct-title': 'Мы не <em>посредники.</em>',
-      'direct-quote': '"Покупатель связывается с вами напрямую. Звонок, WhatsApp — как вам удобно. Partal просто делает вас заметными."',
-      'direct-body': 'Partal — это инструмент для поиска, а не торговая площадка. Мы не берём комиссию с продаж, не контролируем ваши операции. Ваши бизнес-данные принадлежат только вам.',
-      'flow1-title': 'Покупатель ищет',
-      'flow1-sub': '"Тормозные колодки Hyundai Accent 2018" — на Partal',
-      'flow2-title': 'Находит ваш товар',
-      'flow2-sub': 'Цена, состояние, совместимость — всё видно',
-      'flow3-title': 'Связывается напрямую с вами',
-      'flow3-sub': 'WhatsApp или телефон — Partal не вмешивается',
-      'pricing-label': 'Цены',
-      'pricing-title': 'Просто и <em>прозрачно.</em>',
-      'pricing-sub': 'Сейчас полностью бесплатно. Карта не нужна.',
-      'tier1': 'Старт',
-      'tier2': 'Про',
-      'tier3': 'Бизнес',
-      'price1': 'Бесплатно',
-      'price1-sub': 'Карта не нужна',
-      'price2-sub': 'в месяц · скоро',
-      'price3-sub': 'в месяц · скоро',
-      'feat1-1': 'Неограниченное кол-во товаров',
-      'feat1-2': 'Загрузка CSV/XLS',
-      'feat1-3': 'Отображение в поиске',
-      'feat1-4': 'Статистика контактов',
-      'feat1-5': 'Интеграция WhatsApp',
-      'feat2-1': 'Всё из тарифа Старт',
-      'feat2-2': 'Приоритетное размещение',
-      'feat2-3': 'Детальная аналитика',
-      'feat2-4': 'Несколько магазинов',
-      'feat3-1': 'Всё из тарифа Про',
-      'feat3-2': 'API интеграция',
-      'feat3-3': 'Персональная поддержка',
-      'feat3-4': 'Оптовые цены',
-      'pricing-badge': 'Сейчас активно',
-      'faq-label': 'Вопросы',
-      'faq-title': 'Часто задаваемые <em>вопросы</em>',
-      'faq1-q': 'Я уже продаю на OLX — что даёт Partal?',
-      'faq1-a': 'OLX — универсальная платформа, где покупатели ищут тысячи разных категорий. На Partal только люди, которые ищут запчасти. Это значит, что каждый посетитель — ваш потенциальный покупатель. Плюс поиск на Partal намного точнее — по марке, модели, году.',
-      'faq2-q': 'Нужно ли вводить товары вручную?',
-      'faq2-a': 'Нет. Загрузите существующий прайс-лист (CSV, Excel) — система автоматически распознаёт столбцы и создаёт карточки товаров. Если прайс-листа нет, можно добавлять по одному.',
-      'faq3-q': 'Берёте ли вы комиссию с продаж?',
-      'faq3-a': 'Нет, никогда. Partal — это мост между вами и покупателем. Покупатель связывается с вами напрямую (звонок, WhatsApp). Мы не участвуем в сделке и не берём долю.',
-      'faq4-q': 'Когда станет платным?',
-      'faq4-a': 'Платформа полностью бесплатна и останется такой в ближайшем будущем. Когда появятся платные тарифы, бесплатная версия сохранится — платными будут только дополнительные функции. Карта не нужна.',
-      'faq5-q': 'В каких городах работает?',
-      'faq5-a': 'Сейчас работает в Баку, Гяндже, Нахчыване и по всему Азербайджану. Продавцы из других городов тоже могут зарегистрироваться — их город автоматически добавится в фильтры поиска.',
-      'cta-title': 'Начните сейчас —<br/><em>это бесплатно.</em>',
-      'cta-sub': 'Регистрация займёт 30 секунд. Карта не нужна. Выйти можно в любой момент.',
-      'cta-registered': 'Уже зарегистрированы?',
-      'cta-login': 'Войти →',
-      'nav-cta': 'Начать бесплатно →',
-      'pricing-cta': 'Начать бесплатно — карта не нужна →',
-      'footer-app': 'Перейти в приложение',
-      'footer-how': 'Как работает',
-      'footer-faq': 'Вопросы',
-      'footer-copy': '© 2026 Partal. Все права защищены.',
-      'support-label': 'Поддержка', 'support-title': 'Технические знания <em>не нужны.</em>',
-      'support-sub': 'Подключиться к новой платформе бывает непросто. Мы это знаем. Поэтому на первом шаге помогаем лично — бесплатно.',
-      'support-i1-title': 'Личная помощь', 'support-i1-body': 'Возникли трудности при регистрации — позвоните. Мы рядом на каждом шагу.',
-      'support-i2-title': 'Мы добавим товары за вас', 'support-i2-body': 'Нет прайс-листа? Не проблема. Мы вносим ваши товары в систему — вы только присылаете данные.',
-      'support-i3-title': 'Бесплатное обучение', 'support-i3-body': 'Расскажем, как пользоваться платформой и управлять каталогом. Видео, звонок, переписка — как вам удобно.',
-      'support-cta': 'Связаться с нами →',
-      'support-card-header': 'Что нужно для старта?',
-      'support-check1': '<span class="check-icon">✓</span> Номер телефона',
-      'support-check2': '<span class="check-icon">✓</span> Список товаров (даже на бумаге)',
-      'support-check3': '<span class="check-icon">✓</span> WhatsApp или телефон',
-      'support-check4': '<span class="check-icon no">✗</span> Технические знания не нужны',
-      'support-check5': '<span class="check-icon no">✗</span> Карта не нужна',
-      'support-check6': '<span class="check-icon no">✗</span> Договор не нужен',
+      'nav-compare': 'Отличие от Tap.az', 'nav-how': 'Как работает', 'nav-faq': 'Вопросы', 'nav-login': 'Войти',
+      'hero-eyebrow': 'Для продавцов автозапчастей',
+      'hero-h1': 'Вашу запчасть<br/><em>уже ищут.</em>',
+      'hero-sub': 'Отправьте прайс в WhatsApp — каталог загрузим сами. Покупатель вводит марку машины, видит вашу деталь и звонит вам напрямую.',
+      'cta-wa': 'Написать в WhatsApp', 'cta-self': 'Зарегистрируюсь сам',
+      'fact-1': 'Бесплатно', 'fact-2': 'Без процента с продаж', 'fact-3': 'Без карты и договора',
+      'demo-label': 'Так ищет покупатель', 'demo-call': 'Пишет продавцу в одно касание — Partal не посредник', 'demo-note': 'Пример. Цены условные.',
+      'cmp-kicker': 'Зачем Partal',
+      'cmp-h2': 'Tap.az — для всего.<br/><em>Partal — только запчасти.</em>',
+      'cmp-lead': 'На общем сайте объявлений покупатель ищет ваше объявление среди мебели, телефонов и батарей. В Partal он ищет по марке, модели и году — и сразу находит вас.',
+      'cmp-a-title': 'Общий сайт объявлений', 'cmp-a-pill': 'Всё подряд', 'cmp-q': 'Поиск: «радиатор»',
+      'cmp-a1': 'Радиатор отопления (для дома)', 'cmp-a2': 'Краска для радиаторов, 1 л', 'cmp-a3': 'Радиатор Toyota Camry', 'cmp-a4': 'Радиатор-кулер для компьютера', 'cmp-a5': 'Б/у батарея отопления',
+      'cmp-a-foot': 'Каждый товар выкладываете вручную отдельным объявлением',
+      'cmp-b-pill': 'Точно', 'cmp-q2': 'Поиск: «радиатор Toyota Camry 2016»',
+      'cmp-b1': 'Радиатор OEM · Denso', 'cmp-b2': 'Радиатор · Nissens', 'cmp-b3': 'Радиатор · б/у',
+      'cmp-b-foot': 'Весь прайс загружается за один раз',
+      'how-kicker': 'Как работает', 'how-h2': 'От вас — список.<br/><em>Остальное — от нас.</em>',
+      's1-h': 'Отправьте список', 's1-p': 'В WhatsApp: Excel, фото прайса или фото тетради — что есть.',
+      's2-h': 'Каталог загружаем мы', 's2-p': 'Добавляем каждую деталь в Partal вместе с подходящими машинами. Вы проверяете — готово.',
+      's2-alt': 'Хотите сами? <a href="https://az.partal.app">Загрузите CSV или Excel →</a>',
+      's3-h': 'Покупатели звонят вам', 's3-p': 'Покупатель вводит марку, модель и деталь, видит ваш товар и звонит или пишет в WhatsApp напрямую.',
+      'p1-h': 'Без процентов', 'p1-p': 'Не берём долю с продаж. Цена и клиент — ваши.',
+      'p2-h': 'Прямой контакт', 'p2-p': 'Покупатель звонит на ваш номер. Partal не посредник и не держит заказы.',
+      'p3-h': 'Техника не нужна', 'p3-p': 'Есть вопрос — напишите или позвоните. Поможем на каждом шаге.',
+      'faq-kicker': 'Вопросы', 'faq-h2': 'Частые <em>вопросы</em>',
+      'q1': 'Я уже продаю на Tap.az. Что даст Partal?',
+      'a1': 'На Tap.az каждый товар — отдельное объявление, и покупатель ищет его среди других категорий. В Partal весь прайс загружается разом, а покупатель ищет по марке, модели и году и сразу видит подходящую деталь. Уходить с Tap.az не нужно — Partal дополнительный канал.',
+      'q2': 'Будет платно?',
+      'a2': 'Сейчас Partal полностью бесплатный, карта не нужна. В будущем может появиться платный план для дополнительных возможностей — предупредим заранее, а основное останется бесплатным.',
+      'q3': 'Прайса нет, всё в тетради.',
+      'a3': 'Не проблема. Отправьте фото тетради в WhatsApp — мы сами внесём товары и покажем вам на проверку.',
+      'q4': 'Как зарегистрироваться?',
+      'a4': 'Через Google или почту за минуту. Потом укажите название магазина, телефон и WhatsApp — по ним с вами и свяжутся покупатели.',
+      'q5': 'В каких городах работает?',
+      'a5': 'Начинаем с Баку. Продавцы из Гянджи, Нахчывана и других городов тоже могут подключиться — покупатель выбирает город в поиске.',
+      'cta-h2': 'Отправьте список —<br/><em>остальное сделаем мы.</em>', 'cta-p': 'Бесплатно. Без процента с продаж. Можно уйти в любой момент.',
+      'f-app': 'Искать запчасть',
+      'wa-text': 'Здравствуйте! Хочу разместить свои запчасти на Partal.'
     },
     en: {
-      'hero-label': 'For Azerbaijan',
-      'hero-h1': 'Buyers are searching<br/><em>for your parts.</em>',
-      'hero-sub': 'Partal — a specialized platform for auto parts sellers. Buyers are already looking for your products — just upload your catalog.',
-      'hero-trust': 'No card required. No commitment.',
-      'proof-label': 'Recognized brands in catalog',
-      'problem-label': 'The problem',
-      'problem-title': 'Your listings <em>get lost.</em>',
-      'problem-sub': 'Tap.az, OLX, Lalafo — these platforms are for everything. When a buyer searches for a spare part, your listing gets buried under furniture, phones, and pets.',
-      'how-label': 'How it works',
-      'how-title': 'Get started in <em>3 steps</em>',
-      'how-sub': 'Your products can appear in search within 10 minutes of signing up.',
-      'step1-title': 'Register',
-      'step1-body': 'Sign up with your phone number in 30 seconds. No card, contract, or documents required.',
-      'step2-title': 'Upload your catalog',
-      'step2-body': 'Upload your price list in CSV, XLS, or XLSX format. The system automatically recognizes columns and creates product cards.',
-      'step3-title': 'Buyers find you',
-      'step3-body': 'A buyer types make, model, year and part name — your product appears instantly. Contact goes directly to you.',
-      'benefits-label': 'Benefits',
-      'benefits-title': 'Why <em>Partal?</em>',
-      'b1-title': 'Targeted audience',
-      'b1-body': 'On Partal, only people looking for spare parts visit. Every visitor is a potential buyer — not someone looking for furniture or a phone.',
-      'b2-title': 'Smart upload',
-      'b2-body': 'Upload your existing price list — the system recognizes columns automatically and creates product cards. No manual entry needed.',
-      'b3-title': 'Works 24/7',
-      'b3-body': 'Your catalog is online around the clock. While you sleep, buyers find you and see your contact number.',
-      'b4-title': 'Sales analytics',
-      'b4-body': 'Track which products get the most views and how many people contacted you. Make decisions based on data.',
-      'direct-label': 'Transparency',
-      'direct-title': 'We stay <em>out of the way.</em>',
-      'direct-quote': '"The buyer contacts you directly. Call, WhatsApp — however you prefer. Partal simply makes you findable."',
-      'direct-body': 'Partal is a discovery tool, not a marketplace. We take no commission from sales and do not monitor your transactions. Your business data belongs only to you.',
-      'flow1-title': 'Buyer searches',
-      'flow1-sub': '"Hyundai Accent 2018 brake pads" — on Partal',
-      'flow2-title': 'Finds your product',
-      'flow2-sub': 'Price, condition, compatibility — all visible',
-      'flow3-title': 'Contacts you directly',
-      'flow3-sub': 'WhatsApp or phone — Partal does not interfere',
-      'pricing-label': 'Pricing',
-      'pricing-title': 'Simple and <em>transparent.</em>',
-      'pricing-sub': 'Completely free right now. No card required.',
-      'tier1': 'Starter',
-      'tier2': 'Pro',
-      'tier3': 'Business',
-      'price1': 'Free',
-      'price1-sub': 'No card required',
-      'price2-sub': 'per month · coming soon',
-      'price3-sub': 'per month · coming soon',
-      'feat1-1': 'Unlimited products',
-      'feat1-2': 'CSV/XLS upload',
-      'feat1-3': 'Search visibility',
-      'feat1-4': 'Contact statistics',
-      'feat1-5': 'WhatsApp integration',
-      'feat2-1': 'Everything in Starter',
-      'feat2-2': 'Priority placement',
-      'feat2-3': 'Detailed analytics',
-      'feat2-4': 'Multiple stores',
-      'feat3-1': 'Everything in Pro',
-      'feat3-2': 'API integration',
-      'feat3-3': 'Dedicated support',
-      'feat3-4': 'Volume pricing',
-      'pricing-badge': 'Currently active',
-      'faq-label': 'FAQ',
-      'faq-title': 'Frequently asked <em>questions</em>',
-      'faq1-q': 'I already sell on OLX — what does Partal add?',
-      'faq1-a': 'OLX is a general platform where buyers search across thousands of categories. On Partal, only people looking for spare parts visit. That means every visitor is your potential customer. Plus, Partal search is far more precise — filtering by make, model, and year.',
-      'faq2-q': 'Do I need to enter products manually?',
-      'faq2-a': 'No. Upload your existing price list (CSV, Excel) and the system automatically recognizes columns and creates product cards. If you do not have a price list, you can add items one by one.',
-      'faq3-q': 'Do you take a commission on sales?',
-      'faq3-a': 'No, never. Partal is a bridge between you and the buyer. The buyer contacts you directly (call, WhatsApp). We do not participate in the transaction and take no share.',
-      'faq4-q': 'When will it become paid?',
-      'faq4-a': 'The platform is completely free and will stay that way for the foreseeable future. When paid plans arrive, the free version will remain — only additional features will be paid. No card required.',
-      'faq5-q': 'Which cities does it work in?',
-      'faq5-a': 'Currently works in Baku, Ganja, Nakhchivan, and across all of Azerbaijan. Sellers from other cities can also register — their city is automatically added to search filters.',
-      'cta-title': 'Start now —<br/><em>completely free.</em>',
-      'cta-sub': 'Registration takes 30 seconds. No card required. Cancel anytime.',
-      'cta-registered': 'Already registered?',
-      'cta-login': 'Sign in →',
-      'nav-cta': 'Start free →',
-      'pricing-cta': 'Start free — no card required →',
-      'footer-app': 'Go to app',
-      'footer-how': 'How it works',
-      'footer-faq': 'FAQ',
-      'footer-copy': '© 2026 Partal. All rights reserved.',
-      'support-label': 'Support', 'support-title': 'No technical skills <em>required.</em>',
-      'support-sub': 'Joining a new online platform is not always easy. We know. That is why we personally help you with the first steps — for free.',
-      'support-i1-title': 'Personal assistance', 'support-i1-body': 'Having trouble registering? Call us. We are with you at every step.',
-      'support-i2-title': 'We add your products for you', 'support-i2-body': 'No price list? No problem. We enter your products into the system — you just send us the information.',
-      'support-i3-title': 'Free training', 'support-i3-body': 'We teach you how to use the platform and manage your catalog. Video, call, or chat — whatever works for you.',
-      'support-cta': 'Get in touch →',
-      'support-card-header': 'What do you need to start?',
-      'support-check1': '<span class="check-icon">✓</span> Phone number',
-      'support-check2': '<span class="check-icon">✓</span> A list of your products (even on paper)',
-      'support-check3': '<span class="check-icon">✓</span> WhatsApp or phone number',
-      'support-check4': '<span class="check-icon no">✗</span> No technical skills needed',
-      'support-check5': '<span class="check-icon no">✗</span> No card needed',
-      'support-check6': '<span class="check-icon no">✗</span> No contract needed',
+      'nav-compare': 'Why not Tap.az', 'nav-how': 'How it works', 'nav-faq': 'FAQ', 'nav-login': 'Log in',
+      'hero-eyebrow': 'For auto parts sellers',
+      'hero-h1': 'Someone is looking<br/><em>for your part.</em>',
+      'hero-sub': 'Send your price list on WhatsApp — we’ll upload the catalog for you. A buyer types their car, sees your part and calls you directly.',
+      'cta-wa': 'Message us on WhatsApp', 'cta-self': 'I’ll sign up myself',
+      'fact-1': 'Free', 'fact-2': 'No commission', 'fact-3': 'No card, no contract',
+      'demo-label': 'How buyers search', 'demo-call': 'One tap to message the seller — Partal stays out of the deal', 'demo-note': 'Example. Prices are illustrative.',
+      'cmp-kicker': 'Why Partal',
+      'cmp-h2': 'Tap.az is for everything.<br/><em>Partal is only parts.</em>',
+      'cmp-lead': 'On a general classifieds site, buyers dig for your listing among furniture, phones and heaters. On Partal they search by make, model and year — and find you right away.',
+      'cmp-a-title': 'General classifieds', 'cmp-a-pill': 'Mixed', 'cmp-q': 'Search: “radiator”',
+      'cmp-a1': 'Home heating radiator', 'cmp-a2': 'Radiator paint, 1 L', 'cmp-a3': 'Toyota Camry radiator', 'cmp-a4': 'PC radiator fan', 'cmp-a5': 'Used heating radiator',
+      'cmp-a-foot': 'You post every product by hand as a separate listing',
+      'cmp-b-pill': 'Precise', 'cmp-q2': 'Search: “radiator Toyota Camry 2016”',
+      'cmp-b1': 'OEM radiator · Denso', 'cmp-b2': 'Radiator · Nissens', 'cmp-b3': 'Radiator · used',
+      'cmp-b-foot': 'Your whole price list goes up at once',
+      'how-kicker': 'How it works', 'how-h2': 'You send the list.<br/><em>We do the rest.</em>',
+      's1-h': 'Send your list', 's1-p': 'On WhatsApp: an Excel file, a photo of your price list or your notebook — whatever you have.',
+      's2-h': 'We upload the catalog', 's2-p': 'We add every part to Partal with the cars it fits. You check it — done.',
+      's2-alt': 'Prefer to do it yourself? <a href="https://az.partal.app">Upload CSV or Excel →</a>',
+      's3-h': 'Buyers call you', 's3-p': 'A buyer types the make, model and part, sees your product and calls or messages you directly.',
+      'p1-h': 'No commission', 'p1-p': 'We take no cut of your sales. The price and the customer are yours.',
+      'p2-h': 'Direct contact', 'p2-p': 'Buyers call your number. Partal isn’t a middleman and doesn’t hold orders.',
+      'p3-h': 'No tech skills needed', 'p3-p': 'Any question — message or call us. We help at every step.',
+      'faq-kicker': 'FAQ', 'faq-h2': 'Common <em>questions</em>',
+      'q1': 'I already sell on Tap.az. What does Partal add?',
+      'a1': 'On Tap.az every product is a separate listing that buyers have to find among other categories. On Partal your whole price list goes up at once, and buyers search by make, model and year to see the right part immediately. No need to leave Tap.az — Partal is an extra channel.',
+      'q2': 'Will it be paid?',
+      'a2': 'Partal is completely free right now, no card needed. A paid plan for extra features may come later — we’ll tell you in advance, and the basics will stay free.',
+      'q3': 'I don’t have a price list, it’s all in a notebook.',
+      'a3': 'No problem. Send a photo of the notebook on WhatsApp — we’ll enter the products ourselves and show them to you for review.',
+      'q4': 'How do I sign up?',
+      'a4': 'With Google or email in a minute. Then add your shop name, phone and WhatsApp — that’s how buyers will reach you.',
+      'q5': 'Which cities?',
+      'a5': 'We’re starting with Baku. Sellers from Ganja, Nakhchivan and other cities can join too — buyers can filter by city.',
+      'cta-h2': 'Send the list —<br/><em>we’ll do the rest.</em>', 'cta-p': 'Free. No commission. Leave any time.',
+      'f-app': 'Find a part',
+      'wa-text': 'Hello! I want to list my auto parts on Partal.'
     }
   };
+  const WA_TEXT_AZ = 'Salam! Ehtiyat hissələrimi Partalda yerləşdirmək istəyirəm.';
 
-  function setLang(lang) {
-    document.querySelectorAll('.lang-btn').forEach(b => {
-      b.classList.remove('active');
-      if(b.getAttribute('data-lang') === lang) b.classList.add('active');
-    });
-    const t = TRANSLATIONS[lang];
-    const set = (id, html) => { const el = document.getElementById(id); if(el && html) el.innerHTML = html; };
-    const setText = (id, txt) => { const el = document.getElementById(id); if(el && txt) el.textContent = txt; };
+  // Demo searches — each query has matching results
+  const DEMO = [
+    { q: 'Toyota Camry 2016 radiator', r: [['Radiator OEM', 'Denso · Bakı', 185, 1], ['Radiator', 'Nissens · Bakı', 140, 1], ['Radiator, işlənmiş', 'Bakı', 70, 0]] },
+    { q: 'Hyundai Accent tormoz bəndi', r: [['Ön tormoz bəndləri', 'Brembo · Bakı', 55, 1], ['Ön tormoz bəndləri', 'Hi-Q · Sumqayıt', 38, 1], ['Arxa tormoz bəndləri', 'Bosch · Bakı', 42, 0]] },
+    { q: 'Kia Sportage yağ filteri', r: [['Yağ filteri', 'Mann · Bakı', 18, 1], ['Yağ filteri OEM', 'Hyundai/Kia · Bakı', 24, 1], ['Yağ filteri', 'Bosch · Gəncə', 15, 1]] },
+    { q: 'Mercedes E klass amortizator', r: [['Ön amortizator', 'Sachs · Bakı', 210, 1], ['Ön amortizator', 'KYB · Bakı', 165, 0], ['Arxa amortizator', 'Bilstein · Bakı', 240, 1]] },
+  ];
+  const DEMO_UI = { az: ['Stokda var', 'Sifarişlə'], ru: ['В наличии', 'Под заказ'], en: ['In stock', 'On order'] };
 
-    // Nav
-    document.querySelectorAll('.nav-link').forEach(el => { if(el.dataset[lang]) el.textContent = el.dataset[lang]; });
-    document.querySelectorAll('.nav-cta').forEach(el => { if(el.dataset[lang]) el.textContent = el.dataset[lang]; });
+  // EN is translated but hidden for now — to enable, add 'en' here and remove `hidden` from its button
+  const ENABLED_LANGS = ['az', 'ru'];
+  let lang = 'az';
+  const AZ = {};
+  document.querySelectorAll('[data-i18n]').forEach(el => { if (!(el.dataset.i18n in AZ)) AZ[el.dataset.i18n] = el.innerHTML; });
 
-    // Hero
-    set('hero-label-text', t['hero-label']);
-    set('hero-h1', t['hero-h1']);
-    set('hero-sub', t['hero-sub']);
-    set('hero-trust', t['hero-trust']);
-
-    // Proof
-    set('proof-label-text', t['proof-label']);
-
-    // Problem
-    set('problem-label-text', t['problem-label']);
-    set('problem-title', t['problem-title']);
-    set('problem-sub', t['problem-sub']);
-
-    // How
-    set('how-label-text', t['how-label']);
-    set('how-title', t['how-title']);
-    set('how-sub', t['how-sub']);
-    set('step1-title', t['step1-title']);
-    set('step1-body', t['step1-body']);
-    set('step2-title', t['step2-title']);
-    set('step2-body', t['step2-body']);
-    set('step3-title', t['step3-title']);
-    set('step3-body', t['step3-body']);
-
-    // Benefits
-    set('benefits-label-text', t['benefits-label']);
-    set('benefits-title', t['benefits-title']);
-    set('b1-title', t['b1-title']); set('b1-body', t['b1-body']);
-    set('b2-title', t['b2-title']); set('b2-body', t['b2-body']);
-    set('b3-title', t['b3-title']); set('b3-body', t['b3-body']);
-    set('b4-title', t['b4-title']); set('b4-body', t['b4-body']);
-
-    // Direct
-    set('direct-label-text', t['direct-label']);
-    set('direct-title', t['direct-title']);
-    set('direct-quote', t['direct-quote']);
-    set('direct-body', t['direct-body']);
-    set('flow1-title', t['flow1-title']); set('flow1-sub', t['flow1-sub']);
-    set('flow2-title', t['flow2-title']); set('flow2-sub', t['flow2-sub']);
-    set('flow3-title', t['flow3-title']); set('flow3-sub', t['flow3-sub']);
-
-    // Pricing
-    set('pricing-label-text', t['pricing-label']);
-    set('pricing-title', t['pricing-title']);
-    set('pricing-sub', t['pricing-sub']);
-    set('tier1', t['tier1']); set('tier2', t['tier2']); set('tier3', t['tier3']);
-    set('price1', t['price1']); set('price1-sub', t['price1-sub']);
-    set('price2-sub', t['price2-sub']); set('price3-sub', t['price3-sub']);
-    set('feat1-1', t['feat1-1']); set('feat1-2', t['feat1-2']); set('feat1-3', t['feat1-3']); set('feat1-4', t['feat1-4']); set('feat1-5', t['feat1-5']);
-    set('feat2-1', t['feat2-1']); set('feat2-2', t['feat2-2']); set('feat2-3', t['feat2-3']); set('feat2-4', t['feat2-4']);
-    set('feat3-1', t['feat3-1']); set('feat3-2', t['feat3-2']); set('feat3-3', t['feat3-3']); set('feat3-4', t['feat3-4']);
-    set('pricing-badge-text', t['pricing-badge']);
-    const pricingCta = document.getElementById('pricing-cta');
-    if(pricingCta && t['pricing-cta']) pricingCta.textContent = t['pricing-cta'];
-
-    // FAQ
-    set('faq-label-text', t['faq-label']);
-    set('faq-title', t['faq-title']);
-    set('faq1-q', t['faq1-q']); set('faq1-a', t['faq1-a']);
-    set('faq2-q', t['faq2-q']); set('faq2-a', t['faq2-a']);
-    set('faq3-q', t['faq3-q']); set('faq3-a', t['faq3-a']);
-    set('faq4-q', t['faq4-q']); set('faq4-a', t['faq4-a']);
-    set('faq5-q', t['faq5-q']); set('faq5-a', t['faq5-a']);
-
-    // CTA
-    set('cta-title', t['cta-title']);
-    set('cta-sub', t['cta-sub']);
-    set('cta-registered', t['cta-registered']);
-    set('cta-login', t['cta-login']);
-
-    // Support
-    set('support-label-text', t['support-label']);
-    set('support-title', t['support-title']);
-    set('support-sub', t['support-sub']);
-    set('support-i1-title', t['support-i1-title']); set('support-i1-body', t['support-i1-body']);
-    set('support-i2-title', t['support-i2-title']); set('support-i2-body', t['support-i2-body']);
-    set('support-i3-title', t['support-i3-title']); set('support-i3-body', t['support-i3-body']);
-    set('support-cta', t['support-cta']);
-    set('support-card-header', t['support-card-header']);
-    set('support-check1', t['support-check1']); set('support-check2', t['support-check2']);
-    set('support-check3', t['support-check3']); set('support-check4', t['support-check4']);
-    set('support-check5', t['support-check5']); set('support-check6', t['support-check6']);
-
-    // Footer
-    document.querySelectorAll('.footer-link-app').forEach(el => { if(t['footer-app']) el.textContent = t['footer-app']; });
-    document.querySelectorAll('.footer-link-how').forEach(el => { if(t['footer-how']) el.textContent = t['footer-how']; });
-    document.querySelectorAll('.footer-link-faq').forEach(el => { if(t['footer-faq']) el.textContent = t['footer-faq']; });
-    set('footer-copy', t['footer-copy']);
+  function waHref() {
+    const text = lang === 'az' ? WA_TEXT_AZ : T[lang]['wa-text'];
+    return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
   }
 
-  // Scroll animations
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.step, .benefit-card, .faq-item, .pricing-card, .flow-step, .problem-point').forEach(el => {
-    el.classList.add('fade-up');
-    observer.observe(el);
+  function setLang(l) {
+    lang = ENABLED_LANGS.includes(l) ? l : 'az';
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.dataset.i18n;
+      const v = lang === 'az' ? AZ[k] : T[lang][k];
+      if (v !== undefined) el.innerHTML = v;
+    });
+    document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('.js-wa').forEach(a => a.href = waHref());
+    renderDemo();
+    try { localStorage.setItem('partal-lang', lang); } catch (e) {}
+  }
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+  // FAQ
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement, open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => { i.classList.remove('open'); i.querySelector('.faq-q').setAttribute('aria-expanded', 'false'); });
+      if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
   });
 
-  // Hero search animation
-  const queries = ['Toyota Camry 2016 radiator…', 'Hyundai Accent tormoz bəndi…', 'BMW 3 seriya amortizator…', 'Peugeot 308 yağ filteri…'];
-  let qi = 0;
-  const searchMock = document.querySelector('.hero-search-mock');
-  if(searchMock) setInterval(() => {
-    searchMock.style.opacity = '0';
-    setTimeout(() => { searchMock.textContent = queries[qi = (qi+1)%queries.length]; searchMock.style.opacity = '1'; }, 300);
-  }, 2500);
-  if(searchMock) searchMock.style.transition = 'opacity .3s';
+  // Demo
+  let di = 0;
+  const qEl = document.getElementById('demoQ'), rEl = document.getElementById('demoResults');
+  function renderDemo() {
+    const d = DEMO[di], ui = DEMO_UI[lang];
+    qEl.textContent = d.q;
+    rEl.innerHTML = d.r.map(([name, sub, price, stock]) =>
+      '<div class="demo-row"><div><div class="demo-name">' + name + '</div><div class="demo-sub">' + sub + '</div></div>' +
+      '<div class="demo-right"><div class="demo-price">₼' + price + '</div><div class="demo-avail' + (stock ? '' : ' order') + '">' + (stock ? ui[0] : ui[1]) + '</div></div></div>').join('');
+  }
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) setInterval(() => {
+    rEl.style.opacity = '0';
+    setTimeout(() => { di = (di + 1) % DEMO.length; renderDemo(); rEl.style.opacity = '1'; }, 250);
+  }, 3200);
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Initial language: ?lang= → saved → az
+  let initial = new URLSearchParams(location.search).get('lang');
+  if (!initial) { try { initial = localStorage.getItem('partal-lang'); } catch (e) {} }
+  setLang(initial || 'az');
 </script>
 
 </body>
