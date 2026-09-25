@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db, auth } from "./firebase.js";
 import { gaEvent } from "./analytics.js";
 import { AZ } from "./i18n.js";
+import { isProfileComplete } from "./lib/format.js";
 import Logo from "./components/Logo.jsx";
 import Toast from "./components/Toast.jsx";
 import Spinner from "./components/Spinner.jsx";
@@ -104,6 +105,8 @@ export default function App(){
 
   const renderSeller=()=>{
     if(!currentUser)return authLoading?<Spinner/>:<LoginPage onLogin={handleLogin} onBack={goHome}/>;
+    // Buyers contact sellers by phone/WhatsApp — no dashboard until both are filled in
+    if(sellerInfo&&!isProfileComplete(sellerInfo))return <SettingsPage seller={sellerInfo} onSave={handleSaveSettings} onLogout={handleLogout} onBack={goHome}/>;
     if(screen==="form")return <ProductForm product={editingProduct} seller={sellerInfo} onBack={()=>{setScreen("dashboard");setEP(null);}} onSaved={(isDraft)=>{setScreen("dashboard");setEP(null);showToast(isDraft?AZ.draftSaved:editingProduct?.id?AZ.productUpdated:AZ.productAdded);}} onDeleted={()=>{setScreen("dashboard");setEP(null);showToast(AZ.productDeleted);}}/>;
     if(screen==="upload")return <UploadScreen seller={sellerInfo} onBack={()=>setScreen("dashboard")} onReview={d=>{setUD(d);setScreen("review");}}/>;
     if(screen==="review"&&uploadData)return <ReviewScreen data={uploadData} seller={sellerInfo} onBack={()=>setScreen("upload")} onPublish={(count,uploadDate)=>{

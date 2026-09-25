@@ -34,4 +34,6 @@ export function isValidAzPhone(v){ return /^\+994\d{9}$/.test(v||""); }
 // + and 10–15 digits (international, for WhatsApp)
 export function isValidIntlPhone(v){ return /^\+\d{10,15}$/.test(v||""); }
 
+export function isProfileComplete(seller){ return isValidAzPhone(seller?.phone) && isValidIntlPhone(seller?.whatsapp); }
+
 export function isValidEmail(v){ return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }

@@ -13,3 +13,14 @@ describe("phone validation", () => {
     expect(isValidIntlPhone("")).toBe(false);
   });
 });
+
+import { isProfileComplete } from "./format.js";
+
+describe("isProfileComplete", () => {
+  it("requires both phone and WhatsApp", () => {
+    expect(isProfileComplete({ phone: "+994501234567", whatsapp: "+994501234567" })).toBe(true);
+    expect(isProfileComplete({ phone: "+994501234567", whatsapp: "" })).toBe(false);
+    expect(isProfileComplete({ phone: "", whatsapp: "+994501234567" })).toBe(false);
+    expect(isProfileComplete(null)).toBe(false);
+  });
+});
